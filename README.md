@@ -1,5 +1,4 @@
-# HHS CMS BizFlow HR Tracking System
-## (a.k.a. NEIL)
+# HHS BizFlow
 
 System Components
 
