@@ -58,8 +58,6 @@
 	</target>
 
 
-
-
 	<target name="compile"
 			depends="init"
 			description="compiles java source files">
@@ -92,8 +90,6 @@
 		<jar jarfile="${dist.dir}/lib/${target.name}.jar" basedir="${classes.dir}" includes="**/*" manifest="${manifest}" />
 		<delete file="${manifest}" />
 	</target>
-
-
 
 
 </project>
