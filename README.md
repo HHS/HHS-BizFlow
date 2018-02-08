@@ -70,7 +70,7 @@ In order to call DSS web service, there should be an existing report created for
 
 
 ### Usage
-The deployed module can be run on demand as a stand alone application.  For test run, assuming that the module is already built by ANT script following the build instruction above, you may use ANT script with run target.
+The deployed module can be run on demand as a stand alone application.  For on-demand run, assuming that the module is already built by ANT script following the build instruction above, you may use ANT script with run target.
 
 	ant run
 
