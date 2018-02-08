@@ -41,7 +41,7 @@
 
 	<path id="classpath">
 		<!-- 
-    	<path refid="${proj.jdk.classpath}" />
+		<path refid="${proj.jdk.classpath}" />
 		-->
 		<fileset dir="${lib.dir}">
 			<patternset refid="module.dependncy.lib"/>
@@ -75,23 +75,23 @@
 			depends="init"
 			description="compiles java source files">
 		<delete dir="${classes.dir}" />
-        <mkdir dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
 		<javac destdir="${classes.dir}"
 				fork="true" 
 				executable="${proj.jdk.bin}/javac"
 				debug="on" 
 				source="${target.jvm}" target="${target.jvm}"
 				deprecation="off" optimize="on" encoding="utf-8">
-            <classpath refid="classpath" />
-            <src path="${src.main.java.dir}" />
-        </javac>
+			<classpath refid="classpath" />
+			<src path="${src.main.java.dir}" />
+		</javac>
 	</target>
 
 
 	<target name="package"
 			depends="compile"
 			description="creates jar file from DSS client class files">
-		<echo message="Building ${target.name}.jar file." />
+		<echo message="Packaging ${target.name}.jar file." />
 		<delete file="${manifest}" />
 		<echo file="${manifest}" append="false" message="Manifest-Version: ${version}&#13;&#10;Created-By: Deloitte LLP" />
 		<delete dir="${dist.dir}/lib" />
@@ -121,7 +121,7 @@
 				failonerror="true"
 				maxmemory="512m">
 			<classpath refid="run.classpath" />
-        </java>
+		</java>
 	</target>
 
 </project>
