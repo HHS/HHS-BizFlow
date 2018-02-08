@@ -1,3 +1,4 @@
 *.class
+*.log
 usastaff/build/**
 usastaff/dist/**

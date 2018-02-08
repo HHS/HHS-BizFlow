@@ -31,10 +31,17 @@ In order to call DSS web service, there should be an existing report created for
 
 ### Build Instruction
 
-1. Using a text editor, open build.xml file, and modify the JDK location in the following property.
+1. In the build machine, download the project repository files.
 
+1. Open a command line, and change directory to `usastaff` directory.
 
-1. Open command line, and run ANT.
+		cd usastaff
+
+1. Using a text editor, open `usastaff.properties` file, and modify the JDK location in the following property.
+
+		jdk.home.1.7=<full_path_to_jdk_home_dir>
+
+1. In the command line, run ANT build script.
 
 		ant
 
@@ -63,6 +70,8 @@ In order to call DSS web service, there should be an existing report created for
 
 
 ### Usage
-The deployed module can be run on demand as a stand alone application.
+The deployed module can be run on demand as a stand alone application.  For on-demand run, assuming that the module is already built by ANT script following the build instruction above, you may use ANT script with run target.
+
+	ant run
 
 For regular usage in server environment, it is expected to be executed periodically by a cron job.

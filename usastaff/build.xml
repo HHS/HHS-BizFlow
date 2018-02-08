@@ -18,9 +18,7 @@
 	<property name="bin.dir" value="${proj.root.dir}/bin" />
 	<property name="lib.dir" value="${proj.root.dir}/lib" />
 	<property name="dist.dir" value="${proj.root.dir}/dist" />
-	<!--
-	<property name="axis.lib.dir" value="${proj.root.dir}/../../axis-1_4-bin/lib" />
-	-->
+	<property name="manifest" value="MANIFEST.MF"/>
 
 
 
@@ -31,13 +29,28 @@
 		</fileset>
 	</path>
 
+	<patternset id="module.dependncy.lib">
+		<include name="axis.jar" />
+		<include name="commons-discovery-0.2.jar" />
+		<include name="commons-logging-1.1.jar" />
+		<include name="log4j-1.2.8.jar" />
+		<include name="jaxrpc.jar" />
+		<include name="saaj.jar" />
+		<include name="wsdl4j-1.5.1.jar" />
+	</patternset>
 
 	<path id="classpath">
 		<!-- 
-    	<path refid="${proj.jdk.classpath}" />
+		<path refid="${proj.jdk.classpath}" />
 		-->
 		<fileset dir="${lib.dir}">
-			<include name="**/*.jar" />
+			<patternset refid="module.dependncy.lib"/>
+		</fileset>
+	</path>
+	
+	<path id="run.classpath">
+		<fileset dir="${dist.dir}/lib">
+			<include name="*.jar" />
 		</fileset>
 	</path>
 
@@ -62,34 +75,53 @@
 			depends="init"
 			description="compiles java source files">
 		<delete dir="${classes.dir}" />
-        <mkdir dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
 		<javac destdir="${classes.dir}"
 				fork="true" 
 				executable="${proj.jdk.bin}/javac"
 				debug="on" 
 				source="${target.jvm}" target="${target.jvm}"
 				deprecation="off" optimize="on" encoding="utf-8">
-            <classpath refid="classpath" />
-            <src path="${src.main.java.dir}" />
-        </javac>
+			<classpath refid="classpath" />
+			<src path="${src.main.java.dir}" />
+		</javac>
 	</target>
 
 
 	<target name="package"
 			depends="compile"
 			description="creates jar file from DSS client class files">
-		<echo message="Building ${target.name}.jar file." />
+		<echo message="Packaging ${target.name}.jar file." />
 		<delete file="${manifest}" />
 		<echo file="${manifest}" append="false" message="Manifest-Version: ${version}&#13;&#10;Created-By: Deloitte LLP" />
 		<delete dir="${dist.dir}/lib" />
 		<copy todir="${dist.dir}/lib">
 			<fileset dir="${lib.dir}">
-				<include name="*.jar" />
+				<patternset refid="module.dependncy.lib"/>
+			</fileset>
+			<fileset dir="${src.main.java.dir}">
+				<include name="log4j.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.main.java.dir}">
+				<include name="log4j.properties" />
 			</fileset>
 		</copy>
 		<jar jarfile="${dist.dir}/lib/${target.name}.jar" basedir="${classes.dir}" includes="**/*" manifest="${manifest}" />
 		<delete file="${manifest}" />
 	</target>
 
+	
+	<target name="run"
+			depends="init"
+			description="runs DSS module">
+		<java classname="DSS_Java.DSS_JavaUI"
+				fork="true"
+				failonerror="true"
+				maxmemory="512m">
+			<classpath refid="run.classpath" />
+		</java>
+	</target>
 
 </project>
