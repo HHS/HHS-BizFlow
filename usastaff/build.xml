@@ -18,9 +18,6 @@
 	<property name="bin.dir" value="${proj.root.dir}/bin" />
 	<property name="lib.dir" value="${proj.root.dir}/lib" />
 	<property name="dist.dir" value="${proj.root.dir}/dist" />
-	<!--
-	<property name="axis.lib.dir" value="${proj.root.dir}/../../axis-1_4-bin/lib" />
-	-->
 
 
 
