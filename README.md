@@ -3,11 +3,13 @@
 Modules
 
 - **database** : HHS BizFlow common database script.
-- **psclocator** : PSC Locator interface where user information is pulled from PSC Locator database onto BizFlow database.
+- **persondirectory** : Person Directory interface where user information is pulled from PSC Locator database onto BizFlow database.
 - **usastaff** : USA Staffing interface where report data from USA Staffing site onto HHS common database. 
 
-## PSC Locator Interface
+## Person Directory Interface
+This module is to pull HHS empoyee directory information into BizFlow user profile database table.  
 
+Note: Once the user profile information is imported, BizFlow system administrator will need to manually maintain license assignment, authority group assignment, and user group assignment through BizFlow Administration menu.
 
 
 
