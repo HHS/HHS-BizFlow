@@ -146,9 +146,10 @@ public class genericAuthenticationPrompt
 	{
 		try
 		{
-			System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
+			//System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
 			AuthServiceLocator authLocator = new AuthServiceLocator();
-			AuthServicePort authService = (AuthServicePort) authLocator.getAuthServicePort(new URL(url));
+			//AuthServicePort authService = (AuthServicePort)authLocator.getAuthServicePort(new URL(url));
+			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
 			doLogon(authService, new CredentialType());
 			copySOAPHeaders((Stub) authService, (Stub) cmsService);
 		}
@@ -211,7 +212,8 @@ public class genericAuthenticationPrompt
 	 * @throws RemoteException
 	 *             Thrown if an Axis exception occurs
 	 */
-	private static CredentialType doLogon(AuthServicePort authService, CredentialType credentials) throws RemoteException
+	//private static CredentialType doLogon(AuthServicePort authService, CredentialType credentials) throws RemoteException
+	private static CredentialType doLogon(AuthServiceBindingStub authService, CredentialType credentials) throws RemoteException
 	{
 		LogonResponseType response = authService.logon(new LogonRequestType(credentials, null));
 		if (response.getResponseCode() == ResponseCode.ERROR)
