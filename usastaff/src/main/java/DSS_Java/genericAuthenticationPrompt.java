@@ -149,7 +149,7 @@ public class genericAuthenticationPrompt
 			System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
 			AuthServiceLocator authLocator = new AuthServiceLocator();
 			//AuthServicePort authService = authLocator.getAuthServicePort(new URL(url));
-			AuthServiceBindingStub authService = authLocator.getAuthServicePort(new URL(url));
+			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
 			doLogon(authService, new CredentialType());
 			copySOAPHeaders((Stub) authService, (Stub) cmsService);
 		}
@@ -169,7 +169,7 @@ public class genericAuthenticationPrompt
 		{
 			AuthServiceLocator authLocator = new AuthServiceLocator();
 			//AuthServicePort authService = authLocator.getAuthServicePort(new URL(url));
-			AuthServiceBindingStub authService = authLocator.getAuthServicePort(new URL(url));
+			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
 			copySOAPHeaders((Stub) cmsService, (Stub) authService);
 			authService.logoff(new LogoffRequestType());
 		}
