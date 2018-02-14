@@ -1,4 +1,4 @@
 *.class
 *.log
-*/build/**
-*/dist/**
+**/build/**
+**/dist/**
