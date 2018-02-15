@@ -22,18 +22,7 @@ echo You MUST edit this file before you can run this application.
 JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home
 JAR_HOME=./lib
 
-#if [ "$CRN_HOME" = "" ] ; then
-#	CRN_HOME=/usr/ibm/cognos/c10
-#fi
-#if [ "$JAVA_HOME" = "" ] ; then
-#	JAVA_HOME=$CRN_HOME/bin/jre/7.0
-#fi
-
-JAVA=$JAVA_HOME/bin/java
-#JAR_HOME=$CRN_HOME/sdk/java/lib
-
 # Build the CLASSPATH required
-
 CLASSPATH=
 #for dir in ../common_class; do
 #  CLASSPATH="$CLASSPATH:$dir"
@@ -44,7 +33,7 @@ for jar in axis commons-discovery-0.2 commons-logging-1.1 log4j-1.2.8 jaxrpc \
 done
 
 # Run genericAuthenticationPrompt
-#$JAVA -classpath "$CLASSPATH" genericAuthenticationPrompt $1 $2 $3 $4
-#$JAVA -classpath %CLASSPATH% DSS_Java.genericAuthenticationPrompt -u https://data.stage.usastaffing.gov/ibmcognos/bi/v1/disp -l
+#$JAVA_HOME/bin/java -classpath "$CLASSPATH" genericAuthenticationPrompt $1 $2 $3 $4
+#$JAVA_HOME/bin/java -classpath $CLASSPATH DSS_Java.genericAuthenticationPrompt -u https://data.stage.usastaffing.gov/ibmcognos/bi/v1/disp -l
 
-$JAVA -classpath %CLASSPATH% DSS_Java.DSS_JavaUI
+$JAVA_HOME/bin/java -classpath $CLASSPATH DSS_Java.DSS_JavaUI
