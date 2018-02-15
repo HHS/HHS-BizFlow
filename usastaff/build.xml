@@ -10,7 +10,6 @@
 	<property name="target.jvm" value="1.7" />
 	<property name="target.name" value="usastaffdss" />
 	<property name="proj.root.dir" value="${basedir}" />
-	<property name="proj.jdk.home" value="" />
 	<property name="src.dir" value="${proj.root.dir}/src" />
 	<property name="src.main.java.dir" value="${src.dir}/main/java" />
 	<property name="build.dir" value="${proj.root.dir}/build" />
