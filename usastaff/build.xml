@@ -49,6 +49,7 @@
 	</path>
 	
 	<path id="run.classpath">
+		<pathelement location="${dist.dir}/lib"/>
 		<fileset dir="${dist.dir}/lib">
 			<include name="*.jar" />
 		</fileset>
@@ -92,6 +93,14 @@
 			depends="compile"
 			description="creates jar file from DSS client class files">
 		<echo message="Packaging ${target.name}.jar file." />
+		<delete file="${dist.dir}/*.bat" />
+		<delete file="${dist.dir}/*.sh" />
+		<copy todir="${dist.dir}">
+			<fileset dir="${src.main.java.dir}/DSS_Java">
+				<include name="*.bat" />
+				<include name="*.sh" />
+			</fileset>
+		</copy>
 		<delete file="${manifest}" />
 		<echo file="${manifest}" append="false" message="Manifest-Version: ${version}&#13;&#10;Created-By: Deloitte LLP" />
 		<delete dir="${dist.dir}/lib" />
@@ -113,7 +122,7 @@
 	</target>
 
 	
-	<target name="run"
+	<target name="run.gui"
 			depends="init"
 			description="runs DSS module">
 		<java classname="DSS_Java.DSS_JavaUI"
@@ -121,6 +130,26 @@
 				failonerror="true"
 				maxmemory="512m">
 			<classpath refid="run.classpath" />
+		</java>
+	</target>
+
+	
+	<target name="run.cli.genauthprompt"
+			depends="init"
+			description="runs DSS module">
+		<java classname="DSS_Java.genericAuthenticationPrompt"
+				fork="true"
+				failonerror="true"
+				maxmemory="512m">
+			<classpath refid="run.classpath" />
+			<!--
+			<jvmarg value="-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2" />
+			-->
+			<jvmarg value="-Dhttps.protocols=TLSv1.2 -Djdk.tls.client.protocols=TLSv1.2" />
+			<arg value="-u" />
+			<arg value="${genauthprompt.cli.arg.url}" />
+			<arg value="-l" />
+			<arg value="${genauthprompt.cli.arg.search}" />
 		</java>
 	</target>
 

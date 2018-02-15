@@ -148,7 +148,8 @@ public class genericAuthenticationPrompt
 		{
 			System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
 			AuthServiceLocator authLocator = new AuthServiceLocator();
-			AuthServicePort authService = (AuthServicePort) authLocator.getAuthServicePort(new URL(url));
+			//AuthServicePort authService = authLocator.getAuthServicePort(new URL(url));
+			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
 			doLogon(authService, new CredentialType());
 			copySOAPHeaders((Stub) authService, (Stub) cmsService);
 		}
@@ -167,7 +168,8 @@ public class genericAuthenticationPrompt
 		try
 		{
 			AuthServiceLocator authLocator = new AuthServiceLocator();
-			AuthServicePort authService = (AuthServicePort) authLocator.getAuthServicePort(new URL(url));
+			//AuthServicePort authService = authLocator.getAuthServicePort(new URL(url));
+			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
 			copySOAPHeaders((Stub) cmsService, (Stub) authService);
 			authService.logoff(new LogoffRequestType());
 		}
@@ -211,7 +213,8 @@ public class genericAuthenticationPrompt
 	 * @throws RemoteException
 	 *             Thrown if an Axis exception occurs
 	 */
-	private static CredentialType doLogon(AuthServicePort authService, CredentialType credentials) throws RemoteException
+	//private static CredentialType doLogon(AuthServicePort authService, CredentialType credentials) throws RemoteException
+	private static CredentialType doLogon(AuthServiceBindingStub authService, CredentialType credentials) throws RemoteException
 	{
 		LogonResponseType response = authService.logon(new LogonRequestType(credentials, null));
 		if (response.getResponseCode() == ResponseCode.ERROR)
@@ -228,6 +231,8 @@ public class genericAuthenticationPrompt
 				ACredentialPrompt credential;
 				if (elements[i].getValue().getActualValue() != null)
 					credential = new ValueCredential(elements[i]);
+				else if (elements[i].getValue().getMissingValue().getEnumeration() != null)
+					credential = new ChoiceCredential(elements[i]);
 				else
 					credential = new TypeInCredential(elements[i]);
 				credential.promptUser();

@@ -39,10 +39,13 @@ public class TypeInCredential extends ACredentialPrompt
 		// Prompt the user to type in a value
 		System.out.print("Please type a value for ");
 		System.out.println(credential.getLabel());
+		String value = null;
 
 		// Read the value
 		Scanner scan = new Scanner(System.in);
-		String value = scan.nextLine();
+		if (scan.hasNextLine()) {
+			value = scan.nextLine();
+		}
 		scan.close();
 
 		// Replace the missing value with the actual value
