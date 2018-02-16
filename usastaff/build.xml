@@ -62,7 +62,7 @@
 		<echo message="Start time          = ${curtime}" />
 		<echo message="proj.root.dir       = ${proj.root.dir}" />
 		<echo message="src.dir             = ${src.dir}" />
-		<echo message="src.java.dir        = ${src.java.dir}" />
+		<echo message="src.main.java.dir   = ${src.main.java.dir}" />
 		<echo message="build.dir           = ${build.dir}" />
 		<echo message="classes.dir         = ${classes.dir}" />
 		<echo message="bin.dir             = ${bin.dir}" />
