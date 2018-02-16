@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="USAStaffingDSS" default="package" basedir=".">
+<project name="JDBCConnection" default="package" basedir=".">
 
-	<property file="usastaff.properties" />
+	<property file="jdbcconn.properties" />
 
 	<property name="proj.jdk.home" value="${jdk.home.1.7}" />
 	<property name="proj.jdk.bin" value="${jdk.home.1.7}/bin" />
 	<property name="proj.jdk.classpath" value="jdk.classpath.1.7" />
 
 	<property name="target.jvm" value="1.7" />
-	<property name="target.name" value="usastaffdss" />
+	<property name="target.name" value="jdbcconn" />
 	<property name="proj.root.dir" value="${basedir}" />
 	<property name="src.dir" value="${proj.root.dir}/src" />
 	<property name="src.main.java.dir" value="${src.dir}/main/java" />
+	<property name="src.main.res.dir" value="${src.dir}/main/resources" />
 	<property name="build.dir" value="${proj.root.dir}/build" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="bin.dir" value="${proj.root.dir}/bin" />
 	<property name="lib.dir" value="${proj.root.dir}/lib" />
 	<property name="dist.dir" value="${proj.root.dir}/dist" />
-	<property name="manifest" value="MANIFEST.MF"/>
 
 
 
@@ -29,13 +29,8 @@
 	</path>
 
 	<patternset id="module.dependncy.lib">
-		<include name="axis.jar" />
-		<include name="commons-discovery-0.2.jar" />
-		<include name="commons-logging-1.1.jar" />
-		<include name="log4j-1.2.8.jar" />
-		<include name="jaxrpc.jar" />
-		<include name="saaj.jar" />
-		<include name="wsdl4j-1.5.1.jar" />
+		<include name="ojdbc6.jar" />
+		<include name="sqljdbc4.jar" />
 	</patternset>
 
 	<path id="classpath">
@@ -62,7 +57,7 @@
 		<echo message="Start time          = ${curtime}" />
 		<echo message="proj.root.dir       = ${proj.root.dir}" />
 		<echo message="src.dir             = ${src.dir}" />
-		<echo message="src.main.java.dir   = ${src.main.java.dir}" />
+		<echo message="src.java.dir        = ${src.java.dir}" />
 		<echo message="build.dir           = ${build.dir}" />
 		<echo message="classes.dir         = ${classes.dir}" />
 		<echo message="bin.dir             = ${bin.dir}" />
@@ -90,66 +85,20 @@
 
 	<target name="package"
 			depends="compile"
-			description="creates jar file from DSS client class files">
+			description="creates jar file">
 		<echo message="Packaging ${target.name}.jar file." />
-		<delete file="${dist.dir}/*.bat" />
-		<delete file="${dist.dir}/*.sh" />
-		<copy todir="${dist.dir}">
-			<fileset dir="${src.main.java.dir}/DSS_Java">
+		<delete dir="${dist.dir}/lib" />
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${src.main.res.dir}">
 				<include name="*.bat" />
 				<include name="*.sh" />
 			</fileset>
-		</copy>
-		<delete file="${manifest}" />
-		<echo file="${manifest}" append="false" message="Manifest-Version: ${version}&#13;&#10;Created-By: Deloitte LLP" />
-		<delete dir="${dist.dir}/lib" />
-		<copy todir="${dist.dir}/lib">
 			<fileset dir="${lib.dir}">
 				<patternset refid="module.dependncy.lib"/>
 			</fileset>
-			<fileset dir="${src.main.java.dir}">
-				<include name="log4j.properties" />
-			</fileset>
 		</copy>
-		<copy todir="${classes.dir}">
-			<fileset dir="${src.main.java.dir}">
-				<include name="log4j.properties" />
-			</fileset>
-		</copy>
-		<jar jarfile="${dist.dir}/lib/${target.name}.jar" basedir="${classes.dir}" includes="**/*" manifest="${manifest}" />
-		<delete file="${manifest}" />
+		<jar jarfile="${dist.dir}/lib/${target.name}.jar" basedir="${classes.dir}" includes="**/*" />
 	</target>
 
 	
-	<target name="run.gui"
-			depends="init"
-			description="runs DSS module">
-		<java classname="DSS_Java.DSS_JavaUI"
-				fork="true"
-				failonerror="true"
-				maxmemory="512m">
-			<classpath refid="run.classpath" />
-		</java>
-	</target>
-
-	
-	<target name="run.cli.genauthprompt"
-			depends="init"
-			description="runs DSS module">
-		<java classname="DSS_Java.genericAuthenticationPrompt"
-				fork="true"
-				failonerror="true"
-				maxmemory="512m">
-			<classpath refid="run.classpath" />
-			<!--
-			<jvmarg value="-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2" />
-			-->
-			<jvmarg value="-Dhttps.protocols=TLSv1.2 -Djdk.tls.client.protocols=TLSv1.2" />
-			<arg value="-u" />
-			<arg value="${genauthprompt.cli.arg.url}" />
-			<arg value="-l" />
-			<arg value="${genauthprompt.cli.arg.search}" />
-		</java>
-	</target>
-
 </project>
