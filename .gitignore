@@ -2,4 +2,4 @@
 *.log
 **/build/**
 **/dist/**
-#**/target/**
+**/target/**
