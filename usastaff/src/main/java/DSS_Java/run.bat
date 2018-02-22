@@ -15,8 +15,8 @@ rem Run genericAuthenticationPrompt.class
 ::set CRN_HOME=../../../../
 ::set JAR_HOME=%CRN_HOME%sdk/java/lib
 
-::set "JAVA_HOME=C:\Program Files\Java\jdk1.7.0_80"
-set "JAVA_HOME=C:\Program Files\Java\jdk1.8.0_131"
+set "JAVA_HOME=C:\Program Files\Java\jdk1.7.0_80"
+::set "JAVA_HOME=C:\Program Files\Java\jdk1.8.0_131"
 set JAR_HOME=./lib
 
 rem Build the CLASSPATH required to run genericAuthenticationPrompt.class
@@ -35,9 +35,9 @@ set CLASSPATH=%CLASSPATH%;%JAR_HOME%/usastaffdss.jar
 rem Run genericAuthenticationPrompt.class
 
 ::"%JAVA_HOME%" -classpath %CLASSPATH% genericAuthenticationPrompt %1 %2 %3 %4
-::"%JAVA_HOME%"\bin\java.exe -classpath %CLASSPATH% DSS_Java.genericAuthenticationPrompt -u https://data.stage.usastaffing.gov/ibmcognos/bi/v1/disp -l
+"%JAVA_HOME%"\bin\java.exe -classpath %CLASSPATH% DSS_Java.genericAuthenticationPrompt -u https://data.stage.usastaffing.gov/ibmcognos/bi/v1/disp -l
 
-"%JAVA_HOME%"\bin\java.exe -classpath %CLASSPATH% DSS_Java.DSS_JavaUI
+::"%JAVA_HOME%"\bin\java.exe -classpath %CLASSPATH% DSS_Java.DSS_JavaUI
 
 goto end
 

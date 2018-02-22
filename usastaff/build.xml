@@ -144,7 +144,7 @@
 			<!--
 			<jvmarg value="-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2" />
 			-->
-			<jvmarg value="-Dhttps.protocols=TLSv1.2 -Djdk.tls.client.protocols=TLSv1.2" />
+			<jvmarg value="-Dhttps.protocols=TLSv1.1,TLSv1.2 -Djdk.tls.client.protocols=TLSv1.1,TLSv1.2" />
 			<arg value="-u" />
 			<arg value="${genauthprompt.cli.arg.url}" />
 			<arg value="-l" />
