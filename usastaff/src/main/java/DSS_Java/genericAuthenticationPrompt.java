@@ -148,10 +148,12 @@ public class genericAuthenticationPrompt
 	{
 		try
 		{
+			// Force TLSv1.2 with JDK 1.7 runtime environment
 			System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
 			SSLContext ctx = SSLContext.getInstance("TLSv1.2");
 			ctx.init(null, null, null);
 			SSLContext.setDefault(ctx);
+
 			AuthServiceLocator authLocator = new AuthServiceLocator();
 			//AuthServicePort authService = authLocator.getAuthServicePort(new URL(url));
 			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
