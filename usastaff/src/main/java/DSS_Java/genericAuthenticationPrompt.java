@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import javax.net.ssl.SSLContext;
+
 import org.apache.axis.client.Stub;
 import org.apache.axis.message.SOAPHeaderElement;
 
@@ -147,6 +149,9 @@ public class genericAuthenticationPrompt
 		try
 		{
 			System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
+			SSLContext ctx = SSLContext.getInstance("TLSv1.2");
+			ctx.init(null, null, null);
+			SSLContext.setDefault(ctx);
 			AuthServiceLocator authLocator = new AuthServiceLocator();
 			//AuthServicePort authService = authLocator.getAuthServicePort(new URL(url));
 			AuthServiceBindingStub authService = (AuthServiceBindingStub)authLocator.getAuthServicePort(new URL(url));
