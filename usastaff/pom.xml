@@ -87,7 +87,7 @@
 		</dependency>
 
 
-		<!-- Project Library statically stored locally -->
+		<!-- Project Library statically stored under project repository during build -->
 		<dependency>
 			<groupId>proj.lib.local</groupId>
 			<artifactId>axis</artifactId>
@@ -150,7 +150,13 @@
 				</executions>
 			</plugin>
 
-			<!-- Run install-file goal to include 3rd party jars to local repository for build -->
+			<!-- 
+			Run install-file goal to include 3rd party jars to local project repository for build.
+			This should be executed by calling clean goal.  It is to avoid error by dependency 
+			checking done before running goals in plugin in normal validate cycle.
+
+				mvn clean
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
