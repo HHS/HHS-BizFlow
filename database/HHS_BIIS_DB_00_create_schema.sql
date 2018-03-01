@@ -24,8 +24,8 @@
 ----------------------------------------------------
 
 --ALTER USER HHSADMIN IDENTIFIED BY <replace_with_password>;
---ALTER USER HHS_HR IDENTIFIED BY <replace_with_password>;
---ALTER USER HHSDEV IDENTIFIED BY <replace_with_password>;
+--ALTER USER EWITSUSR IDENTIFIED BY <replace_with_password>;
+--ALTER USER HISTDBA IDENTIFIED BY <replace_with_password>;
 
 
 ----------------------------------------------------
@@ -33,13 +33,11 @@
 ----------------------------------------------------
 
 --DROP USER HHSADMIN CASCADE;
---DROP TABLESPACE HHS_HR_TS;
---DROP USER HHS_HR CASCADE;
---DROP USER HHSDEV CASCADE;
---DROP ROLE HHS_HR_RW_ROLE;
---DROP ROLE HHS_HR_DEV_ROLE;
--- BF_DEV_ROLE might be created by some other script
-----DROP ROLE BF_DEV_ROLE;
+--DROP TABLESPACE HHS_BIIS_TS;
+--DROP USER EWITSUSR CASCADE;
+--DROP USER HISTDBA CASCADE;
+--DROP ROLE HHS_BIIS_VIEW_ROLE;
+--DROP ROLE HHS_BIIS_OWNER_ROLE;
 
 
 
@@ -47,8 +45,8 @@
 -- Create HHSADMIN user for DBA for HHS project
 -------------------------------------------------------------------------------
 
-CREATE USER HHSADMIN IDENTIFIED BY <replace_with_password>;
-GRANT CONNECT, RESOURCE, DBA TO HHSADMIN;
+--CREATE USER HHSADMIN IDENTIFIED BY <replace_with_password>;
+--GRANT CONNECT, RESOURCE, DBA TO HHSADMIN;
 
 
 
@@ -57,76 +55,47 @@ GRANT CONNECT, RESOURCE, DBA TO HHSADMIN;
 -------------------------------------------------------------------------------
 
 -- Make sure the directory to store the datafile actually exists on the server where DBMS is installed.
-CREATE TABLESPACE HHS_HR_TS DATAFILE 'C:\bizflowdb\HHS_HR.DBF' SIZE 30M AUTOEXTEND ON NEXT 3M MAXSIZE UNLIMITED
+CREATE TABLESPACE HHS_BIIS_TS DATAFILE 'C:\bizflowdb\HHS_BIIS.DBF' SIZE 30M AUTOEXTEND ON NEXT 3M MAXSIZE UNLIMITED
 ;
 
 
 
 
-
-CREATE USER HHS_HR IDENTIFIED BY <replace_with_password>
-	DEFAULT TABLESPACE HHS_HR_TS
+-- user schema
+CREATE USER EWITSUSR IDENTIFIED BY <replace_with_password>
+	DEFAULT TABLESPACE HHS_BIIS_TS
 --	TEMPORARY TABLESPACE HHSTST
-	QUOTA UNLIMITED ON HHS_HR_TS
+	QUOTA UNLIMITED ON HHS_BIIS_TS
 ;
 
--- developer user
-CREATE USER HHSDEV IDENTIFIED BY <replace_with_password>
-	DEFAULT TABLESPACE HHS_HR_TS
-	QUOTA UNLIMITED ON HHS_HR_TS
+-- view schema
+CREATE USER HISTDBA IDENTIFIED BY <replace_with_password>
+	DEFAULT TABLESPACE HHS_BIIS_TS
+	QUOTA UNLIMITED ON HHS_BIIS_TS
 ;
 
 
 -- create role and grant privilege
-CREATE ROLE HHS_HR_RW_ROLE;
-CREATE ROLE HHS_HR_DEV_ROLE;
---CREATE ROLE BF_DEV_ROLE;  -- already created as part of CMS project
+CREATE ROLE HHS_BIIS_VIEW_ROLE;
+CREATE ROLE HHS_BIIS_OWNER_ROLE;
 
--- grant HHS role to HHS user
-GRANT CONNECT, RESOURCE, HHS_HR_RW_ROLE TO HHS_HR;
-GRANT CONNECT, RESOURCE, HHS_HR_DEV_ROLE TO HHSDEV;
+-- grant view role to user
+GRANT CONNECT, RESOURCE, HHS_BIIS_VIEW_ROLE TO EWITSUSR;
+GRANT CONNECT, RESOURCE, HHS_BIIS_OWNER_ROLE TO HISTDBA;
 
--- grant HHS database privileges to HHS role
+-- grant view database privileges to user role
+GRANT ALTER SESSION
+		, CREATE SEQUENCE, CREATE SESSION, CREATE SYNONYM, CREATE TABLE
+		, CREATE VIEW, CREATE PROCEDURE
+	TO HHS_BIIS_VIEW_ROLE
+;
+
+-- grant owner database privileges to owner role
 GRANT ALTER SESSION, CREATE CLUSTER, CREATE DATABASE LINK
 		, CREATE SEQUENCE, CREATE SESSION, CREATE SYNONYM, CREATE TABLE
 		, CREATE VIEW, CREATE PROCEDURE
-	TO HHS_HR_RW_ROLE
-;
-
--- grant HHS database privileges to HHS DEV role
-GRANT ALTER SESSION, CREATE CLUSTER, CREATE DATABASE LINK
-		, CREATE SEQUENCE, CREATE SESSION, CREATE SYNONYM, CREATE TABLE
-		, CREATE VIEW, CREATE PROCEDURE
-	TO HHS_HR_DEV_ROLE
+	TO HHS_BIIS_OWNER_ROLE
 ;
 
 
--- Grant workflow table access to role.
--- It may have already been granted as part of CMS project.
---BEGIN
---	FOR ATAB IN (SELECT TABLE_NAME FROM ALL_TABLES WHERE OWNER = 'BIZFLOW') LOOP
---		EXECUTE IMMEDIATE 'GRANT ALL ON BIZFLOW.'||ATAB.TABLE_NAME||' TO BF_DEV_ROLE';
---	END LOOP;
---END;
 
-
-
-
-
----------------------------------
--- CROSS schema access
----------------------------------
-
--- grant the HHS database access role to bizflow database user
-
-GRANT HHS_HR_RW_ROLE TO BIZFLOW;
-
-
--- grant WORKFLOW database access role to HHS_HR database user
-
-GRANT BF_DEV_ROLE TO HHS_HR;
-
-
--- grant WORKFLOW database access role to HHSDEV database user
-
-GRANT BF_DEV_ROLE TO HHSDEV;
