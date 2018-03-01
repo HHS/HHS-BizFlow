@@ -64,91 +64,17 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
-			<version>4.2.4.RELEASE</version>
 		</dependency>
-		
-<!--
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
--->
-<!--
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
--->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-
-		<!-- Project Library statically stored under project repository during build -->
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>commons-discovery</artifactId>
-			<version>0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.8</version>
-		</dependency>
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>jaxrpc</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>saaj</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>proj.lib.local</groupId>
-			<artifactId>wsdl4j</artifactId>
-			<version>1.5.1</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
 		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<echo>java.home = ${java.home}</echo>
-								<echo>project.basedir = ${project.basedir}</echo>
-								<echo>project.baseUri = ${project.baseUri}</echo>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<!-- 
 			Run install-file goal to include 3rd party jars to local project repository for build.
@@ -160,7 +86,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<version>2.5.2</version>
+				<version>2.5.2</version><!--$NO-MVN-MAN-VER$-->
 				<executions>
 					<execution>
 						<id>install-axis-jar-lib</id>
@@ -297,4 +223,43 @@
 	</build>
 
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>axis</artifactId>
+				<version>1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>commons-discovery</artifactId>
+				<version>0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.8</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>jaxrpc</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>saaj</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>wsdl4j</artifactId>
+				<version>1.5.1</version>
+			</dependency>														
+		</dependencies>
+	</dependencyManagement>
 </project>

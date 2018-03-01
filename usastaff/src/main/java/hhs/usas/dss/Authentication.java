@@ -3,7 +3,10 @@ package hhs.usas.dss;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.SSLContext;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.message.SOAPHeaderElement;
@@ -27,7 +30,7 @@ import com.cognos.developer.schemas.rds.types._2.SourceTypeEnum;
 
 public class Authentication {
 
-    SOAPHeaderElement[] logon(String namespace, String username, String password, String url) throws MalformedURLException, ServiceException, RemoteException {
+    SOAPHeaderElement[] logon(String namespace, String username, String password, String url) throws MalformedURLException, ServiceException, RemoteException, NoSuchAlgorithmException, KeyManagementException {
 		AuthServiceLocator authlocator = new AuthServiceLocator();
 		//AuthServicePort authService = (AuthServicePort) authlocator.getAuthServicePort(new URL(serverURL));
 		AuthServiceBindingStub authservice = (AuthServiceBindingStub) authlocator.getAuthServicePort(new URL(url)) ;
@@ -54,6 +57,10 @@ public class Authentication {
 		//Login IBM Cognos server using the CMS Authentication Service
 		System.setProperty("http.agent", "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0;  rv:11.0)");
 		System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
+		//Force TLSv1.2 with JDK 1.7 runtime environment
+		SSLContext ctx = SSLContext.getInstance("TLSv1.2");
+		ctx.init(null, null, null);
+		SSLContext.setDefault(ctx);		
 		credentialType.setCredentialElements(new CredentialElementType[]{nameSpaceElement,userNameElement,passWordElement});
 		LogonRequestType logonRequest = new LogonRequestType(credentialType, null);
 		@SuppressWarnings("unused")
