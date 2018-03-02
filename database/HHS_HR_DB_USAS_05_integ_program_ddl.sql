@@ -245,7 +245,7 @@ BEGIN
 				, X.SUPERVISORY_POSITION
 				, X.TRAVEL_PREFERENCE
 			FROM INTG_DATA_DTL IDX
-				, XMLTABLE('/dataSet/dataTable/row[../id/text() = "lst_VacancyDetail"]'
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyDetail"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
 						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
