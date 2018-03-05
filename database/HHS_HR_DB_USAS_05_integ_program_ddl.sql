@@ -1,4 +1,10 @@
 
+
+SET DEFINE OFF;
+
+
+
+
 --------------------------------------------------------
 --  DDL for Procedure SP_ERROR_LOG
 --------------------------------------------------------
@@ -62,12 +68,12 @@ CREATE OR REPLACE PROCEDURE SP_UPDATE_INTG_DATA
 	, I_USER            IN      VARCHAR2
 )
 IS
-	V_ID NUMBER(20);
-	V_INTG_TYPE VARCHAR2(50);
-	V_USER VARCHAR2(50);
-	V_REC_CNT NUMBER(10);
-	V_MAX_ID NUMBER(20);
-	V_XMLDOC XMLTYPE;
+	V_ID                        NUMBER(20);
+	V_INTG_TYPE                 VARCHAR2(50);
+	V_USER                      VARCHAR2(50);
+	V_REC_CNT                   NUMBER(10);
+	V_MAX_ID                    NUMBER(20);
+	V_XMLDOC                    XMLTYPE;
 BEGIN
 	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
 	--DBMS_OUTPUT.PUT_LINE('    ID IS NULL?  = ' || (CASE WHEN IO_ID IS NULL THEN 'YES' ELSE 'NO' END));
@@ -423,6 +429,284 @@ BEGIN
 			, SRC.TRAVEL_PREFERENCE
 		)
 		;
+
+
+		--------------------------------
+		-- DSS_VACANCY_CUSTOMER table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_VACANCY_CUSTOMER table');
+		MERGE INTO DSS_VACANCY_CUSTOMER TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_NUMBER
+				, X.CUSTOMER_NAME
+				, X.DEPARTMENT_NAME
+				, X.DEPARTMENT_CODE
+				, X.AGENCY_NAME
+				, X.AGENCY_CODE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyCustomer"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
+						, CUSTOMER_NAME                     VARCHAR2(100)   PATH 'Vacancy__Customer__Name'
+						, DEPARTMENT_NAME                   VARCHAR2(100)   PATH 'Vacancy__Customer__Department__Name'
+						, DEPARTMENT_CODE                   VARCHAR2(4)     PATH 'Vacancy__Customer__Department__Code'
+						, AGENCY_NAME                       VARCHAR2(100)   PATH 'Vacancy__Customer__Agency__Name'
+						, AGENCY_CODE                       VARCHAR2(4)     PATH 'Vacancy__Customer__Agency__Code'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.CUSTOMER_NAME = TRG.CUSTOMER_NAME)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			--TRG.CUSTOMER_NAME                   = SRC.CUSTOMER_NAME
+			TRG.DEPARTMENT_NAME                 = SRC.DEPARTMENT_NAME
+			, TRG.DEPARTMENT_CODE               = SRC.DEPARTMENT_CODE
+			, TRG.AGENCY_NAME                   = SRC.AGENCY_NAME
+			, TRG.AGENCY_CODE                   = SRC.AGENCY_CODE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_NUMBER
+			, TRG.CUSTOMER_NAME
+			, TRG.DEPARTMENT_NAME
+			, TRG.DEPARTMENT_CODE
+			, TRG.AGENCY_NAME
+			, TRG.AGENCY_CODE
+		)
+		VALUES
+		(
+			SRC.VACANCY_NUMBER
+			, SRC.CUSTOMER_NAME
+			, SRC.DEPARTMENT_NAME
+			, SRC.DEPARTMENT_CODE
+			, SRC.AGENCY_NAME
+			, SRC.AGENCY_CODE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_VACANCY_ELIGIBILITY table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_VACANCY_ELIGIBILITY table');
+		MERGE INTO DSS_VACANCY_ELIGIBILITY TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_NUMBER
+				, X.ELIGIBILITY
+				, X.ELIGIBILITY_LABEL
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyEligibility"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
+						, ELIGIBILITY                       VARCHAR2(100)   PATH 'Vacancy__Eligibility'
+						, ELIGIBILITY_LABEL                 VARCHAR2(30)    PATH 'Vacancy__Eligibility__Label'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.ELIGIBILITY = TRG.ELIGIBILITY)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			--TRG.ELIGIBILITY                     = SRC.ELIGIBILITY
+			TRG.ELIGIBILITY_LABEL               = SRC.ELIGIBILITY_LABEL
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_NUMBER
+			, TRG.ELIGIBILITY
+			, TRG.ELIGIBILITY_LABEL
+		)
+		VALUES
+		(
+			SRC.VACANCY_NUMBER
+			, SRC.ELIGIBILITY
+			, SRC.ELIGIBILITY_LABEL
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_VACANCY_POSITION table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_VACANCY_POSITION table');
+		MERGE INTO DSS_VACANCY_POSITION TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_NUMBER
+				, X.POSITION_DESCRIPTION
+				, X.POSITION_DESCRIPTION_TITLE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyPosition"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
+						, POSITION_DESCRIPTION              VARCHAR2(50)    PATH 'Vacancy__Position__Description__Number'
+						, POSITION_DESCRIPTION_TITLE        VARCHAR2(100)   PATH 'Vacancy__Position__Description__Title'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.POSITION_DESCRIPTION = TRG.POSITION_DESCRIPTION)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			--TRG.POSITION_DESCRIPTION            = SRC.POSITION_DESCRIPTION
+			TRG.POSITION_DESCRIPTION_TITLE      = SRC.POSITION_DESCRIPTION_TITLE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_NUMBER
+			, TRG.POSITION_DESCRIPTION
+			, TRG.POSITION_DESCRIPTION_TITLE
+		)
+		VALUES
+		(
+			SRC.VACANCY_NUMBER
+			, SRC.POSITION_DESCRIPTION
+			, SRC.POSITION_DESCRIPTION_TITLE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_VACANCY_SPECIALTY table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_VACANCY_SPECIALTY table');
+		MERGE INTO DSS_VACANCY_SPECIALTY TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_NUMBER
+				, X.SPECIALTY
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancySpecialty"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
+						, SPECIALTY                         VARCHAR2(50)    PATH 'Vacancy__Specialty'
+
+--TODO: older xml has other specialty detail fields (Vacancy__Grade, Vacancy__Series).  Which one is correct?
+--      If only two columns, update should be removed, only insert makes sense
+
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.SPECIALTY = TRG.SPECIALTY)
+
+--TODO: finalize the match condition
+
+		--WHEN MATCHED THEN UPDATE SET
+			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+		--	TRG.SPECIALTY                       = SRC.SPECIALTY
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_NUMBER
+			, TRG.SPECIALTY
+		)
+		VALUES
+		(
+			SRC.VACANCY_NUMBER
+			, SRC.SPECIALTY
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_VACANCY_DOCUMENT table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_VACANCY_DOCUMENT table');
+		MERGE INTO DSS_VACANCY_DOCUMENT TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_NUMBER
+				, X.SUPPORTING_DOC_TYPE
+				, X.SUPPORTING_DOC_CUSTM_TITLE
+				, X.REQUIRED_DOC
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyDocuments"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
+						, SUPPORTING_DOC_TYPE               VARCHAR2(50)    PATH 'Vacancy__Supporting__Document__Type'
+						, SUPPORTING_DOC_CUSTM_TITLE        VARCHAR2(100)   PATH 'Vacancy__Supporting__Document__Custom__Title'
+						, REQUIRED_DOC                      VARCHAR2(3)     PATH 'Vacancy__Required__Document'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.SUPPORTING_DOC_TYPE = TRG.SUPPORTING_DOC_TYPE)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			--TRG.SUPPORTING_DOC_TYPE             = SRC.SUPPORTING_DOC_TYPE
+			TRG.SUPPORTING_DOC_CUSTM_TITLE      = SRC.SUPPORTING_DOC_CUSTM_TITLE
+			, TRG.REQUIRED_DOC                  = SRC.REQUIRED_DOC
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_NUMBER
+			, TRG.SUPPORTING_DOC_TYPE
+			, TRG.SUPPORTING_DOC_CUSTM_TITLE
+			, TRG.REQUIRED_DOC
+		)
+		VALUES
+		(
+			SRC.VACANCY_NUMBER
+			, SRC.SUPPORTING_DOC_TYPE
+			, SRC.SUPPORTING_DOC_CUSTM_TITLE
+			, SRC.REQUIRED_DOC
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_VACANCY_REQUEST table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_VACANCY_REQUEST table');
+		MERGE INTO DSS_VACANCY_REQUEST TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_NUMBER
+				, X.REQUEST_NUMBER
+				, X.REQUEST_STATUS
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyRequest"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
+						, REQUEST_NUMBER                    VARCHAR2(50)    PATH 'Request__Number'
+						, REQUEST_STATUS                    VARCHAR2(30)    PATH 'Request__Status'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			--TRG.REQUEST_NUMBER                  = SRC.REQUEST_NUMBER
+			TRG.REQUEST_STATUS                  = SRC.REQUEST_STATUS
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_NUMBER
+			, TRG.REQUEST_NUMBER
+			, TRG.REQUEST_STATUS
+		)
+		VALUES
+		(
+			SRC.VACANCY_NUMBER
+			, SRC.REQUEST_NUMBER
+			, SRC.REQUEST_STATUS
+		)
+		;
+
 
 	EXCEPTION
 		WHEN OTHERS THEN
