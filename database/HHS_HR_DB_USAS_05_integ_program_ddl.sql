@@ -44,115 +44,334 @@ END;
 
 
 
-
 --------------------------------------------------------
---  DDL for Procedure SP_UPDATE_INTG_DATA
+--  DDL for Procedure SP_UPDATE_ANNOUNCEMENT_TABLE
 --------------------------------------------------------
 
 /**
- * Stores the integration data in the integration data detail table (INTG_DATA_DTL).
+ * Parses Announcement XML data and stores it
+ * into the operational tables for Vacancy.
  *
- * @param IO_ID - ID number the row of the INTG_DATA_DTL table to be inserted or updated.  It will be also used as the return object.
- * @param I_INTG_TYPE - Integration Type to indicate the source data name, which will be
- * 				used to distinguish the xml structure.
- * @param I_FIELD_DATA - CLOB representation of the integration data.
- * @param I_USER - Indicates the user who
- *
- * @return IO_ID - ID number of the row of the INTG_DATA_DTL table inserted or updated.
+ * @param I_ID - Record ID
  */
-CREATE OR REPLACE PROCEDURE SP_UPDATE_INTG_DATA
+CREATE OR REPLACE PROCEDURE SP_UPDATE_ANNOUNCEMENT_TABLE
 (
-	IO_ID               IN OUT  NUMBER
-	, I_INTG_TYPE       IN      VARCHAR2
-	, I_FIELD_DATA      IN      CLOB
-	, I_USER            IN      VARCHAR2
+	I_ID                IN      NUMBER
 )
 IS
-	V_ID                        NUMBER(20);
-	V_INTG_TYPE                 VARCHAR2(50);
-	V_USER                      VARCHAR2(50);
 	V_REC_CNT                   NUMBER(10);
-	V_MAX_ID                    NUMBER(20);
 	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20920);
+	E_INVALID_ANNOUNCEMENT_DATA     EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_ANNOUNCEMENT_DATA, -20921);
 BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_ANNOUNCEMENT_TABLE - BEGIN ============================');
 	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
-	--DBMS_OUTPUT.PUT_LINE('    ID IS NULL?  = ' || (CASE WHEN IO_ID IS NULL THEN 'YES' ELSE 'NO' END));
-	--DBMS_OUTPUT.PUT_LINE('    ID           = ' || TO_CHAR(IO_ID));
-	--DBMS_OUTPUT.PUT_LINE('    I_INTG_TYPE  = ' || I_INTG_TYPE);
-	--DBMS_OUTPUT.PUT_LINE('    I_FIELD_DATA = ' || I_FIELD_DATA);
-	--DBMS_OUTPUT.PUT_LINE('    I_USER       = ' || I_USER);
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
 	--DBMS_OUTPUT.PUT_LINE(' ----------------');
 
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
 
-	V_ID := IO_ID;
-
-	--DBMS_OUTPUT.PUT_LINE('ID to be used is determined: ' || TO_CHAR(V_ID));
-
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20920, 'SP_UPDATE_ANNOUNCEMENT_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
 
 	BEGIN
-		SELECT COUNT(*) INTO V_REC_CNT FROM INTG_DATA_DTL WHERE ID = V_ID;
-	EXCEPTION
-		WHEN NO_DATA_FOUND THEN
-			V_REC_CNT := -1;
-	END;
-
-	V_INTG_TYPE := I_INTG_TYPE;
-	V_USER := I_USER;
-
-	--DBMS_OUTPUT.PUT_LINE('Inspected existence of same record.');
-	--DBMS_OUTPUT.PUT_LINE('    V_ID       = ' || TO_CHAR(V_ID));
-	--DBMS_OUTPUT.PUT_LINE('    V_REC_CNT  = ' || TO_CHAR(V_REC_CNT));
-
-	V_XMLDOC := XMLTYPE(I_FIELD_DATA);
-
-	IF V_REC_CNT > 0 THEN
-		--DBMS_OUTPUT.PUT_LINE('Record found so that field data will be updated on the same record.');
-
-		UPDATE INTG_DATA_DTL
-		SET
-			INTG_TYPE = V_INTG_TYPE
-			, FIELD_DATA = V_XMLDOC
-			, MOD_DT = SYSDATE
-			, MOD_USR = V_USER
-		WHERE ID = V_ID
-		;
-
-	ELSE
-		--DBMS_OUTPUT.PUT_LINE('No record found so that new record will be inserted.');
-
-		INSERT INTO INTG_DATA_DTL
+		--------------------------------
+		-- DSS_ANNOUNCEMENT_DETAIL table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_ANNOUNCEMENT_DETAIL table');
+		MERGE INTO DSS_ANNOUNCEMENT_DETAIL TRG
+		USING
 		(
-			INTG_TYPE
-			, FIELD_DATA
-			, CRT_DT
-			, CRT_USR
+			SELECT
+				X.ANNOUNCEMENT_NUMBER
+				, X.VACANCY_NUMBER
+				, X.ANN_CONTROL_NUMBER
+				, X.ANNOUNCEMENT_STATUS
+				, X.IS_RELEASED
+				, TO_DATE(SUBSTR(X.RELEASED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS RELEASED_DATE
+				, TO_DATE(SUBSTR(X.LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_UPDATE_DATE
+				, X.EXTERNAL_CONTACT_NAME
+				, X.INTERNAL_CONTACT_NAME
+				, X.SALARY_TYPE
+				, X.MINIMUM_SALARY
+				, X.MAXIMUM_SALARY
+				, TO_DATE(SUBSTR(X.OPEN_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS OPEN_DATE
+				, TO_DATE(SUBSTR(X.CLOSE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CLOSE_DATE
+				, X.TOTAL_VACANCIES
+				, X.PART_TIME_HOURS
+				, X.NOT_TO_EXCEED
+				, X.WHO_MAY_APPLY
+				, X.TEMPLATE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementDetail"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
+						, VACANCY_NUMBER                    NUMBER(10)      PATH 'Vacancy__Number'
+						, ANN_CONTROL_NUMBER                NUMBER(10)      PATH 'Announcement__Control__Number'
+						, ANNOUNCEMENT_STATUS               VARCHAR2(30)    PATH 'Announcement__Status'
+						, IS_RELEASED                       VARCHAR2(3)     PATH 'Announcement__Is__Released'
+						, RELEASED_DATE_STR                 VARCHAR2(50)    PATH 'Announcement__Released__Date_x002fTime'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Announcement__Last__Update__Date_x002fTime'
+						, EXTERNAL_CONTACT_NAME             VARCHAR2(100)   PATH 'Announcement__External__Contact__Name'
+						, INTERNAL_CONTACT_NAME             VARCHAR2(100)   PATH 'Announcement__Internal__Contact__Name'
+						, SALARY_TYPE                       VARCHAR2(20)    PATH 'Announcement__Salary__Type'
+						, MINIMUM_SALARY                    NUMBER(8,2)     PATH 'Announcement__Minimum__Salary'
+						, MAXIMUM_SALARY                    NUMBER(8,2)     PATH 'Announcement__Maximum__Salary'
+						, OPEN_DATE_STR                     VARCHAR2(50)    PATH 'Announcement__Open__Date'
+						, CLOSE_DATE_STR                    VARCHAR2(50)    PATH 'Announcement__Close__Date'
+						, TOTAL_VACANCIES                   VARCHAR2(4)     PATH 'Announcement__Total__Vacancies'
+						, PART_TIME_HOURS                   NUMBER(2)       PATH 'Announcement__Part__Time__Hours'
+						, NOT_TO_EXCEED                     VARCHAR2(20)    PATH 'Announcement__Not__To__Exceed'
+						, WHO_MAY_APPLY                     VARCHAR2(100)   PATH 'Announcement__Who__May__Apply'
+						, TEMPLATE                          VARCHAR2(200)   PATH 'Announcement__Template'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			, TRG.ANN_CONTROL_NUMBER            = SRC.ANN_CONTROL_NUMBER
+			, TRG.ANNOUNCEMENT_STATUS           = SRC.ANNOUNCEMENT_STATUS
+			, TRG.IS_RELEASED                   = SRC.IS_RELEASED
+			, TRG.RELEASED_DATE                 = SRC.RELEASED_DATE
+			, TRG.LAST_UPDATE_DATE              = SRC.LAST_UPDATE_DATE
+			, TRG.EXTERNAL_CONTACT_NAME         = SRC.EXTERNAL_CONTACT_NAME
+			, TRG.INTERNAL_CONTACT_NAME         = SRC.INTERNAL_CONTACT_NAME
+			, TRG.SALARY_TYPE                   = SRC.SALARY_TYPE
+			, TRG.MINIMUM_SALARY                = SRC.MINIMUM_SALARY
+			, TRG.MAXIMUM_SALARY                = SRC.MAXIMUM_SALARY
+			, TRG.OPEN_DATE                     = SRC.OPEN_DATE
+			, TRG.CLOSE_DATE                    = SRC.CLOSE_DATE
+			, TRG.TOTAL_VACANCIES               = SRC.TOTAL_VACANCIES
+			, TRG.PART_TIME_HOURS               = SRC.PART_TIME_HOURS
+			, TRG.NOT_TO_EXCEED                 = SRC.NOT_TO_EXCEED
+			, TRG.WHO_MAY_APPLY                 = SRC.WHO_MAY_APPLY
+			, TRG.TEMPLATE                      = SRC.TEMPLATE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.ANNOUNCEMENT_NUMBER
+			, TRG.VACANCY_NUMBER
+			, TRG.ANN_CONTROL_NUMBER
+			, TRG.ANNOUNCEMENT_STATUS
+			, TRG.IS_RELEASED
+			, TRG.RELEASED_DATE
+			, TRG.LAST_UPDATE_DATE
+			, TRG.EXTERNAL_CONTACT_NAME
+			, TRG.INTERNAL_CONTACT_NAME
+			, TRG.SALARY_TYPE
+			, TRG.MINIMUM_SALARY
+			, TRG.MAXIMUM_SALARY
+			, TRG.OPEN_DATE
+			, TRG.CLOSE_DATE
+			, TRG.TOTAL_VACANCIES
+			, TRG.PART_TIME_HOURS
+			, TRG.NOT_TO_EXCEED
+			, TRG.WHO_MAY_APPLY
+			, TRG.TEMPLATE
 		)
 		VALUES
 		(
-			V_INTG_TYPE
-			, V_XMLDOC
-			, SYSDATE
-			, V_USER
+			SRC.ANNOUNCEMENT_NUMBER
+			, SRC.VACANCY_NUMBER
+			, SRC.ANN_CONTROL_NUMBER
+			, SRC.ANNOUNCEMENT_STATUS
+			, SRC.IS_RELEASED
+			, SRC.RELEASED_DATE
+			, SRC.LAST_UPDATE_DATE
+			, SRC.EXTERNAL_CONTACT_NAME
+			, SRC.INTERNAL_CONTACT_NAME
+			, SRC.SALARY_TYPE
+			, SRC.MINIMUM_SALARY
+			, SRC.MAXIMUM_SALARY
+			, SRC.OPEN_DATE
+			, SRC.CLOSE_DATE
+			, SRC.TOTAL_VACANCIES
+			, SRC.PART_TIME_HOURS
+			, SRC.NOT_TO_EXCEED
+			, SRC.WHO_MAY_APPLY
+			, SRC.TEMPLATE
 		)
-		RETURNING ID INTO V_ID
 		;
-	END IF;
 
-	IF V_INTG_TYPE = 'VACANCY' THEN
-		SP_UPDATE_VACANCY_TABLE(V_ID);
-	END IF;
 
-	COMMIT;
+		--------------------------------
+		-- DSS_ANNOUNCEMENT_APPT_TYPE table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_ANNOUNCEMENT_APPT_TYPE table');
+		MERGE INTO DSS_ANNOUNCEMENT_APPT_TYPE TRG
+		USING
+		(
+			SELECT
+				X.ANNOUNCEMENT_NUMBER
+				, X.APPOINTMENT_TYPE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementAppointmentType"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
+						, APPOINTMENT_TYPE                  VARCHAR2(35)    PATH 'Announcement__Appointment__Type'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.APPOINTMENT_TYPE                = SRC.APPOINTMENT_TYPE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.ANNOUNCEMENT_NUMBER
+			, TRG.APPOINTMENT_TYPE
+		)
+		VALUES
+		(
+			SRC.ANNOUNCEMENT_NUMBER
+			, SRC.APPOINTMENT_TYPE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_ANNOUNCEMENT_WORK_SCHED table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_ANNOUNCEMENT_WORK_SCHED table');
+		MERGE INTO DSS_ANNOUNCEMENT_WORK_SCHED TRG
+		USING
+		(
+			SELECT
+				X.ANNOUNCEMENT_NUMBER
+				, X.WORK_SCHEDULE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementWorkSchedule"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
+						, WORK_SCHEDULE                     VARCHAR2(18)    PATH 'Announcement__Work__Schedule'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.WORK_SCHEDULE                   = SRC.WORK_SCHEDULE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.ANNOUNCEMENT_NUMBER
+			, TRG.WORK_SCHEDULE
+		)
+		VALUES
+		(
+			SRC.ANNOUNCEMENT_NUMBER
+			, SRC.WORK_SCHEDULE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_ANNOUNCEMENT_LOCATION table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_ANNOUNCEMENT_LOCATION table');
+		MERGE INTO DSS_ANNOUNCEMENT_LOCATION TRG
+		USING
+		(
+			SELECT
+				X.ANNOUNCEMENT_NUMBER
+				, X.LOCATION_DESCRIPTION
+				, X.LOCATION_OPENINGS
+				, X.CITY
+				, X.STATE_ABBREV
+				, X.COUNTY
+				, X.COUNTRY
+				, X.LOCATION_CODE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementLocation"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
+						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Announcement__Location__Description'
+						, LOCATION_OPENINGS                 VARCHAR2(4)     PATH 'Announcement__Location__Openings'
+						, CITY                              VARCHAR2(50)    PATH 'Announcement__Location__City'
+						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Announcement__Location__State__Abbreviation'
+						, COUNTY                            VARCHAR2(50)    PATH 'Announcement__Location__County'
+						, COUNTRY                           VARCHAR2(50)    PATH 'Announcement__Location__Country'
+						, LOCATION_CODE                     VARCHAR2(10)    PATH 'Announcement__Location__Code'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.LOCATION_DESCRIPTION            = SRC.LOCATION_DESCRIPTION
+			, TRG.LOCATION_OPENINGS             = SRC.LOCATION_OPENINGS
+			, TRG.CITY                          = SRC.CITY
+			, TRG.STATE_ABBREV                  = SRC.STATE_ABBREV
+			, TRG.COUNTY                        = SRC.COUNTY
+			, TRG.COUNTRY                       = SRC.COUNTRY
+			, TRG.LOCATION_CODE                 = SRC.LOCATION_CODE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.ANNOUNCEMENT_NUMBER
+			, TRG.LOCATION_DESCRIPTION
+			, TRG.LOCATION_OPENINGS
+			, TRG.CITY
+			, TRG.STATE_ABBREV
+			, TRG.COUNTY
+			, TRG.COUNTRY
+			, TRG.LOCATION_CODE
+		)
+		VALUES
+		(
+			SRC.ANNOUNCEMENT_NUMBER
+			, SRC.LOCATION_DESCRIPTION
+			, SRC.LOCATION_OPENINGS
+			, SRC.CITY
+			, SRC.STATE_ABBREV
+			, SRC.COUNTY
+			, SRC.COUNTRY
+			, SRC.LOCATION_CODE
+		)
+		;
+
+
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20921, 'SP_UPDATE_ANNOUNCEMENT_TABLE: Invalid ANNOUNCEMENT data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_ANNOUNCEMENT_TABLE - END ==========================');
+
 
 EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_ANNOUNCEMENT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_ANNOUNCEMENT_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_ANNOUNCEMENT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
 	WHEN OTHERS THEN
 		SP_ERROR_LOG();
-		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_INTG_DATA -------------------');
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_ANNOUNCEMENT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
 END;
 
 /
-
-
 
 
 
@@ -172,11 +391,6 @@ CREATE OR REPLACE PROCEDURE SP_UPDATE_VACANCY_TABLE
 	I_ID                IN      NUMBER
 )
 IS
-	V_JOB_REQ_ID                NUMBER(20);
-	V_JOB_REQ_NUM               NVARCHAR2(50);
-	V_CLOBVALUE                 CLOB;
-	V_VALUE                     NVARCHAR2(4000);
-	V_VALUE_LOOKUP              NVARCHAR2(2000);
 	V_REC_CNT                   NUMBER(10);
 	V_XMLDOC                    XMLTYPE;
 	V_XMLVALUE                  XMLTYPE;
@@ -732,6 +946,124 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_VACANCY_TABLE -------------------');
 		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+
+/
+
+
+
+
+
+--------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_INTG_DATA
+--------------------------------------------------------
+
+/**
+ * Stores the integration data in the integration data detail table (INTG_DATA_DTL).
+ *
+ * @param IO_ID - ID number the row of the INTG_DATA_DTL table to be inserted or updated.  It will be also used as the return object.
+ * @param I_INTG_TYPE - Integration Type to indicate the source data name, which will be
+ * 				used to distinguish the xml structure.
+ * @param I_FIELD_DATA - CLOB representation of the integration data.
+ * @param I_USER - Indicates the user who
+ *
+ * @return IO_ID - ID number of the row of the INTG_DATA_DTL table inserted or updated.
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_INTG_DATA
+(
+	IO_ID               IN OUT  NUMBER
+	, I_INTG_TYPE       IN      VARCHAR2
+	, I_FIELD_DATA      IN      CLOB
+	, I_USER            IN      VARCHAR2
+)
+IS
+	V_ID                        NUMBER(20);
+	V_INTG_TYPE                 VARCHAR2(50);
+	V_USER                      VARCHAR2(50);
+	V_REC_CNT                   NUMBER(10);
+	V_MAX_ID                    NUMBER(20);
+	V_XMLDOC                    XMLTYPE;
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    ID IS NULL?  = ' || (CASE WHEN IO_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    ID           = ' || TO_CHAR(IO_ID));
+	--DBMS_OUTPUT.PUT_LINE('    I_INTG_TYPE  = ' || I_INTG_TYPE);
+	--DBMS_OUTPUT.PUT_LINE('    I_FIELD_DATA = ' || I_FIELD_DATA);
+	--DBMS_OUTPUT.PUT_LINE('    I_USER       = ' || I_USER);
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+
+	V_ID := IO_ID;
+
+	--DBMS_OUTPUT.PUT_LINE('ID to be used is determined: ' || TO_CHAR(V_ID));
+
+
+	BEGIN
+		SELECT COUNT(*) INTO V_REC_CNT FROM INTG_DATA_DTL WHERE ID = V_ID;
+	EXCEPTION
+		WHEN NO_DATA_FOUND THEN
+			V_REC_CNT := -1;
+	END;
+
+	V_INTG_TYPE := I_INTG_TYPE;
+	V_USER := I_USER;
+
+	--DBMS_OUTPUT.PUT_LINE('Inspected existence of same record.');
+	--DBMS_OUTPUT.PUT_LINE('    V_ID       = ' || TO_CHAR(V_ID));
+	--DBMS_OUTPUT.PUT_LINE('    V_REC_CNT  = ' || TO_CHAR(V_REC_CNT));
+
+	V_XMLDOC := XMLTYPE(I_FIELD_DATA);
+
+	IF V_REC_CNT > 0 THEN
+		--DBMS_OUTPUT.PUT_LINE('Record found so that field data will be updated on the same record.');
+
+		UPDATE INTG_DATA_DTL
+		SET
+			INTG_TYPE = V_INTG_TYPE
+			, FIELD_DATA = V_XMLDOC
+			, MOD_DT = SYSDATE
+			, MOD_USR = V_USER
+		WHERE ID = V_ID
+		;
+
+	ELSE
+		--DBMS_OUTPUT.PUT_LINE('No record found so that new record will be inserted.');
+
+		INSERT INTO INTG_DATA_DTL
+		(
+			INTG_TYPE
+			, FIELD_DATA
+			, CRT_DT
+			, CRT_USR
+		)
+		VALUES
+		(
+			V_INTG_TYPE
+			, V_XMLDOC
+			, SYSDATE
+			, V_USER
+		)
+		RETURNING ID INTO V_ID
+		;
+	END IF;
+
+
+	--------------------------------------------
+	-- Parse XML data into respective tables
+	--------------------------------------------
+	IF V_INTG_TYPE = 'ANNOUNCEMENT' THEN
+		SP_UPDATE_ANNOUNCEMENT_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'VACANCY' THEN
+		SP_UPDATE_VACANCY_TABLE(V_ID);
+	END IF;
+	
+
+	COMMIT;
+
+EXCEPTION
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('Error occurred while executing SP_UPDATE_INTG_DATA -------------------');
 END;
 
 /
