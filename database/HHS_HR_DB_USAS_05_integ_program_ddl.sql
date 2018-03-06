@@ -50,7 +50,7 @@ END;
 
 /**
  * Parses Announcement XML data and stores it
- * into the operational tables for Vacancy.
+ * into the operational tables for Announcement.
  *
  * @param I_ID - Record ID
  */
@@ -367,6 +367,554 @@ EXCEPTION
 		V_ERRCODE := SQLCODE;
 		V_ERRMSG := SQLERRM;
 		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_ANNOUNCEMENT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+
+/
+
+
+
+
+--------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_APPLICATION_TABLE
+--------------------------------------------------------
+
+/**
+ * Parses Application XML data and stores it
+ * into the operational tables for Application.
+ *
+ * @param I_ID - Record ID
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_APPLICATION_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20930);
+	E_INVALID_APPLICATION_DATA     EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_APPLICATION_DATA, -20931);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_APPLICATION_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20930, 'SP_UPDATE_APPLICATION_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_APPLICATION_DETAIL table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_APPLICATION_DETAIL table');
+		MERGE INTO DSS_APPLICATION_DETAIL TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.VACANCY_NUMBER
+				, X.ANNOUNCEMENT_NUMBER
+				, X.APP_CONTROL_NUMBER
+				, X.APPLICATION_STATUS
+				, TO_DATE(SUBSTR(X.LAST_SUBMITTED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_SUBMITTED_DATE
+				, X.FIRST_NAME
+				, X.MIDDLE_NAME
+				, X.LAST_NAME
+				, X.SUFFIX
+				, X.ADDRESS_1
+				, X.ADDRESS_2
+				, X.ADDRESS_3
+				, X.POSTAL_CODE
+				, X.CITY
+				, X.STATE_ABBREV
+				, X.COUNTRY
+				, X.CITIZENSHIP
+				, X.EMAIL
+				, X.RECORD_STATUS_DESCRIPTION
+				, X.RECORD_STATUS_CODE
+				, X.CLAIMED_VET_PREF
+				, X.CLAIMED_VET_PREF_CODE
+				, X.ADJ_VET_PREF
+				, X.ADJ_VET_PREF_CODE
+				, TO_DATE(SUBSTR(X.VET_DOC_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS VET_DOC_DATE
+				, X.LOWEST_GRADE
+				, TO_DATE(SUBSTR(X.ELIGIBILITY_START_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ELIGIBILITY_START_DATE
+				, TO_DATE(SUBSTR(X.ELIGIBILITY_END_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ELIGIBILITY_END_DATE
+				, X.IS_FOLLOWUP
+				, X.IS_REVIEWED
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationDetail"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
+						, VACANCY_NUMBER                    NUMBER(10)      PATH 'Vacancy__Number'
+						, ANNOUNCEMENT_NUMBER               VARCHAR2(30)    PATH 'Announcement__Number'
+						, APP_CONTROL_NUMBER                NUMBER(10)      PATH 'Application__Control__Number'
+						, APPLICATION_STATUS                VARCHAR2(40)    PATH 'Application__Status'
+						, LAST_SUBMITTED_DATE_STR           VARCHAR2(50)    PATH 'Application__Last__Submitted__Date_x002fTime'
+						, FIRST_NAME                        VARCHAR2(50)    PATH 'Applicant__First__Name'
+						, MIDDLE_NAME                       VARCHAR2(50)    PATH 'Applicant__Middle__Name'
+						, LAST_NAME                         VARCHAR2(50)    PATH 'Applicant__Last__Name'
+						, SUFFIX                            VARCHAR2(3)     PATH 'Applicant__Suffix'
+						, ADDRESS_1                         VARCHAR2(75)    PATH 'Applicant__Address__Line__1'
+						, ADDRESS_2                         VARCHAR2(75)    PATH 'Applicant__Address__Line__2'
+						, ADDRESS_3                         VARCHAR2(75)    PATH 'Applicant__Address__Line__3'
+						, POSTAL_CODE                       VARCHAR2(10)    PATH 'Applicant__Address__Postal__Code'
+						, CITY                              VARCHAR2(50)    PATH 'Applicant__Address__City'
+						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Applicant__Address__State__Abbreviation'
+						, COUNTRY                           VARCHAR2(50)    PATH 'Applicant__Address__Country'
+						, CITIZENSHIP                       VARCHAR2(50)    PATH 'Applicant__Citizenship'
+						, EMAIL                             VARCHAR2(100)   PATH 'Applicant__Email'
+						, RECORD_STATUS_DESCRIPTION         VARCHAR2(100)   PATH 'Application__Record__Status__Description'
+						, RECORD_STATUS_CODE                VARCHAR2(2)     PATH 'Application__Record__Status__Code'
+						, CLAIMED_VET_PREF                  VARCHAR2(130)   PATH 'Application__Veterans__Preference__Claimed'
+						, CLAIMED_VET_PREF_CODE             VARCHAR2(3)     PATH 'Application__Veterans__Preference__Claimed__Code'
+						, ADJ_VET_PREF                      VARCHAR2(130)   PATH 'Application__Veterans__Preference__Adjudicated'
+						, ADJ_VET_PREF_CODE                 VARCHAR2(3)     PATH 'Application__Veterans__Preference__Adjudicated__Code'
+						, VET_DOC_DATE_STR                  VARCHAR2(50)    PATH 'Application__Veterans__Document__Date'
+						, LOWEST_GRADE                      VARCHAR2(2)     PATH 'Application__Lowest__Acceptable__Grade'
+						, ELIGIBILITY_START_DATE_STR        VARCHAR2(50)    PATH 'Application__Eligibility__Start__Date'
+						, ELIGIBILITY_END_DATE_STR          VARCHAR2(50)    PATH 'Application__Eligibility__End__Date'
+						, IS_FOLLOWUP                       VARCHAR2(3)     PATH 'Application__Is__Followup'
+						, IS_REVIEWED                       VARCHAR2(3)     PATH 'Application__Is__Reviewed'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			, TRG.ANNOUNCEMENT_NUMBER           = SRC.ANNOUNCEMENT_NUMBER
+			, TRG.APP_CONTROL_NUMBER            = SRC.APP_CONTROL_NUMBER
+			, TRG.APPLICATION_STATUS            = SRC.APPLICATION_STATUS
+			, TRG.LAST_SUBMITTED_DATE           = SRC.LAST_SUBMITTED_DATE
+			, TRG.FIRST_NAME                    = SRC.FIRST_NAME
+			, TRG.MIDDLE_NAME                   = SRC.MIDDLE_NAME
+			, TRG.LAST_NAME                     = SRC.LAST_NAME
+			, TRG.SUFFIX                        = SRC.SUFFIX
+			, TRG.ADDRESS_1                     = SRC.ADDRESS_1
+			, TRG.ADDRESS_2                     = SRC.ADDRESS_2
+			, TRG.ADDRESS_3                     = SRC.ADDRESS_3
+			, TRG.POSTAL_CODE                   = SRC.POSTAL_CODE
+			, TRG.CITY                          = SRC.CITY
+			, TRG.STATE_ABBREV                  = SRC.STATE_ABBREV
+			, TRG.COUNTRY                       = SRC.COUNTRY
+			, TRG.CITIZENSHIP                   = SRC.CITIZENSHIP
+			, TRG.EMAIL                         = SRC.EMAIL
+			, TRG.RECORD_STATUS_DESCRIPTION     = SRC.RECORD_STATUS_DESCRIPTION
+			, TRG.RECORD_STATUS_CODE            = SRC.RECORD_STATUS_CODE
+			, TRG.CLAIMED_VET_PREF              = SRC.CLAIMED_VET_PREF
+			, TRG.CLAIMED_VET_PREF_CODE         = SRC.CLAIMED_VET_PREF_CODE
+			, TRG.ADJ_VET_PREF                  = SRC.ADJ_VET_PREF
+			, TRG.ADJ_VET_PREF_CODE             = SRC.ADJ_VET_PREF_CODE
+			, TRG.VET_DOC_DATE                  = SRC.VET_DOC_DATE
+			, TRG.LOWEST_GRADE                  = SRC.LOWEST_GRADE
+			, TRG.ELIGIBILITY_START_DATE        = SRC.ELIGIBILITY_START_DATE
+			, TRG.ELIGIBILITY_END_DATE          = SRC.ELIGIBILITY_END_DATE
+			, TRG.IS_FOLLOWUP                   = SRC.IS_FOLLOWUP
+			, TRG.IS_REVIEWED                   = SRC.IS_REVIEWED
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.VACANCY_NUMBER
+			, TRG.ANNOUNCEMENT_NUMBER
+			, TRG.APP_CONTROL_NUMBER
+			, TRG.APPLICATION_STATUS
+			, TRG.LAST_SUBMITTED_DATE
+			, TRG.FIRST_NAME
+			, TRG.MIDDLE_NAME
+			, TRG.LAST_NAME
+			, TRG.SUFFIX
+			, TRG.ADDRESS_1
+			, TRG.ADDRESS_2
+			, TRG.ADDRESS_3
+			, TRG.POSTAL_CODE
+			, TRG.CITY
+			, TRG.STATE_ABBREV
+			, TRG.COUNTRY
+			, TRG.CITIZENSHIP
+			, TRG.EMAIL
+			, TRG.RECORD_STATUS_DESCRIPTION
+			, TRG.RECORD_STATUS_CODE
+			, TRG.CLAIMED_VET_PREF
+			, TRG.CLAIMED_VET_PREF_CODE
+			, TRG.ADJ_VET_PREF
+			, TRG.ADJ_VET_PREF_CODE
+			, TRG.VET_DOC_DATE
+			, TRG.LOWEST_GRADE
+			, TRG.ELIGIBILITY_START_DATE
+			, TRG.ELIGIBILITY_END_DATE
+			, TRG.IS_FOLLOWUP
+			, TRG.IS_REVIEWED
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.VACANCY_NUMBER
+			, SRC.ANNOUNCEMENT_NUMBER
+			, SRC.APP_CONTROL_NUMBER
+			, SRC.APPLICATION_STATUS
+			, SRC.LAST_SUBMITTED_DATE
+			, SRC.FIRST_NAME
+			, SRC.MIDDLE_NAME
+			, SRC.LAST_NAME
+			, SRC.SUFFIX
+			, SRC.ADDRESS_1
+			, SRC.ADDRESS_2
+			, SRC.ADDRESS_3
+			, SRC.POSTAL_CODE
+			, SRC.CITY
+			, SRC.STATE_ABBREV
+			, SRC.COUNTRY
+			, SRC.CITIZENSHIP
+			, SRC.EMAIL
+			, SRC.RECORD_STATUS_DESCRIPTION
+			, SRC.RECORD_STATUS_CODE
+			, SRC.CLAIMED_VET_PREF
+			, SRC.CLAIMED_VET_PREF_CODE
+			, SRC.ADJ_VET_PREF
+			, SRC.ADJ_VET_PREF_CODE
+			, SRC.VET_DOC_DATE
+			, SRC.LOWEST_GRADE
+			, SRC.ELIGIBILITY_START_DATE
+			, SRC.ELIGIBILITY_END_DATE
+			, SRC.IS_FOLLOWUP
+			, SRC.IS_REVIEWED
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_APPLICATION_DOCUMENT table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_APPLICATION_DOCUMENT table');
+		MERGE INTO DSS_APPLICATION_DOCUMENT TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.DOC_NAME
+				, X.DOC_TYPE
+				, TO_DATE(SUBSTR(X.DOC_PROCESSED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS DOC_PROCESSED_DATE
+				, TO_DATE(SUBSTR(X.APP_RETREIVED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS APP_RETREIVED_DATE
+				, X.DOC_HM_VIEWABLE
+				, X.DOC_NH_VIEWABLE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationDocuments"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
+						, DOC_NAME                          VARCHAR2(100)   PATH 'Application__Document__Name'
+						, DOC_TYPE                          VARCHAR2(50)    PATH 'Application__Document__Type'
+						, DOC_PROCESSED_DATE_STR            VARCHAR2(50)    PATH 'Application__Document__Processed__Date_x002fTime'
+						, APP_RETREIVED_DATE_STR            VARCHAR2(50)    PATH 'Application__Document__Retrieved__Date_x002fTime'
+						, DOC_HM_VIEWABLE                   VARCHAR2(3)     PATH 'Application__Document__HM__Viewable'
+						, DOC_NH_VIEWABLE                   VARCHAR2(3)     PATH 'Application__Document__NH__Viewable'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.DOC_NAME = TRG.DOC_NAME)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.DOC_TYPE                        = SRC.DOC_TYPE
+			, TRG.DOC_PROCESSED_DATE            = SRC.DOC_PROCESSED_DATE
+			, TRG.APP_RETREIVED_DATE            = SRC.APP_RETREIVED_DATE
+			, TRG.DOC_HM_VIEWABLE               = SRC.DOC_HM_VIEWABLE
+			, TRG.DOC_NH_VIEWABLE               = SRC.DOC_NH_VIEWABLE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.DOC_NAME
+			, TRG.DOC_TYPE
+			, TRG.DOC_PROCESSED_DATE
+			, TRG.APP_RETREIVED_DATE
+			, TRG.DOC_HM_VIEWABLE
+			, TRG.DOC_NH_VIEWABLE
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.DOC_NAME
+			, SRC.DOC_TYPE
+			, SRC.DOC_PROCESSED_DATE
+			, SRC.APP_RETREIVED_DATE
+			, SRC.DOC_HM_VIEWABLE
+			, SRC.DOC_NH_VIEWABLE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_APPLICATION_ELIGIBILITY table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_APPLICATION_ELIGIBILITY table');
+		MERGE INTO DSS_APPLICATION_ELIGIBILITY TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.ELIGIBILITY
+				, X.ELIGIBILITY_ADJ
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationEligibility"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
+						, ELIGIBILITY                       VARCHAR2(100)   PATH 'Application__Eligibility'
+						, ELIGIBILITY_ADJ                   VARCHAR2(10)    PATH 'Application__Eligibility__Adjudication'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.ELIGIBILITY = TRG.ELIGIBILITY)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.ELIGIBILITY_ADJ                 = SRC.ELIGIBILITY_ADJ
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.ELIGIBILITY
+			, TRG.ELIGIBILITY_ADJ
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.ELIGIBILITY
+			, SRC.ELIGIBILITY_ADJ
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_APPLICATION_LOCATION table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_APPLICATION_LOCATION table');
+		MERGE INTO DSS_APPLICATION_LOCATION TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.LOCATION_DESCRIPTION
+				, X.CITY
+				, X.STATE_ABBREV
+				, X.COUNTY
+				, X.COUNTRY
+				, X.LOCATION_CODE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationLocation"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
+						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Application__Location__Description'
+						, CITY                              VARCHAR2(50)    PATH 'Application__Location__City'
+						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Application__Location__State__Abbreviation'
+						, COUNTY                            VARCHAR2(50)    PATH 'Application__Location__County'
+						, COUNTRY                           VARCHAR2(50)    PATH 'Application__Location__Country'
+						, LOCATION_CODE                     VARCHAR2(10)    PATH 'Application__Location__Code'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.LOCATION_DESCRIPTION            = SRC.LOCATION_DESCRIPTION
+			, TRG.CITY                          = SRC.CITY
+			, TRG.STATE_ABBREV                  = SRC.STATE_ABBREV
+			, TRG.COUNTY                        = SRC.COUNTY
+			, TRG.COUNTRY                       = SRC.COUNTRY
+			, TRG.LOCATION_CODE                 = SRC.LOCATION_CODE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.LOCATION_DESCRIPTION
+			, TRG.CITY
+			, TRG.STATE_ABBREV
+			, TRG.COUNTY
+			, TRG.COUNTRY
+			, TRG.LOCATION_CODE
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.LOCATION_DESCRIPTION
+			, SRC.CITY
+			, SRC.STATE_ABBREV
+			, SRC.COUNTY
+			, SRC.COUNTRY
+			, SRC.LOCATION_CODE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_APPLICANT_PHONE table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_APPLICANT_PHONE table');
+		MERGE INTO DSS_APPLICANT_PHONE TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.PHONE_TYPE
+				, X.PHONE_NUMBER
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationPhone"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
+						, PHONE_TYPE                        VARCHAR2(8)     PATH 'Applicant__Phone__Type'
+						, PHONE_NUMBER                      VARCHAR2(30)    PATH 'Applicant__Phone__Number'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.PHONE_TYPE = TRG.PHONE_TYPE)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.PHONE_NUMBER                    = SRC.PHONE_NUMBER
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.PHONE_TYPE
+			, TRG.PHONE_NUMBER
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.PHONE_TYPE
+			, SRC.PHONE_NUMBER
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_APPLICATION_RATING table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_APPLICATION_RATING table');
+		MERGE INTO DSS_APPLICATION_RATING TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.SERIES
+				, X.GRADE
+				, X.SPECIALTY
+				, X.RATING_MSG_CODE
+				, X.DISPLAY_RATING
+				, X.FINAL_RATING
+				, X.AUGMENTED_RATING
+				, TO_DATE(SUBSTR(X.RATING_CREATION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS RATING_CREATION_DATE
+				, X.RATING_AVAIL_STATUS
+				, X.RATING_CATEGORY_LBL
+				, X.IS_OVERRIDE
+				, TO_DATE(SUBSTR(X.RATING_MODIFIED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS RATING_MODIFIED_DATE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationRating"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
+						, SERIES                            VARCHAR2(4)     PATH 'Application__Series'
+						, GRADE                             VARCHAR2(2)     PATH 'Application__Grade'
+						, SPECIALTY                         VARCHAR2(100)   PATH 'Application__Specialty'
+						, RATING_MSG_CODE                   VARCHAR2(4)     PATH 'Application__Rating__Notification__Message__Code'
+						, DISPLAY_RATING                    VARCHAR2(10)    PATH 'Application__Display__Rating'
+						, FINAL_RATING                      NUMBER(7,4)     PATH 'Application__Final__Rating'
+						, AUGMENTED_RATING                  NUMBER(7,4)     PATH 'Application__Augmented__Rating'
+						, RATING_CREATION_DATE_STR          VARCHAR2(50)    PATH 'Application__Rating__Creation__Date_x002fTime'
+						, RATING_AVAIL_STATUS               VARCHAR2(20)    PATH 'Application__Rating__Availability__Status'
+						, RATING_CATEGORY_LBL               VARCHAR2(20)    PATH 'Application__Rating__Category__Label'
+						, IS_OVERRIDE                       VARCHAR2(3)     PATH 'Application__Rating__Is__Override'
+						, RATING_MODIFIED_DATE_STR          VARCHAR2(50)    PATH 'Application__Rating__Modified__Date_x002fTime'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.SERIES                          = SRC.SERIES
+			, TRG.GRADE                         = SRC.GRADE
+			, TRG.SPECIALTY                     = SRC.SPECIALTY
+			, TRG.RATING_MSG_CODE               = SRC.RATING_MSG_CODE
+			, TRG.DISPLAY_RATING                = SRC.DISPLAY_RATING
+			, TRG.FINAL_RATING                  = SRC.FINAL_RATING
+			, TRG.AUGMENTED_RATING              = SRC.AUGMENTED_RATING
+			, TRG.RATING_CREATION_DATE          = SRC.RATING_CREATION_DATE
+			, TRG.RATING_AVAIL_STATUS           = SRC.RATING_AVAIL_STATUS
+			, TRG.RATING_CATEGORY_LBL           = SRC.RATING_CATEGORY_LBL
+			, TRG.IS_OVERRIDE                   = SRC.IS_OVERRIDE
+			, TRG.RATING_MODIFIED_DATE          = SRC.RATING_MODIFIED_DATE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.SERIES
+			, TRG.GRADE
+			, TRG.SPECIALTY
+			, TRG.RATING_MSG_CODE
+			, TRG.DISPLAY_RATING
+			, TRG.FINAL_RATING
+			, TRG.AUGMENTED_RATING
+			, TRG.RATING_CREATION_DATE
+			, TRG.RATING_AVAIL_STATUS
+			, TRG.RATING_CATEGORY_LBL
+			, TRG.IS_OVERRIDE
+			, TRG.RATING_MODIFIED_DATE
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.SERIES
+			, SRC.GRADE
+			, SRC.SPECIALTY
+			, SRC.RATING_MSG_CODE
+			, SRC.DISPLAY_RATING
+			, SRC.FINAL_RATING
+			, SRC.AUGMENTED_RATING
+			, SRC.RATING_CREATION_DATE
+			, SRC.RATING_AVAIL_STATUS
+			, SRC.RATING_CATEGORY_LBL
+			, SRC.IS_OVERRIDE
+			, SRC.RATING_MODIFIED_DATE
+		)
+		;
+
+
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20931, 'SP_UPDATE_APPLICATION_TABLE: Invalid APPLICATION data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_APPLICATION_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_APPLICATION_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_APPLICATION_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_APPLICATION_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_APPLICATION_TABLE -------------------');
 		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
 END;
@@ -1053,6 +1601,8 @@ BEGIN
 	--------------------------------------------
 	IF V_INTG_TYPE = 'ANNOUNCEMENT' THEN
 		SP_UPDATE_ANNOUNCEMENT_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'APPLICATION' THEN
+		SP_UPDATE_APPLICATION_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'VACANCY' THEN
 		SP_UPDATE_VACANCY_TABLE(V_ID);
 	END IF;
