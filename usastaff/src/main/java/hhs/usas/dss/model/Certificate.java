@@ -5,7 +5,7 @@ public class Certificate extends Report {
 	public Certificate() {
 		super();
 		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Certificate Data Self Service']");
-		this.setFileName("CertificateDSS");
+		this.setIntgType("CERTIFICATE");
 		this.setParmNum(2);
 		this.setSvpName("parm_StaffingDateType");
 		this.setSvpUseval("CertificateLastUpdateDate");

@@ -5,7 +5,7 @@ public class Announcement extends Report {
 	public Announcement() {
 		super();
 		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Announcement Data Self Service']");
-		this.setFileName("AnnouncementDSS");
+		this.setIntgType("ANNOUNCEMENT");
 		this.setParmNum(2);
 		this.setSvpName("parm_StaffingDateType");
 		this.setSvpUseval("Announcement Last Update");

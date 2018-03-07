@@ -18,11 +18,11 @@ public class Report {
 	private static String rvpEndDisplay;
 	
 	//File Name for Saving
-	private static String fileName;
+	private static String intgType;
 	
 	//Number of Prompts
 	private static int parmNum;
-
+	
 	public static String getSearchPath() {
 		return searchPath;
 	}
@@ -95,12 +95,12 @@ public class Report {
 		Report.rvpEndDisplay = rvpEndDisplay;
 	}
 
-	public static String getFileName() {
-		return fileName;
+	public static String getIntgType() {
+		return intgType;
 	}
 
-	public static void setFileName(String fileName) {
-		Report.fileName = fileName;
+	public static void setIntgType(String intgType) {
+		Report.intgType = intgType;
 	}
 
 	public static int getParmNum() {
@@ -113,6 +113,7 @@ public class Report {
 
 	public Report() {
 		super();
-	}	
+	}
+	
 	
 }

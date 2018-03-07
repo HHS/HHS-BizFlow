@@ -1,6 +1,5 @@
 package hhs.usas.dss;
 
-import java.io.FileOutputStream;
 import java.net.URL;
 
 import org.apache.axis.message.SOAPHeaderElement;
@@ -17,10 +16,10 @@ public class ReportGeneration {
 	
 	private static final Logger log = LoggerFactory.getLogger(ReportGeneration.class);
 			
-	public static void generateReport(Report report) throws Exception{
+	public static String generateReport(Report report) throws Exception{
 		
 		Credentials cred = new Credentials();
-		
+		String reportData = null;
 		try {
 			Authentication auth = new Authentication();
 			Prompts p = new Prompts();
@@ -43,10 +42,10 @@ public class ReportGeneration {
 				prompts[1] = p.buildRangeValuePrompt(report.getRvpName(), report.getRvpStartUseval(),report.getRvpEndUseval(), report.getRvpStartDisplay(), report.getRvpEndDisplay());
 			}
 
-			String reportData = auth.getReportData(rdsservice, report.getSearchPath(), cred.getFORMAT(), prompts);
+			reportData = auth.getReportData(rdsservice, report.getSearchPath(), cred.getFORMAT(), prompts);
 			auth.logoff(rdsservice, headers, cred.getCOGNOSURL());
 					
-			try
+/*			try
 			{
 				@SuppressWarnings("resource")
 				FileOutputStream outputFile=new FileOutputStream("reports/"+ report.getFileName() +".xml"); 
@@ -56,11 +55,12 @@ public class ReportGeneration {
 			catch(Exception e)
 			{
 				log.info(e.getMessage() + "::" + e.getCause());
-			}
+			}*/
+
 		} catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 		}
-		
+		return reportData;
 	}
 
 }
