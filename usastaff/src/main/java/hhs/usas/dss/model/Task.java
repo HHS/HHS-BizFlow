@@ -5,7 +5,7 @@ public class Task extends Report{
 	public Task() {
 		super();
 		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Task Data Self Service']");
-		this.setFileName("TaskDSS");
+		this.setIntgType("TASK");
 		this.setParmNum(1);
 		this.setRvpName("parm_StaffingDateRange");
 		this.setRvpStartUseval("2018-01-01T00:00:00.000");

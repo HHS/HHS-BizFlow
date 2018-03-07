@@ -5,7 +5,7 @@ public class NewHire extends Report {
 	public NewHire() {
 		super();
 		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='New Hire Data Self Service']");
-		this.setFileName("NewHireDSS");
+		this.setIntgType("NEWHIRE");
 		this.setParmNum(1);
 		this.setRvpName("parm_StaffingDateRange");
 		this.setRvpStartUseval("2018-01-01T00:00:00.000");

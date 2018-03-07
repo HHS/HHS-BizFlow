@@ -5,7 +5,7 @@ public class Application extends Report {
 	public Application() {
 		super();
 		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Application Data Self Service']");
-		this.setFileName("ApplicationDSS");
+		this.setIntgType("APPLICATION");
 		this.setParmNum(2);
 		this.setSvpName("parm_StaffingDateType");
 		this.setSvpUseval("ApplicationLastUpdateDate");

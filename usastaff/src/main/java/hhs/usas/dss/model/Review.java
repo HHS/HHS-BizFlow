@@ -5,7 +5,7 @@ public class Review extends Report {
 	public Review() {
 		super();
 		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Review Data Self Service']");
-		this.setFileName("ReviewDSS");
+		this.setIntgType("REVIEW");
 		this.setParmNum(1);
 		this.setRvpName("parm_StaffingDateRange");
 		this.setRvpStartUseval("2018-01-01T00:00:00.000");
