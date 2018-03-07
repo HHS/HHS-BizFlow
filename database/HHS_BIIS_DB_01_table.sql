@@ -1,5 +1,34 @@
 
 
+------------------------------------
+-- Backout statement
+------------------------------------
+/*
+
+DROP TABLE HISTDBA.CYBERSECURITY_CD_TBL;
+DROP TABLE HISTDBA.DES_BIIS_PERSON_MV;
+DROP TABLE HISTDBA.DUTY_STATION;
+DROP TABLE HISTDBA.EHRP_APPT_TYPE_CD_TBL;
+DROP TABLE HISTDBA.LEGAL_AUTHORITY;
+DROP TABLE HISTDBA.MD715_SERIES;
+DROP TABLE HISTDBA.NATURE_OF_ACTION;
+DROP TABLE HISTDBA.SAC_HIST_EXTENDED;
+
+*/
+
+
+
+------------------------------------
+--DDL for table CYBERSECURITY_CD_TBL
+------------------------------------
+CREATE TABLE HISTDBA.CYBERSECURITY_CD_TBL
+(
+	CYBERSECURITY_CD                VARCHAR2(2)
+	, DESCR                         VARCHAR2(200)
+);
+
+
+
 
 ------------------------------------
 --DDL for table DES_BIIS_PERSON_MV
@@ -43,6 +72,18 @@ CREATE TABLE HISTDBA.DUTY_STATION
 
 
 ------------------------------------
+--DDL for table EHRP_APPT_TYPE_CD_TBL
+------------------------------------
+CREATE TABLE HISTDBA.EHRP_APPT_TYPE_CD_TBL
+(
+	APPT_TYPE_CD                    VARCHAR2(15)
+	, DESCR                         VARCHAR2(80)
+);
+
+
+
+
+------------------------------------
 --DDL for table LEGAL_AUTHORITY
 ------------------------------------
 CREATE TABLE HISTDBA.LEGAL_AUTHORITY
@@ -52,6 +93,19 @@ CREATE TABLE HISTDBA.LEGAL_AUTHORITY
 	, STATUS                        VARCHAR2(25)
 	, EFFECTIVE_DATE                DATE
 	, AS_OF_DATE                    DATE
+);
+
+
+
+
+------------------------------------
+--DDL for table MD715_SERIES
+------------------------------------
+-- occupation codes - generic OPM descriptions
+CREATE TABLE HISTDBA.MD715_SERIES
+(
+	SERIES                          VARCHAR2(4)     NOT NULL
+	, SERIES_DESCR                  VARCHAR2(80)
 );
 
 
@@ -87,19 +141,6 @@ CREATE TABLE HISTDBA.SAC_HIST_EXTENDED
 	, LAST_UPDATE_DATE              DATE
 	, EEOC_OPDIV                    VARCHAR2(20)
 	, ARCHIVE_IND                   VARCHAR2(1)
-);
-
-
-
-
-------------------------------------
---DDL for table MD715_SERIES
-------------------------------------
--- occupation codes - generic OPM descriptions
-CREATE TABLE HISTDBA.MD715_SERIES
-(
-	SERIES                          VARCHAR2(4)     NOT NULL
-	, SERIES_DESCR                  VARCHAR2(80)
 );
 
 
