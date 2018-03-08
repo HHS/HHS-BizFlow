@@ -1,10 +1,22 @@
 package hhs.usas.dss;
 
+import java.io.FileOutputStream;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.sql.Types;
+
+import javax.sql.DataSource;
 
 import org.apache.axis.message.SOAPHeaderElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.support.SqlLobValue;
+import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.springframework.stereotype.Component;
 
 import com.cognos.developer.schemas.bibus._3.ReportDataServiceLocator;
 import com.cognos.developer.schemas.bibus._3.ReportDataServicePort;
@@ -15,7 +27,7 @@ import hhs.usas.dss.model.Report;
 public class ReportGeneration {
 	
 	private static final Logger log = LoggerFactory.getLogger(ReportGeneration.class);
-			
+				
 	public static String generateReport(Report report) throws Exception{
 		
 		Credentials cred = new Credentials();
@@ -43,24 +55,43 @@ public class ReportGeneration {
 			}
 
 			reportData = auth.getReportData(rdsservice, report.getSearchPath(), cred.getFORMAT(), prompts);
-			auth.logoff(rdsservice, headers, cred.getCOGNOSURL());
-					
-/*			try
-			{
-				@SuppressWarnings("resource")
-				FileOutputStream outputFile=new FileOutputStream("reports/"+ report.getFileName() +".xml"); 
-				outputFile.write(reportData.getBytes());
-				log.info("The report output is saved in " + report.getFileName() + ".xml file.");
-			}
-			catch(Exception e)
-			{
-				log.info(e.getMessage() + "::" + e.getCause());
-			}*/
+			auth.logoff(rdsservice, headers, cred.getCOGNOSURL());					
 
 		} catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 		}
 		return reportData;
+	}
+		
+	public static void saveReportFile(Report report, String reportXml) throws Exception{
+		try
+		{
+			@SuppressWarnings("resource")
+			FileOutputStream outputFile=new FileOutputStream("reports/"+ report.getFileName() + "_" + System.currentTimeMillis() +".xml"); 
+			outputFile.write(reportXml.getBytes());
+			log.info("The report output is saved in " + report.getFileName() + System.currentTimeMillis() +".xml file.");
+		}
+		catch(Exception e)
+		{
+			log.info(e.getMessage() + "::" + e.getCause());
+		}				
+	}
+	
+	public static void insertReporttoDB(DataSource targetDataSource, Report report, String reportXml) throws Exception{
+		
+		JdbcTemplate template = new JdbcTemplate(targetDataSource);
+		
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(template)
+				.withSchemaName("HHS_HR")
+				.withProcedureName("SP_UPDATE_INTG_DATA");
+
+		MapSqlParameterSource in = new MapSqlParameterSource();
+		in.addValue("IO_ID", null);
+		in.addValue("I_INTG_TYPE", report.getIntgType());
+		in.addValue("I_FIELD_DATA", new SqlLobValue(reportXml, new DefaultLobHandler()), Types.CLOB);
+		in.addValue("I_USER", "HHS_HR");
+		
+		simpleJdbcCall.execute(in);		
 	}
 
 }

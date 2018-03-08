@@ -18,10 +18,19 @@ public class Report {
 	private static String rvpEndDisplay;
 	
 	//File Name for Saving
+	private static String fileName;
+	
+	//Intg Type for inserting into intg_data_dtl table
 	private static String intgType;
 	
 	//Number of Prompts
 	private static int parmNum;
+	
+	//Number of times to pull the report
+	private static int rptIteration;
+	
+	//the number of days to pull back for each report iteration
+	private static int dateRange;
 	
 	public static String getSearchPath() {
 		return searchPath;
@@ -95,6 +104,14 @@ public class Report {
 		Report.rvpEndDisplay = rvpEndDisplay;
 	}
 
+	public static String getFileName() {
+		return fileName;
+	}
+
+	public static void setFileName(String fileName) {
+		Report.fileName = fileName;
+	}
+
 	public static String getIntgType() {
 		return intgType;
 	}
@@ -109,6 +126,22 @@ public class Report {
 
 	public static void setParmNum(int parmNum) {
 		Report.parmNum = parmNum;
+	}
+	
+	public static int getRptIteration() {
+		return rptIteration;
+	}
+
+	public static void setRptIteration(int rptIteration) {
+		Report.rptIteration = rptIteration;
+	}
+
+	public static int getDateRange() {
+		return dateRange;
+	}
+
+	public static void setDateRange(int dateRange) {
+		Report.dateRange = dateRange;
 	}
 
 	public Report() {

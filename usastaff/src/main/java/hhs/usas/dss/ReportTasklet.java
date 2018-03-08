@@ -1,8 +1,6 @@
 package hhs.usas.dss;
 
-import java.sql.Clob;
-import java.sql.Types;
-import java.util.Map;
+import java.util.Date;
 
 import javax.sql.DataSource;
 
@@ -14,27 +12,22 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.core.support.SqlLobValue;
-import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.stereotype.Component;
 
 import hhs.usas.dss.ReportGeneration;
+import hhs.usas.dss.DateRange;
 import hhs.usas.dss.model.Announcement;
 import hhs.usas.dss.model.Application;
 import hhs.usas.dss.model.Certificate;
 import hhs.usas.dss.model.NewHire;
+import hhs.usas.dss.model.Report;
 import hhs.usas.dss.model.Request;
 import hhs.usas.dss.model.Review;
 import hhs.usas.dss.model.Task;
 import hhs.usas.dss.model.Vacancy;
 
 @Component
-public class ReportTasklet implements Tasklet{
+public class ReportTasklet extends Report implements Tasklet {
 
 	private static final Logger log = LoggerFactory.getLogger(ReportTasklet.class);
 
@@ -46,54 +39,132 @@ public class ReportTasklet implements Tasklet{
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
 		String reportXml;
-		
-		try {			
-		
-/*			//Retrieve Announcement DSS Report
+		Date currentDate;			
+				
+		try {
+
+			currentDate = new Date();
+
+			//Retrieve Announcement DSS Report
 			Announcement ann = new Announcement();
-			ReportGeneration.generateReport(ann);
-			
+			for(int i=0; i< ann.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, ann.getDateRange());
+				ann.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				ann.setRvpStartUseval(DateRange.getStartUseVal());
+				ann.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				ann.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(ann);
+				ReportGeneration.saveReportFile(ann, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, ann, reportXml);
+			}		
+		
+			currentDate = new Date();
+
 			//Retrieve Application DSS Report
 			Application app = new Application();
-			ReportGeneration.generateReport(app);
+			for(int i=0; i< app.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, app.getDateRange());
+				app.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				app.setRvpStartUseval(DateRange.getStartUseVal());
+				app.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				app.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(app);
+				ReportGeneration.saveReportFile(app, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, app, reportXml);
+			}	
+			
+/*			currentDate = new Date();
 			
 			//Retrieve Certificate DSS Report
 			Certificate cert = new Certificate();
-			ReportGeneration.generateReport(cert);
+			for(int i=0; i< cert.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, cert.getDateRange());
+				cert.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				cert.setRvpStartUseval(DateRange.getStartUseVal());
+				cert.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				cert.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(cert);
+				ReportGeneration.saveReportFile(cert, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, cert, reportXml);
+			}				
 			
+			currentDate = new Date();
+
 			//Retrieve New Hire DSS Report
 			NewHire newHire = new NewHire();
-			ReportGeneration.generateReport(newHire);
+			for(int i=0; i< newHire.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, newHire.getDateRange());
+				newHire.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				newHire.setRvpStartUseval(DateRange.getStartUseVal());
+				newHire.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				newHire.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(newHire);
+				ReportGeneration.saveReportFile(newHire, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, newHire, reportXml);
+			}	
 			
+			currentDate = new Date();
+
 			//Retrieve Request DSS Report
 			Request request = new Request();
-			ReportGeneration.generateReport(request);
+			for(int i=0; i< request.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, request.getDateRange());
+				request.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				request.setRvpStartUseval(DateRange.getStartUseVal());
+				request.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				request.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(request);
+				ReportGeneration.saveReportFile(request, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, request, reportXml);
+			}				
 			
+			currentDate = new Date();
+
 			//Retrieve Review DSS Report
 			Review review = new Review();
-			ReportGeneration.generateReport(review);
+			for(int i=0; i< review.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, review.getDateRange());
+				review.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				review.setRvpStartUseval(DateRange.getStartUseVal());
+				review.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				review.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(review);
+				ReportGeneration.saveReportFile(review, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, review, reportXml);
+			}				
+			
+			currentDate = new Date();
 			
 			//Retrieve Task DSS Report
 			Task task = new Task();
-			ReportGeneration.generateReport(task);*/
-			
+			for(int i=0; i< task.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, task.getDateRange());
+				task.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				task.setRvpStartUseval(DateRange.getStartUseVal());
+				task.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				task.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(task);
+				ReportGeneration.saveReportFile(task, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, task, reportXml);
+*/
+			currentDate = new Date();
+
 			//Retrieve Vacancy DSS Report
 			Vacancy vacancy = new Vacancy();
-			reportXml = ReportGeneration.generateReport(vacancy);
-	
-			JdbcTemplate template = new JdbcTemplate(targetDataSource);
+			for(int i=0; i< vacancy.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, vacancy.getDateRange());
+				vacancy.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				vacancy.setRvpStartUseval(DateRange.getStartUseVal());
+				vacancy.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				vacancy.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(vacancy);
+				ReportGeneration.saveReportFile(vacancy, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, vacancy, reportXml);
+			}
 			
-			SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(template)
-					.withSchemaName("HHS_HR")
-					.withProcedureName("SP_UPDATE_INTG_DATA");
-
-			MapSqlParameterSource in = new MapSqlParameterSource();
-			in.addValue("IO_ID", null);
-			in.addValue("I_INTG_TYPE", vacancy.getIntgType());
-			in.addValue("I_FIELD_DATA", new SqlLobValue(reportXml, new DefaultLobHandler()), Types.CLOB);
-			in.addValue("I_USER", "HHS_HR");
-			
-			simpleJdbcCall.execute(in);
+			//reportXml = ReportGeneration.generateReport(this);
+			//ReportGeneration.saveReportFile(this, reportXml);
+			//ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
 		
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
