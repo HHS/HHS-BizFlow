@@ -925,6 +925,336 @@ END;
 
 
 --------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_CERTIFICATE_TABLE
+--------------------------------------------------------
+
+/**
+ * Parses Certificate XML data and stores it
+ * into the operational tables for Certificate.
+ *
+ * @param I_ID - Record ID
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_CERTIFICATE_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20940);
+	E_INVALID_CERTIFICATE_DATA     EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_CERTIFICATE_DATA, -20941);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CERTIFICATE_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20940, 'SP_UPDATE_CERTIFICATE_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+
+
+		--------------------------------
+		-- DSS_CERTIFICATE table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_CERTIFICATE table');
+		MERGE INTO DSS_CERTIFICATE TRG
+		USING
+		(
+			SELECT
+				X.CERTIFICATE_NUMBER
+				, X.AUDITED
+				, X.AUDITOR
+				, X.CUTOFF_NUMBER
+				, TO_DATE(SUBSTR(X.FINAL_AUDIT_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS FINAL_AUDIT_DATE
+				, TO_DATE(SUBSTR(X.INITIAL_AUDIT_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS INITIAL_AUDIT_DATE
+				, TO_DATE(SUBSTR(X.ISSUE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ISSUE_DATE
+				, X.ISSUER
+				, TO_DATE(SUBSTR(X.LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_UPDATE_DATE
+				, X.CERT_ORDER
+				, X.PRIORITY_ORDER
+				, X.QUALIFIED_SCORE
+				, X.RANK_BY_DESCRIPTION
+				, X.REFER_METHOD
+				, X.TIE_BREAKER
+				, X.CERTIFICATE_TYPE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "Lst_Certificate"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						CERTIFICATE_NUMBER                  VARCHAR2(20)    PATH 'Certificate__Number'
+	                    , AUDITED                           VARCHAR2(3)     PATH 'Certificate__Audited'
+						, AUDITOR                           VARCHAR2(100)   PATH 'Certificate__Auditor'
+						, CUTOFF_NUMBER                     NUMBER(4)       PATH 'Certificate__Cutoff__Number'
+						, FINAL_AUDIT_DATE_STR              VARCHAR2(50)    PATH 'Certificate__Final__Audit__Complete__Date'
+						, INITIAL_AUDIT_DATE_STR            VARCHAR2(50)    PATH 'Certificate__Initial__Audit__Complete__Date'
+						, ISSUE_DATE_STR                    VARCHAR2(50)    PATH 'Certificate__Issue__Date'
+						, ISSUER                            VARCHAR2(100)   PATH 'Certificate__Issuer'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Certificate__Last__Updated__Date_x002fTime'
+						, CERT_ORDER                        VARCHAR2(10)    PATH 'Certificate__Order'
+						, PRIORITY_ORDER                    VARCHAR2(40)    PATH 'Certificate__Priority__Order'
+						, QUALIFIED_SCORE                   NUMBER(3)       PATH 'Certificate__Qualified__Score'
+						, RANK_BY_DESCRIPTION               VARCHAR2(40)    PATH 'Certificate__Rank__By__Description'
+						, REFER_METHOD                      VARCHAR2(20)    PATH 'Certificate__Refer__Method'
+						, TIE_BREAKER                       VARCHAR2(20)    PATH 'Certificate__Tie__Breaker'
+						, CERTIFICATE_TYPE                  VARCHAR2(30)    PATH 'Certificate__Type'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.CERTIFICATE_NUMBER = TRG.CERTIFICATE_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.AUDITED                         = SRC.AUDITED
+			, TRG.AUDITOR                       = SRC.AUDITOR
+			, TRG.CUTOFF_NUMBER                 = SRC.CUTOFF_NUMBER
+			, TRG.FINAL_AUDIT_DATE              = SRC.FINAL_AUDIT_DATE
+			, TRG.INITIAL_AUDIT_DATE            = SRC.INITIAL_AUDIT_DATE
+			, TRG.ISSUE_DATE                    = SRC.ISSUE_DATE
+			, TRG.ISSUER                        = SRC.ISSUER
+			, TRG.LAST_UPDATE_DATE              = SRC.LAST_UPDATE_DATE
+			, TRG.CERT_ORDER                    = SRC.CERT_ORDER
+			, TRG.PRIORITY_ORDER                = SRC.PRIORITY_ORDER
+			, TRG.QUALIFIED_SCORE               = SRC.QUALIFIED_SCORE
+			, TRG.RANK_BY_DESCRIPTION           = SRC.RANK_BY_DESCRIPTION
+			, TRG.REFER_METHOD                  = SRC.REFER_METHOD
+			, TRG.TIE_BREAKER                   = SRC.TIE_BREAKER
+			, TRG.CERTIFICATE_TYPE              = SRC.CERTIFICATE_TYPE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.CERTIFICATE_NUMBER
+			, TRG.AUDITED
+			, TRG.AUDITOR
+			, TRG.CUTOFF_NUMBER
+			, TRG.FINAL_AUDIT_DATE
+			, TRG.INITIAL_AUDIT_DATE
+			, TRG.ISSUE_DATE
+			, TRG.ISSUER
+			, TRG.LAST_UPDATE_DATE
+			, TRG.CERT_ORDER
+			, TRG.PRIORITY_ORDER
+			, TRG.QUALIFIED_SCORE
+			, TRG.RANK_BY_DESCRIPTION
+			, TRG.REFER_METHOD
+			, TRG.TIE_BREAKER
+			, TRG.CERTIFICATE_TYPE
+		)
+		VALUES
+		(
+			SRC.CERTIFICATE_NUMBER
+			, SRC.AUDITED
+			, SRC.AUDITOR
+			, SRC.CUTOFF_NUMBER
+			, SRC.FINAL_AUDIT_DATE
+			, SRC.INITIAL_AUDIT_DATE
+			, SRC.ISSUE_DATE
+			, SRC.ISSUER
+			, SRC.LAST_UPDATE_DATE
+			, SRC.CERT_ORDER
+			, SRC.PRIORITY_ORDER
+			, SRC.QUALIFIED_SCORE
+			, SRC.RANK_BY_DESCRIPTION
+			, SRC.REFER_METHOD
+			, SRC.TIE_BREAKER
+			, SRC.CERTIFICATE_TYPE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_CERTIFICATE_APP table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_CERTIFICATE_APP table');
+		MERGE INTO DSS_CERTIFICATE_APP TRG
+		USING
+		(
+			SELECT
+				X.APPLICATION_NUMBER
+				, X.ADDED
+				, TO_DATE(SUBSTR(X.ADD_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ADD_DATE
+				, X.AUDIT_CODE
+				, TO_DATE(SUBSTR(X.AUDIT_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS AUDIT_DATE
+				, TO_DATE(SUBSTR(X.CERTIFIED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CERTIFIED_DATE
+				, X.FIRST_NAME
+				, X.MIDDLE_NAME
+				, X.LAST_NAME
+				, X.SUFFIX
+				, X.LOCATION_DESCRIPTION
+				, X.CITY
+				, X.STATE
+				, X.COUNTRY
+				, X.PD_NUMBER
+				, X.POSITION_TITLE
+				, X.SERIES
+				, X.SERIES_TITLE
+				, X.PRIORITY_DESCRIPTION
+				, X.RANK_ORDER
+				, X.RATING
+				, X.REORDERED
+				, X.RETURN_STATUS
+				, X.VET_PREF_CODE
+				, X.VET_PREF_DESCRIPTION
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "Lst_CertificateApplication"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Certificate__Application__Number'
+						, ADDED                             VARCHAR2(3)     PATH 'Certificate__Application__Added'
+						, ADD_DATE_STR                      VARCHAR2(50)    PATH 'Certificate__Application__Add__Date'
+						, AUDIT_CODE                        VARCHAR2(20)    PATH 'Certificate__Application__Audit__Code'
+						, AUDIT_DATE_STR                    VARCHAR2(50)    PATH 'Certificate__Application__Audit__Date'
+						, CERTIFIED_DATE_STR                VARCHAR2(50)    PATH 'Certificate__Application__Certified__Date'
+						, FIRST_NAME                        VARCHAR2(50)    PATH 'Certificate__Application__First__Name'
+						, MIDDLE_NAME                       VARCHAR2(50)    PATH 'Certificate__Application__Middle__Name'
+						, LAST_NAME                         VARCHAR2(50)    PATH 'Certificate__Application__Last__Name'
+						, SUFFIX                            VARCHAR2(3)     PATH 'Certificate__Application__Suffix'
+						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__Description'
+						, CITY                              VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__City'
+						, STATE                             VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__State'
+						, COUNTRY                           VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__Country'
+						, PD_NUMBER                         VARCHAR2(20)    PATH 'Certificate__Application__Hired__Position__Description__Number'
+						, POSITION_TITLE                    VARCHAR2(100)   PATH 'Certificate__Application__Hired__Position__Title'
+						, SERIES                            VARCHAR2(4)     PATH 'Certificate__Application__Hired__Series'
+						, SERIES_TITLE                      VARCHAR2(100)   PATH 'Certificate__Application__Hired__Series__Title'
+						, PRIORITY_DESCRIPTION              VARCHAR2(50)    PATH 'Certificate__Application__Priority__Description'
+						, RANK_ORDER                        NUMBER(3)       PATH 'Certificate__Application__Rank__Order'
+						, RATING                            VARCHAR2(4)     PATH 'Certificate__Application__Rating'
+						, REORDERED                         VARCHAR2(3)     PATH 'Certificate__Application__Reordered'
+						, RETURN_STATUS                     VARCHAR2(20)    PATH 'Certificate__Application__Return__Status'
+						, VET_PREF_CODE                     VARCHAR2(3)     PATH 'Certificate__Application__Veterans__Preference__Code'
+						, VET_PREF_DESCRIPTION              VARCHAR2(250)   PATH 'Certificate__Application__Veterans__Preference__Description'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.ADDED                           = SRC.ADDED
+			, TRG.ADD_DATE                      = SRC.ADD_DATE
+			, TRG.AUDIT_CODE                    = SRC.AUDIT_CODE
+			, TRG.AUDIT_DATE                    = SRC.AUDIT_DATE
+			, TRG.CERTIFIED_DATE                = SRC.CERTIFIED_DATE
+			, TRG.FIRST_NAME                    = SRC.FIRST_NAME
+			, TRG.MIDDLE_NAME                   = SRC.MIDDLE_NAME
+			, TRG.LAST_NAME                     = SRC.LAST_NAME
+			, TRG.SUFFIX                        = SRC.SUFFIX
+			, TRG.LOCATION_DESCRIPTION          = SRC.LOCATION_DESCRIPTION
+			, TRG.CITY                          = SRC.CITY
+			, TRG.STATE                         = SRC.STATE
+			, TRG.COUNTRY                       = SRC.COUNTRY
+			, TRG.PD_NUMBER                     = SRC.PD_NUMBER
+			, TRG.POSITION_TITLE                = SRC.POSITION_TITLE
+			, TRG.SERIES                        = SRC.SERIES
+			, TRG.SERIES_TITLE                  = SRC.SERIES_TITLE
+			, TRG.PRIORITY_DESCRIPTION          = SRC.PRIORITY_DESCRIPTION
+			, TRG.RANK_ORDER                    = SRC.RANK_ORDER
+			, TRG.RATING                        = SRC.RATING
+			, TRG.REORDERED                     = SRC.REORDERED
+			, TRG.RETURN_STATUS                 = SRC.RETURN_STATUS
+			, TRG.VET_PREF_CODE                 = SRC.VET_PREF_CODE
+			, TRG.VET_PREF_DESCRIPTION          = SRC.VET_PREF_DESCRIPTION
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.APPLICATION_NUMBER
+			, TRG.ADDED
+			, TRG.ADD_DATE
+			, TRG.AUDIT_CODE
+			, TRG.AUDIT_DATE
+			, TRG.CERTIFIED_DATE
+			, TRG.FIRST_NAME
+			, TRG.MIDDLE_NAME
+			, TRG.LAST_NAME
+			, TRG.SUFFIX
+			, TRG.LOCATION_DESCRIPTION
+			, TRG.CITY
+			, TRG.STATE
+			, TRG.COUNTRY
+			, TRG.PD_NUMBER
+			, TRG.POSITION_TITLE
+			, TRG.SERIES
+			, TRG.SERIES_TITLE
+			, TRG.PRIORITY_DESCRIPTION
+			, TRG.RANK_ORDER
+			, TRG.RATING
+			, TRG.REORDERED
+			, TRG.RETURN_STATUS
+			, TRG.VET_PREF_CODE
+			, TRG.VET_PREF_DESCRIPTION
+		)
+		VALUES
+		(
+			SRC.APPLICATION_NUMBER
+			, SRC.ADDED
+			, SRC.ADD_DATE
+			, SRC.AUDIT_CODE
+			, SRC.AUDIT_DATE
+			, SRC.CERTIFIED_DATE
+			, SRC.FIRST_NAME
+			, SRC.MIDDLE_NAME
+			, SRC.LAST_NAME
+			, SRC.SUFFIX
+			, SRC.LOCATION_DESCRIPTION
+			, SRC.CITY
+			, SRC.STATE
+			, SRC.COUNTRY
+			, SRC.PD_NUMBER
+			, SRC.POSITION_TITLE
+			, SRC.SERIES
+			, SRC.SERIES_TITLE
+			, SRC.PRIORITY_DESCRIPTION
+			, SRC.RANK_ORDER
+			, SRC.RATING
+			, SRC.REORDERED
+			, SRC.RETURN_STATUS
+			, SRC.VET_PREF_CODE
+			, SRC.VET_PREF_DESCRIPTION
+		)
+		;
+
+
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20941, 'SP_UPDATE_CERTIFICATE_TABLE: Invalid APPLICATION data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CERTIFICATE_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CERTIFICATE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_CERTIFICATE_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CERTIFICATE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CERTIFICATE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+
+/
+
+
+
+
+--------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_VACANCY_TABLE
 --------------------------------------------------------
 
@@ -1603,6 +1933,8 @@ BEGIN
 		SP_UPDATE_ANNOUNCEMENT_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'APPLICATION' THEN
 		SP_UPDATE_APPLICATION_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'CERTIFICATE' THEN
+		SP_UPDATE_CERTIFICATE_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'VACANCY' THEN
 		SP_UPDATE_VACANCY_TABLE(V_ID);
 	END IF;

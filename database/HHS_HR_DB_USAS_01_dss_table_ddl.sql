@@ -37,6 +37,10 @@ DROP TABLE DSS_VACANCY_APP_CNT;
 */
 
 
+
+SET DEFINE OFF;
+
+
 --==================================
 --ANNOUNCEMENT TABLES
 --==================================

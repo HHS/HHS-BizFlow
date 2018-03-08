@@ -17,6 +17,8 @@ DROP TABLE HISTDBA.SAC_HIST_EXTENDED;
 */
 
 
+SET DEFINE OFF;
+
 
 ------------------------------------
 --DDL for table CYBERSECURITY_CD_TBL
