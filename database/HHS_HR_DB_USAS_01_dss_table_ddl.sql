@@ -34,6 +34,8 @@ DROP TABLE DSS_VACANCY_SPECIALTY;
 DROP TABLE DSS_VACANCY_DOCUMENT;
 DROP TABLE DSS_VACANCY_REQUEST;
 DROP TABLE DSS_VACANCY_APP_CNT;
+DROP TABLE DSS_TIME_TO_RECRUIT;
+DROP TABLE DSS_TIME_TO_OFFER;
 */
 
 
@@ -650,4 +652,44 @@ CREATE TABLE DSS_VACANCY_APP_CNT
 );
 
 
+--==================================
+--CUSTOM REPORT TABLES
+--==================================
+------------------------------------
+--DDL for table DSS_TIME_TO_RECRUIT
+------------------------------------
+CREATE TABLE DSS_TIME_TO_RECRUIT
+(
+    STAFFING_ORGANIZATION           VARCHAR2(100),
+    STAFFING_OFFICE                 VARCHAR2(100),
+    REQUEST_CREATE_DATE             DATE,
+    REQUEST_NUMBER                  VARCHAR2(50),
+    REQUEST_STATUS                  VARCHAR2(30),
+    REQUEST_POS_DESC_TITLE          VARCHAR2(100),
+    REQUEST_DESCRIPTION             VARCHAR2(30),
+    DISPLAY_TYPE                    VARCHAR2(30),
+    CERT_ISSUE_DATE                 DATE,
+    CERT_REVIEW_SENT_DATE           DATE,
+    CERT_REVIEW_RETURNED_DATE       DATE,
+    CERT_INITIAL_AUDIT_DATE         DATE,
+    CERT_FINAL_AUDIT_DATE           DATE
+);
+
+
+------------------------------------
+--DDL for table DSS_TIME_TO_OFFER
+------------------------------------
+CREATE TABLE DSS_TIME_TO_OFFER
+(
+    STAFFING_ORGANIZATION           VARCHAR2(100),
+    STAFFING_OFFICE                 VARCHAR2(100),
+    REQUEST_CREATE_DATE             DATE,
+    REQUEST_APPROVAL_DATE           DATE,
+    REQUEST_NUMBER                  VARCHAR2(50),
+    REQUEST_STATUS                  VARCHAR2(30),
+    REQUEST_POS_DESC_TITLE          VARCHAR2(100),
+    REQUEST_DESCRIPTION             VARCHAR2(30),
+    DISPLAY_TYPE                    VARCHAR2(30),
+    SEND_OFFICIAL_OFFER_CMPLT_DATE  DATE
+);
 
