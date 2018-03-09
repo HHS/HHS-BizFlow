@@ -10,7 +10,7 @@ public class Task extends Report{
 		this.setParmNum(1);
 		this.setRvpName("parm_StaffingDateRange");
 		this.setRptIteration(3);
-		this.setDateRange(-60);		
+		this.setDateRange(-30);		
 	}
 	
 }

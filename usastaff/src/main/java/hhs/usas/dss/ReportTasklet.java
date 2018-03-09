@@ -24,6 +24,8 @@ import hhs.usas.dss.model.Report;
 import hhs.usas.dss.model.Request;
 import hhs.usas.dss.model.Review;
 import hhs.usas.dss.model.Task;
+import hhs.usas.dss.model.TimeToOffer;
+import hhs.usas.dss.model.TimeToRecruit;
 import hhs.usas.dss.model.Vacancy;
 
 @Component
@@ -73,7 +75,7 @@ public class ReportTasklet extends Report implements Tasklet {
 				ReportGeneration.insertReporttoDB(targetDataSource, app, reportXml);
 			}	
 			
-/*			currentDate = new Date();
+			currentDate = new Date();
 			
 			//Retrieve Certificate DSS Report
 			Certificate cert = new Certificate();
@@ -100,7 +102,7 @@ public class ReportTasklet extends Report implements Tasklet {
 				newHire.setRvpEndUseval(DateRange.getEndUseVal());
 				reportXml = ReportGeneration.generateReport(newHire);
 				ReportGeneration.saveReportFile(newHire, reportXml);
-				ReportGeneration.insertReporttoDB(targetDataSource, newHire, reportXml);
+				//ReportGeneration.insertReporttoDB(targetDataSource, newHire, reportXml);
 			}	
 			
 			currentDate = new Date();
@@ -115,7 +117,7 @@ public class ReportTasklet extends Report implements Tasklet {
 				request.setRvpEndUseval(DateRange.getEndUseVal());
 				reportXml = ReportGeneration.generateReport(request);
 				ReportGeneration.saveReportFile(request, reportXml);
-				ReportGeneration.insertReporttoDB(targetDataSource, request, reportXml);
+				//ReportGeneration.insertReporttoDB(targetDataSource, request, reportXml);
 			}				
 			
 			currentDate = new Date();
@@ -130,8 +132,8 @@ public class ReportTasklet extends Report implements Tasklet {
 				review.setRvpEndUseval(DateRange.getEndUseVal());
 				reportXml = ReportGeneration.generateReport(review);
 				ReportGeneration.saveReportFile(review, reportXml);
-				ReportGeneration.insertReporttoDB(targetDataSource, review, reportXml);
-			}				
+				//ReportGeneration.insertReporttoDB(targetDataSource, review, reportXml);
+			}		
 			
 			currentDate = new Date();
 			
@@ -145,8 +147,9 @@ public class ReportTasklet extends Report implements Tasklet {
 				task.setRvpEndUseval(DateRange.getEndUseVal());
 				reportXml = ReportGeneration.generateReport(task);
 				ReportGeneration.saveReportFile(task, reportXml);
-				ReportGeneration.insertReporttoDB(targetDataSource, task, reportXml);
-*/
+				//ReportGeneration.insertReporttoDB(targetDataSource, task, reportXml);
+			}
+
 			currentDate = new Date();
 
 			//Retrieve Vacancy DSS Report
@@ -159,12 +162,36 @@ public class ReportTasklet extends Report implements Tasklet {
 				vacancy.setRvpEndUseval(DateRange.getEndUseVal());
 				reportXml = ReportGeneration.generateReport(vacancy);
 				ReportGeneration.saveReportFile(vacancy, reportXml);
-				ReportGeneration.insertReporttoDB(targetDataSource, vacancy, reportXml);
+				ReportGeneration.insertReporttoDB(targetDataSource, vacancy, reportXml);			
+			}	
+				
+			currentDate = new Date();
+
+			//Retrieve TimeToRecruit Report
+			TimeToRecruit recruit = new TimeToRecruit();
+			for(int i=0; i< recruit.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, recruit.getDateRange());
+				recruit.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				recruit.setRvpStartUseval(DateRange.getStartUseVal());
+				recruit.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				recruit.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(recruit);
+				ReportGeneration.saveReportFile(recruit, reportXml);
+				//ReportGeneration.insertReporttoDB(targetDataSource, recruit, reportXml);
 			}
 			
-			//reportXml = ReportGeneration.generateReport(this);
-			//ReportGeneration.saveReportFile(this, reportXml);
-			//ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
+			//Retrieve TimeToOffer Report
+			TimeToOffer offer = new TimeToOffer();
+			for(int i=0; i< offer.getRptIteration(); i++) {
+				currentDate = DateRange.generateDateRange(currentDate, offer.getDateRange());
+				offer.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+				offer.setRvpStartUseval(DateRange.getStartUseVal());
+				offer.setRvpEndDisplay(DateRange.getEndDisplayVal());
+				offer.setRvpEndUseval(DateRange.getEndUseVal());
+				reportXml = ReportGeneration.generateReport(offer);
+				ReportGeneration.saveReportFile(offer, reportXml);
+				//ReportGeneration.insertReporttoDB(targetDataSource, offer, reportXml);
+			}
 		
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
