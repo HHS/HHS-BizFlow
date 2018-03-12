@@ -130,3 +130,14 @@ GRANT BF_DEV_ROLE TO HHS_HR;
 -- grant WORKFLOW database access role to HHSDEV database user
 
 GRANT BF_DEV_ROLE TO HHSDEV;
+
+
+
+-- create link to BIIS database
+CREATE DATABASE LINK BIIS_DBLINK
+CONNECT TO EWITSUSR IDENTIFIED BY <replace_with_password>
+USING 
+	'(DESCRIPTION =
+		(ADDRESS = (PROTOCOL = TCP)(HOST = <replace_with_db_host>)(PORT = <replace_with_db_port>))
+		(CONNECT_DATA = (SERVICE_NAME = <replace_with_service_name>))
+	)';
