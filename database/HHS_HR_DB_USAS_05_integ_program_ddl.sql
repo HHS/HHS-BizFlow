@@ -8,7 +8,6 @@ SET DEFINE OFF;
 --------------------------------------------------------
 --  DDL for Procedure SP_ERROR_LOG
 --------------------------------------------------------
-
 /**
  * Stores database errors to ERROR_LOG table to help troubleshooting.
  *
@@ -47,7 +46,6 @@ END;
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_ANNOUNCEMENT_TABLE
 --------------------------------------------------------
-
 /**
  * Parses Announcement XML data and stores it
  * into the operational tables for Announcement.
@@ -379,7 +377,6 @@ END;
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_APPLICATION_TABLE
 --------------------------------------------------------
-
 /**
  * Parses Application XML data and stores it
  * into the operational tables for Application.
@@ -927,7 +924,6 @@ END;
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_CERTIFICATE_TABLE
 --------------------------------------------------------
-
 /**
  * Parses Certificate XML data and stores it
  * into the operational tables for Certificate.
@@ -962,8 +958,6 @@ BEGIN
 	END IF;
 
 	BEGIN
-
-
 		--------------------------------
 		-- DSS_CERTIFICATE table
 		--------------------------------
@@ -1255,9 +1249,293 @@ END;
 
 
 --------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_NEWHIRE_TABLE
+--------------------------------------------------------
+/**
+ * Parses New Hire report XML data and stores it
+ * into the operational tables for New Hire.
+ *
+ * @param I_ID - Record ID
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_NEWHIRE_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20950);
+	E_INVALID_NEWHIRE_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_NEWHIRE_DATA, -20951);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_NEWHIRE_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20950, 'SP_UPDATE_NEWHIRE_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_NEW_HIRE table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_NEW_HIRE table');
+		MERGE INTO DSS_NEW_HIRE TRG
+		USING
+		(
+			SELECT
+				X.NEW_HIRE_NUMBER
+				, X.NEW_HIRE_FIRST_NAME
+				, X.NEW_HIRE_MIDDLE_NAME
+				, X.NEW_HIRE_LAST_NAME
+				, X.NEW_HIRE_SUFFIX
+				, X.NEW_HIRE_MAIDEN_NAME
+				, X.NEW_HIRE_NAME
+				, X.NEW_HIRE_EMAIL
+				, X.NEW_HIRE_ADDRESS_1
+				, X.NEW_HIRE_ADDRESS_2
+				, X.NEW_HIRE_APT
+				, X.NEW_HIRE_CITY
+				, X.NEW_HIRE_STATE
+				, X.NEW_HIRE_COUNTRY
+				, X.NEW_HIRE_POSTAL_CODE
+				, X.AGENCY
+				, X.AGENCY_ADDRESS_1
+				, X.AGENCY_ADDRESS_2
+				, X.AGENCY_ADDRESS_3
+				, X.AGENCY_CITY
+				, X.AGENCY_STATE
+				, X.AGENCY_COUNTRY
+				, X.AGENCY_POSTAL_CODE
+				, X.BRANCH
+				, X.BUREAU
+				, X.UNIT
+				, X.PD_NUMBER
+				, X.POSITION_TITLE
+				, X.PAY_PLAN
+				, X.SERIES
+				, X.GRADE
+				, X.DUTY_LOCATION
+				, X.DUTY_LOCATION_CODE
+				, TO_DATE(SUBSTR(X.PROJECTED_START_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS PROJECTED_START_DATE
+				, X.PROLONGED_START_DATE_RSN
+				, TO_DATE(SUBSTR(X.ACTUAL_START_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ACTUAL_START_DATE
+				, X.VET_PREF_STATUS
+				, TO_DATE(SUBSTR(X.LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_UPDATE_DATE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_NewHire"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						NEW_HIRE_NUMBER                     VARCHAR2(10)    PATH 'New__Hire__Number'
+						, NEW_HIRE_FIRST_NAME               VARCHAR2(50)    PATH 'New__Hire__First__Name'
+						, NEW_HIRE_MIDDLE_NAME              VARCHAR2(50)    PATH 'New__Hire__Middle__Name'
+						, NEW_HIRE_LAST_NAME                VARCHAR2(50)    PATH 'New__Hire__Last__Name'
+						, NEW_HIRE_SUFFIX                   VARCHAR2(3)     PATH 'New__Hire__Suffix'
+						, NEW_HIRE_MAIDEN_NAME              VARCHAR2(50)    PATH 'New__Hire__Maiden__Name'
+						, NEW_HIRE_NAME                     VARCHAR2(100)   PATH 'New__Hire__Name'
+						, NEW_HIRE_EMAIL                    VARCHAR2(100)   PATH 'New__Hire__Email'
+						, NEW_HIRE_ADDRESS_1                VARCHAR2(75)    PATH 'New__Hire__Address__1'
+						, NEW_HIRE_ADDRESS_2                VARCHAR2(75)    PATH 'New__Hire__Address__2'
+						, NEW_HIRE_APT                      VARCHAR2(20)    PATH 'New__Hire__Apt_x002fSuite'
+						, NEW_HIRE_CITY                     VARCHAR2(50)    PATH 'New__Hire__City'
+						, NEW_HIRE_STATE                    VARCHAR2(50)    PATH 'New__Hire__State'
+						, NEW_HIRE_COUNTRY                  VARCHAR2(50)    PATH 'New__Hire__Country'
+						, NEW_HIRE_POSTAL_CODE              VARCHAR2(10)    PATH 'New__Hire__Postal__Code'
+						, AGENCY                            VARCHAR2(100)   PATH 'New__Hire__Agency_x002fDepartment'
+						, AGENCY_ADDRESS_1                  VARCHAR2(75)    PATH 'New__Hire__Agency_x002fDepartment__Address__1'
+						, AGENCY_ADDRESS_2                  VARCHAR2(75)    PATH 'New__Hire__Agency_x002fDepartment__Address__2'
+						, AGENCY_ADDRESS_3                  VARCHAR2(75)    PATH 'New__Hire__Agency_x002fDepartment__Address__3'
+						, AGENCY_CITY                       VARCHAR2(50)    PATH 'New__Hire__Agency_x002fDepartment__Address__City'
+						, AGENCY_STATE                      VARCHAR2(50)    PATH 'New__Hire__Agency_x002fDepartment__Address__State'
+						, AGENCY_COUNTRY                    VARCHAR2(50)    PATH 'New__Hire__Agency_x002fDepartment__Address__Country'
+						, AGENCY_POSTAL_CODE                VARCHAR2(10)    PATH 'New__Hire__Agency_x002fDepartment__Address__Postal__Code'
+						, BRANCH                            VARCHAR2(100)   PATH 'New__Hire__Branch_x002fOrganization'
+						, BUREAU                            VARCHAR2(100)   PATH 'New__Hire__Bureau_x002fDivision'
+						, UNIT                              VARCHAR2(30)    PATH 'New__Hire__Activity_x002fUnit'
+						, PD_NUMBER                         VARCHAR2(50)    PATH 'New__Hire__Position__Description__Number'
+						, POSITION_TITLE                    VARCHAR2(100)   PATH 'New__Hire__Position__Title'
+						, PAY_PLAN                          VARCHAR2(2)     PATH 'New__Hire__Pay__Plan'
+						, SERIES                            VARCHAR2(4)     PATH 'New__Hire__Series'
+						, GRADE                             VARCHAR2(2)     PATH 'New__Hire__Grade'
+						, DUTY_LOCATION                     VARCHAR2(100)   PATH 'New__Hire__Duty__Location'
+						, DUTY_LOCATION_CODE                VARCHAR2(50)    PATH 'New__Hire__Duty__Location__Code'
+						, PROJECTED_START_DATE_STR          VARCHAR2(50)    PATH 'New__Hire__Projected__Start__Date'
+						, PROLONGED_START_DATE_RSN          VARCHAR2(50)    PATH 'New__Hire__Prolonged__Start__Date__Reason'
+						, ACTUAL_START_DATE_STR             VARCHAR2(50)    PATH 'New__Hire__Actual__Start__Date'
+						, VET_PREF_STATUS                   VARCHAR2(130)   PATH 'New__Hire__Veterans__Preference__Status'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'New__Hire__Last__Update__Date_x002fTime'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.NEW_HIRE_NUMBER = TRG.NEW_HIRE_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.NEW_HIRE_FIRST_NAME             = SRC.NEW_HIRE_FIRST_NAME
+			, TRG.NEW_HIRE_MIDDLE_NAME          = SRC.NEW_HIRE_MIDDLE_NAME
+			, TRG.NEW_HIRE_LAST_NAME            = SRC.NEW_HIRE_LAST_NAME
+			, TRG.NEW_HIRE_SUFFIX               = SRC.NEW_HIRE_SUFFIX
+			, TRG.NEW_HIRE_MAIDEN_NAME          = SRC.NEW_HIRE_MAIDEN_NAME
+			, TRG.NEW_HIRE_NAME                 = SRC.NEW_HIRE_NAME
+			, TRG.NEW_HIRE_EMAIL                = SRC.NEW_HIRE_EMAIL
+			, TRG.NEW_HIRE_ADDRESS_1            = SRC.NEW_HIRE_ADDRESS_1
+			, TRG.NEW_HIRE_ADDRESS_2            = SRC.NEW_HIRE_ADDRESS_2
+			, TRG.NEW_HIRE_APT                  = SRC.NEW_HIRE_APT
+			, TRG.NEW_HIRE_CITY                 = SRC.NEW_HIRE_CITY
+			, TRG.NEW_HIRE_STATE                = SRC.NEW_HIRE_STATE
+			, TRG.NEW_HIRE_COUNTRY              = SRC.NEW_HIRE_COUNTRY
+			, TRG.NEW_HIRE_POSTAL_CODE          = SRC.NEW_HIRE_POSTAL_CODE
+			, TRG.AGENCY                        = SRC.AGENCY
+			, TRG.AGENCY_ADDRESS_1              = SRC.AGENCY_ADDRESS_1
+			, TRG.AGENCY_ADDRESS_2              = SRC.AGENCY_ADDRESS_2
+			, TRG.AGENCY_ADDRESS_3              = SRC.AGENCY_ADDRESS_3
+			, TRG.AGENCY_CITY                   = SRC.AGENCY_CITY
+			, TRG.AGENCY_STATE                  = SRC.AGENCY_STATE
+			, TRG.AGENCY_COUNTRY                = SRC.AGENCY_COUNTRY
+			, TRG.AGENCY_POSTAL_CODE            = SRC.AGENCY_POSTAL_CODE
+			, TRG.BRANCH                        = SRC.BRANCH
+			, TRG.BUREAU                        = SRC.BUREAU
+			, TRG.UNIT                          = SRC.UNIT
+			, TRG.PD_NUMBER                     = SRC.PD_NUMBER
+			, TRG.POSITION_TITLE                = SRC.POSITION_TITLE
+			, TRG.PAY_PLAN                      = SRC.PAY_PLAN
+			, TRG.SERIES                        = SRC.SERIES
+			, TRG.GRADE                         = SRC.GRADE
+			, TRG.DUTY_LOCATION                 = SRC.DUTY_LOCATION
+			, TRG.DUTY_LOCATION_CODE            = SRC.DUTY_LOCATION_CODE
+			, TRG.PROJECTED_START_DATE          = SRC.PROJECTED_START_DATE
+			, TRG.PROLONGED_START_DATE_RSN      = SRC.PROLONGED_START_DATE_RSN
+			, TRG.ACTUAL_START_DATE             = SRC.ACTUAL_START_DATE
+			, TRG.VET_PREF_STATUS               = SRC.VET_PREF_STATUS
+			, TRG.LAST_UPDATE_DATE              = SRC.LAST_UPDATE_DATE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.NEW_HIRE_NUMBER
+			, TRG.NEW_HIRE_FIRST_NAME
+			, TRG.NEW_HIRE_MIDDLE_NAME
+			, TRG.NEW_HIRE_LAST_NAME
+			, TRG.NEW_HIRE_SUFFIX
+			, TRG.NEW_HIRE_MAIDEN_NAME
+			, TRG.NEW_HIRE_NAME
+			, TRG.NEW_HIRE_EMAIL
+			, TRG.NEW_HIRE_ADDRESS_1
+			, TRG.NEW_HIRE_ADDRESS_2
+			, TRG.NEW_HIRE_APT
+			, TRG.NEW_HIRE_CITY
+			, TRG.NEW_HIRE_STATE
+			, TRG.NEW_HIRE_COUNTRY
+			, TRG.NEW_HIRE_POSTAL_CODE
+			, TRG.AGENCY
+			, TRG.AGENCY_ADDRESS_1
+			, TRG.AGENCY_ADDRESS_2
+			, TRG.AGENCY_ADDRESS_3
+			, TRG.AGENCY_CITY
+			, TRG.AGENCY_STATE
+			, TRG.AGENCY_COUNTRY
+			, TRG.AGENCY_POSTAL_CODE
+			, TRG.BRANCH
+			, TRG.BUREAU
+			, TRG.UNIT
+			, TRG.PD_NUMBER
+			, TRG.POSITION_TITLE
+			, TRG.PAY_PLAN
+			, TRG.SERIES
+			, TRG.GRADE
+			, TRG.DUTY_LOCATION
+			, TRG.DUTY_LOCATION_CODE
+			, TRG.PROJECTED_START_DATE
+			, TRG.PROLONGED_START_DATE_RSN
+			, TRG.ACTUAL_START_DATE
+			, TRG.VET_PREF_STATUS
+			, TRG.LAST_UPDATE_DATE
+		)
+		VALUES
+		(
+			SRC.NEW_HIRE_NUMBER
+			, SRC.NEW_HIRE_FIRST_NAME
+			, SRC.NEW_HIRE_MIDDLE_NAME
+			, SRC.NEW_HIRE_LAST_NAME
+			, SRC.NEW_HIRE_SUFFIX
+			, SRC.NEW_HIRE_MAIDEN_NAME
+			, SRC.NEW_HIRE_NAME
+			, SRC.NEW_HIRE_EMAIL
+			, SRC.NEW_HIRE_ADDRESS_1
+			, SRC.NEW_HIRE_ADDRESS_2
+			, SRC.NEW_HIRE_APT
+			, SRC.NEW_HIRE_CITY
+			, SRC.NEW_HIRE_STATE
+			, SRC.NEW_HIRE_COUNTRY
+			, SRC.NEW_HIRE_POSTAL_CODE
+			, SRC.AGENCY
+			, SRC.AGENCY_ADDRESS_1
+			, SRC.AGENCY_ADDRESS_2
+			, SRC.AGENCY_ADDRESS_3
+			, SRC.AGENCY_CITY
+			, SRC.AGENCY_STATE
+			, SRC.AGENCY_COUNTRY
+			, SRC.AGENCY_POSTAL_CODE
+			, SRC.BRANCH
+			, SRC.BUREAU
+			, SRC.UNIT
+			, SRC.PD_NUMBER
+			, SRC.POSITION_TITLE
+			, SRC.PAY_PLAN
+			, SRC.SERIES
+			, SRC.GRADE
+			, SRC.DUTY_LOCATION
+			, SRC.DUTY_LOCATION_CODE
+			, SRC.PROJECTED_START_DATE
+			, SRC.PROLONGED_START_DATE_RSN
+			, SRC.ACTUAL_START_DATE
+			, SRC.VET_PREF_STATUS
+			, SRC.LAST_UPDATE_DATE
+		)
+		;
+
+
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20951, 'SP_UPDATE_NEWHIRE_TABLE: Invalid APPLICATION data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_NEWHIRE_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_NEWHIRE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_NEWHIRE_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_NEWHIRE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_NEWHIRE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+
+/
+
+
+
+
+--------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_VACANCY_TABLE
 --------------------------------------------------------
-
 /**
  * Parses Vacancy XML data and stores it
  * into the operational tables for Vacancy.
@@ -1835,7 +2113,6 @@ END;
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_INTG_DATA
 --------------------------------------------------------
-
 /**
  * Stores the integration data in the integration data detail table (INTG_DATA_DTL).
  *
@@ -1935,6 +2212,8 @@ BEGIN
 		SP_UPDATE_APPLICATION_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'CERTIFICATE' THEN
 		SP_UPDATE_CERTIFICATE_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'NEWHIRE' THEN
+		SP_UPDATE_NEWHIRE_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'VACANCY' THEN
 		SP_UPDATE_VACANCY_TABLE(V_ID);
 	END IF;
