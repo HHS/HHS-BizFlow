@@ -1219,7 +1219,7 @@ BEGIN
 
 	EXCEPTION
 		WHEN OTHERS THEN
-			RAISE_APPLICATION_ERROR(-20941, 'SP_UPDATE_CERTIFICATE_TABLE: Invalid APPLICATION data.  I_ID = ' || TO_CHAR(I_ID) );
+			RAISE_APPLICATION_ERROR(-20941, 'SP_UPDATE_CERTIFICATE_TABLE: Invalid CERTIFICATE data.  I_ID = ' || TO_CHAR(I_ID) );
 	END;
 
 	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CERTIFICATE_TABLE - END ==========================');
@@ -1504,7 +1504,7 @@ BEGIN
 
 	EXCEPTION
 		WHEN OTHERS THEN
-			RAISE_APPLICATION_ERROR(-20951, 'SP_UPDATE_NEWHIRE_TABLE: Invalid APPLICATION data.  I_ID = ' || TO_CHAR(I_ID) );
+			RAISE_APPLICATION_ERROR(-20951, 'SP_UPDATE_NEWHIRE_TABLE: Invalid NEW HIRE data.  I_ID = ' || TO_CHAR(I_ID) );
 	END;
 
 	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_NEWHIRE_TABLE - END ==========================');
@@ -1524,6 +1524,528 @@ EXCEPTION
 		V_ERRCODE := SQLCODE;
 		V_ERRMSG := SQLERRM;
 		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_NEWHIRE_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+
+/
+
+
+
+
+--------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_REQUEST_TABLE
+--------------------------------------------------------
+/**
+ * Parses Request report XML data and stores it
+ * into the operational tables for Request.
+ *
+ * @param I_ID - Record ID
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_REQUEST_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_REQUEST_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_REQUEST_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_REQUEST_DETAIL table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_DETAIL table');
+		MERGE INTO DSS_REQUEST_DETAIL TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.REQUEST_DESCRIPTION
+				, X.REQUEST_STATUS
+				, X.REQUEST_TYPE
+				, X.REQUEST_SOURCE
+				, TO_DATE(SUBSTR(X.LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_UPDATE_DATE
+				, TO_DATE(SUBSTR(X.CREATION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CREATION_DATE
+				, TO_DATE(SUBSTR(X.SUBMISSION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS SUBMISSION_DATE
+				, X.REQUESTER_NAME
+				, X.REQUESTER_EMAIL
+				, X.APPROVER_NAME
+				, X.APPROVER_EMAIL
+				, TO_DATE(SUBSTR(X.APPROVAL_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS APPROVAL_DATE
+				, X.CUSTOMER_NAME
+				, X.CUSTOMER_DEPARTMENT_NAME
+				, X.CUSTOMER_DEPARTMENT_CODE
+				, X.CUSTOMER_AGENCY_NAME
+				, X.CUSTOMER_AGENCY_CODE
+				, X.CUSTOMER_ADDRESS_LINE_1
+				, X.CUSTOMER_ADDRESS_LINE_2
+				, X.CUSTOMER_ADDRESS_LINE_3
+				, X.CUSTOMER_CITY
+				, X.CUSTOMER_STATE
+				, X.CUSTOMER_POSTAL_CODE
+				, X.CUSTOMER_COUNTRY
+				, X.HIRING_ORGANIZATION
+				, X.STAFFING_ORGANIZATION
+				, TO_DATE(SUBSTR(X.PERSONNEL_ACTION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS PERSONNEL_ACTION_DATE
+				, X.MAXIMUM_AGE
+				, X.MINIMUM_AGE
+				, X.RELOCATION
+				, X.SECURITY_CLEARANCE
+				, X.SUPERVISORY_POSITION
+				, X.TRAVEL_PREFERENCE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestDetail"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, REQUEST_DESCRIPTION               VARCHAR2(30)    PATH 'Request__Description'
+						, REQUEST_STATUS                    VARCHAR2(30)    PATH 'Request__Status'
+						, REQUEST_TYPE                      VARCHAR2(20)    PATH 'Request__Type'
+						, REQUEST_SOURCE                    VARCHAR2(10)    PATH 'Request__Source'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Request__Last__Update__Date_x002fTime'
+						, CREATION_DATE_STR                 VARCHAR2(50)    PATH 'Request__Creation__Date'
+						, SUBMISSION_DATE_STR               VARCHAR2(50)    PATH 'Request__Submission__Date'
+						, REQUESTER_NAME                    VARCHAR2(100)   PATH 'Requester__Name'
+						, REQUESTER_EMAIL                   VARCHAR2(100)   PATH 'Requester__Email'
+						, APPROVER_NAME                     VARCHAR2(100)   PATH 'Request__Approver__Name'
+						, APPROVER_EMAIL                    VARCHAR2(100)   PATH 'Request__Approver__Email'
+						, APPROVAL_DATE_STR                 VARCHAR2(50)    PATH 'Request__Approval__Date'
+						, CUSTOMER_NAME                     VARCHAR2(100)   PATH 'Request__Customer__Name'
+						, CUSTOMER_DEPARTMENT_NAME          VARCHAR2(100)   PATH 'Request__Customer__Department__Name'
+						, CUSTOMER_DEPARTMENT_CODE          VARCHAR2(2)     PATH 'Request__Customer__Department__Code'
+						, CUSTOMER_AGENCY_NAME              VARCHAR2(100)   PATH 'Request__Customer__Agency__Name'
+						, CUSTOMER_AGENCY_CODE              VARCHAR2(4)     PATH 'Request__Customer__Agency__Code'
+						, CUSTOMER_ADDRESS_LINE_1           VARCHAR2(75)    PATH 'Request__Customer__Address__Line__1'
+						, CUSTOMER_ADDRESS_LINE_2           VARCHAR2(75)    PATH 'Request__Customer__Address__Line__2'
+						, CUSTOMER_ADDRESS_LINE_3           VARCHAR2(75)    PATH 'Request__Customer__Address__Line__3'
+						, CUSTOMER_CITY                     VARCHAR2(50)    PATH 'Request__Customer__Address__City'
+						, CUSTOMER_STATE                    VARCHAR2(50)    PATH 'Request__Customer__Address__State'
+						, CUSTOMER_POSTAL_CODE              VARCHAR2(10)    PATH 'Request__Customer__Address__Postal__Code'
+						, CUSTOMER_COUNTRY                  VARCHAR2(50)    PATH 'Request__Customer__Address__Country'
+						, HIRING_ORGANIZATION               VARCHAR2(100)   PATH 'Request__Hiring__Organization'
+						, STAFFING_ORGANIZATION             VARCHAR2(100)   PATH 'Request__Staffing__Organization'
+						, PERSONNEL_ACTION_DATE_STR         VARCHAR2(50)    PATH 'Request__Personnel__Action__Date'
+						, MAXIMUM_AGE                       NUMBER(3)       PATH 'Request__Maximum__Age'
+						, MINIMUM_AGE                       NUMBER(3)       PATH 'Request__Minimum__Age'
+						, RELOCATION                        VARCHAR2(3)     PATH 'Request__Relocation'
+						, SECURITY_CLEARANCE                VARCHAR2(50)    PATH 'Request__Security__Clearance'
+						, SUPERVISORY_POSITION              VARCHAR2(3)     PATH 'Request__Supervisory__Position'
+						, TRAVEL_PREFERENCE                 VARCHAR2(20)    PATH 'Request__Travel__Preference'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.REQUEST_DESCRIPTION             = SRC.REQUEST_DESCRIPTION
+			, TRG.REQUEST_STATUS                = SRC.REQUEST_STATUS
+			, TRG.REQUEST_TYPE                  = SRC.REQUEST_TYPE
+			, TRG.REQUEST_SOURCE                = SRC.REQUEST_SOURCE
+			, TRG.LAST_UPDATE_DATE              = SRC.LAST_UPDATE_DATE
+			, TRG.CREATION_DATE                 = SRC.CREATION_DATE
+			, TRG.SUBMISSION_DATE               = SRC.SUBMISSION_DATE
+			, TRG.REQUESTER_NAME                = SRC.REQUESTER_NAME
+			, TRG.REQUESTER_EMAIL               = SRC.REQUESTER_EMAIL
+			, TRG.APPROVER_NAME                 = SRC.APPROVER_NAME
+			, TRG.APPROVER_EMAIL                = SRC.APPROVER_EMAIL
+			, TRG.APPROVAL_DATE                 = SRC.APPROVAL_DATE
+			, TRG.CUSTOMER_NAME                 = SRC.CUSTOMER_NAME
+			, TRG.CUSTOMER_DEPARTMENT_NAME      = SRC.CUSTOMER_DEPARTMENT_NAME
+			, TRG.CUSTOMER_DEPARTMENT_CODE      = SRC.CUSTOMER_DEPARTMENT_CODE
+			, TRG.CUSTOMER_AGENCY_NAME          = SRC.CUSTOMER_AGENCY_NAME
+			, TRG.CUSTOMER_AGENCY_CODE          = SRC.CUSTOMER_AGENCY_CODE
+			, TRG.CUSTOMER_ADDRESS_LINE_1       = SRC.CUSTOMER_ADDRESS_LINE_1
+			, TRG.CUSTOMER_ADDRESS_LINE_2       = SRC.CUSTOMER_ADDRESS_LINE_2
+			, TRG.CUSTOMER_ADDRESS_LINE_3       = SRC.CUSTOMER_ADDRESS_LINE_3
+			, TRG.CUSTOMER_CITY                 = SRC.CUSTOMER_CITY
+			, TRG.CUSTOMER_STATE                = SRC.CUSTOMER_STATE
+			, TRG.CUSTOMER_POSTAL_CODE          = SRC.CUSTOMER_POSTAL_CODE
+			, TRG.CUSTOMER_COUNTRY              = SRC.CUSTOMER_COUNTRY
+			, TRG.HIRING_ORGANIZATION           = SRC.HIRING_ORGANIZATION
+			, TRG.STAFFING_ORGANIZATION         = SRC.STAFFING_ORGANIZATION
+			, TRG.PERSONNEL_ACTION_DATE         = SRC.PERSONNEL_ACTION_DATE
+			, TRG.MAXIMUM_AGE                   = SRC.MAXIMUM_AGE
+			, TRG.MINIMUM_AGE                   = SRC.MINIMUM_AGE
+			, TRG.RELOCATION                    = SRC.RELOCATION
+			, TRG.SECURITY_CLEARANCE            = SRC.SECURITY_CLEARANCE
+			, TRG.SUPERVISORY_POSITION          = SRC.SUPERVISORY_POSITION
+			, TRG.TRAVEL_PREFERENCE             = SRC.TRAVEL_PREFERENCE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.REQUEST_DESCRIPTION
+			, TRG.REQUEST_STATUS
+			, TRG.REQUEST_TYPE
+			, TRG.REQUEST_SOURCE
+			, TRG.LAST_UPDATE_DATE
+			, TRG.CREATION_DATE
+			, TRG.SUBMISSION_DATE
+			, TRG.REQUESTER_NAME
+			, TRG.REQUESTER_EMAIL
+			, TRG.APPROVER_NAME
+			, TRG.APPROVER_EMAIL
+			, TRG.APPROVAL_DATE
+			, TRG.CUSTOMER_NAME
+			, TRG.CUSTOMER_DEPARTMENT_NAME
+			, TRG.CUSTOMER_DEPARTMENT_CODE
+			, TRG.CUSTOMER_AGENCY_NAME
+			, TRG.CUSTOMER_AGENCY_CODE
+			, TRG.CUSTOMER_ADDRESS_LINE_1
+			, TRG.CUSTOMER_ADDRESS_LINE_2
+			, TRG.CUSTOMER_ADDRESS_LINE_3
+			, TRG.CUSTOMER_CITY
+			, TRG.CUSTOMER_STATE
+			, TRG.CUSTOMER_POSTAL_CODE
+			, TRG.CUSTOMER_COUNTRY
+			, TRG.HIRING_ORGANIZATION
+			, TRG.STAFFING_ORGANIZATION
+			, TRG.PERSONNEL_ACTION_DATE
+			, TRG.MAXIMUM_AGE
+			, TRG.MINIMUM_AGE
+			, TRG.RELOCATION
+			, TRG.SECURITY_CLEARANCE
+			, TRG.SUPERVISORY_POSITION
+			, TRG.TRAVEL_PREFERENCE
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.REQUEST_DESCRIPTION
+			, SRC.REQUEST_STATUS
+			, SRC.REQUEST_TYPE
+			, SRC.REQUEST_SOURCE
+			, SRC.LAST_UPDATE_DATE
+			, SRC.CREATION_DATE
+			, SRC.SUBMISSION_DATE
+			, SRC.REQUESTER_NAME
+			, SRC.REQUESTER_EMAIL
+			, SRC.APPROVER_NAME
+			, SRC.APPROVER_EMAIL
+			, SRC.APPROVAL_DATE
+			, SRC.CUSTOMER_NAME
+			, SRC.CUSTOMER_DEPARTMENT_NAME
+			, SRC.CUSTOMER_DEPARTMENT_CODE
+			, SRC.CUSTOMER_AGENCY_NAME
+			, SRC.CUSTOMER_AGENCY_CODE
+			, SRC.CUSTOMER_ADDRESS_LINE_1
+			, SRC.CUSTOMER_ADDRESS_LINE_2
+			, SRC.CUSTOMER_ADDRESS_LINE_3
+			, SRC.CUSTOMER_CITY
+			, SRC.CUSTOMER_STATE
+			, SRC.CUSTOMER_POSTAL_CODE
+			, SRC.CUSTOMER_COUNTRY
+			, SRC.HIRING_ORGANIZATION
+			, SRC.STAFFING_ORGANIZATION
+			, SRC.PERSONNEL_ACTION_DATE
+			, SRC.MAXIMUM_AGE
+			, SRC.MINIMUM_AGE
+			, SRC.RELOCATION
+			, SRC.SECURITY_CLEARANCE
+			, SRC.SUPERVISORY_POSITION
+			, SRC.TRAVEL_PREFERENCE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_REQUEST_APPT_TYPE table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_APPT_TYPE table');
+		MERGE INTO DSS_REQUEST_APPT_TYPE TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.APPOINTMENT_TYPE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestAppointmentType"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, APPOINTMENT_TYPE                  VARCHAR2(35)    PATH 'Request__Appointment__Type'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
+		WHEN MATCHED THEN UPDATE SET
+			TRG.APPOINTMENT_TYPE                = SRC.APPOINTMENT_TYPE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.APPOINTMENT_TYPE
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.APPOINTMENT_TYPE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_REQUEST_LOCATION table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_LOCATION table');
+		MERGE INTO DSS_REQUEST_LOCATION TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.LOCATION_DESCRIPTION
+				, LOCATION_OPENINGS
+				, CITY
+				, STATE
+				, COUNTY
+				, COUNTRY
+				, LOCATION_CODE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestLocation"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Request__Location__Description'
+						, LOCATION_OPENINGS                 VARCHAR2(4)     PATH 'Request__Location__Openings'
+						, CITY                              VARCHAR2(50)    PATH 'Request__Location__City'
+						, STATE                             VARCHAR2(50)    PATH 'Request__Location__State'
+						, COUNTY                            VARCHAR2(50)    PATH 'Request__Location__County'
+						, COUNTRY                           VARCHAR2(50)    PATH 'Request__Location__Country'
+						, LOCATION_CODE                     VARCHAR2(10)    PATH 'Request__Location__Code'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER AND SRC.LOCATION_CODE = TRG.LOCATION_CODE )
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.LOCATION_DESCRIPTION            = SRC.LOCATION_DESCRIPTION
+			, TRG.LOCATION_OPENINGS             = SRC.LOCATION_OPENINGS
+			, TRG.CITY                          = SRC.CITY
+			, TRG.STATE                         = SRC.STATE
+			, TRG.COUNTY                        = SRC.COUNTY
+			, TRG.COUNTRY                       = SRC.COUNTRY
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.LOCATION_CODE
+			, TRG.LOCATION_DESCRIPTION
+			, TRG.LOCATION_OPENINGS
+			, TRG.CITY
+			, TRG.STATE
+			, TRG.COUNTY
+			, TRG.COUNTRY
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.LOCATION_CODE
+			, SRC.LOCATION_DESCRIPTION
+			, SRC.LOCATION_OPENINGS
+			, SRC.CITY
+			, SRC.STATE
+			, SRC.COUNTY
+			, SRC.COUNTRY
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_REQUEST_POSITION table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_POSITION table');
+		MERGE INTO DSS_REQUEST_POSITION TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.PD_NUMBER
+				, X.PD_TITLE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestPosition"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, PD_NUMBER                         VARCHAR2(50)    PATH 'Request__Position__Description__Number'
+						, PD_TITLE                          VARCHAR2(100)   PATH 'Request__Position__Description__Title'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER AND SRC.PD_NUMBER = TRG.PD_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.PD_TITLE                        = SRC.PD_TITLE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.PD_NUMBER
+			, TRG.PD_TITLE
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.PD_NUMBER
+			, SRC.PD_TITLE
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_REQUEST_SPECIALTY table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_SPECIALTY table');
+		MERGE INTO DSS_REQUEST_SPECIALTY TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.SPECIALTY
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestSpecialty"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, SPECIALTY                         VARCHAR2(50)    PATH 'Request__Specialty'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.SPECIALTY                       = SRC.SPECIALTY
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.SPECIALTY
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.SPECIALTY
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_REQUEST_VACANCY table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_VACANCY table');
+		MERGE INTO DSS_REQUEST_VACANCY TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.VACANCY_NUMBER
+				, X.VACANCY_STATUS
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestVacancy"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, VACANCY_NUMBER                    NUMBER(10)      PATH 'Vacancy__Number'
+						, VACANCY_STATUS                    VARCHAR2(10)    PATH 'Vacancy__Status'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
+			, TRG.VACANCY_STATUS                = SRC.VACANCY_STATUS
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.VACANCY_NUMBER
+			, TRG.VACANCY_STATUS
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.VACANCY_NUMBER
+			, SRC.VACANCY_STATUS
+		)
+		;
+
+
+		--------------------------------
+		-- DSS_REQUEST_WORK_SCHED table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REQUEST_WORK_SCHED table');
+		MERGE INTO DSS_REQUEST_WORK_SCHED TRG
+		USING
+		(
+			SELECT
+				X.REQUEST_NUMBER
+				, X.WORK_SCHEDULE
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestWorkSchedule"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
+						, WORK_SCHEDULE                     VARCHAR2(18)    PATH 'Request__Work__Schedule'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.WORK_SCHEDULE                   = SRC.WORK_SCHEDULE
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.REQUEST_NUMBER
+			, TRG.WORK_SCHEDULE
+		)
+		VALUES
+		(
+			SRC.REQUEST_NUMBER
+			, SRC.WORK_SCHEDULE
+		)
+		;
+
+
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_REQUEST_TABLE: Invalid REQUEST data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_REQUEST_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_REQUEST_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_REQUEST_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_REQUEST_TABLE -------------------');
 		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
 END;
@@ -2214,6 +2736,8 @@ BEGIN
 		SP_UPDATE_CERTIFICATE_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'NEWHIRE' THEN
 		SP_UPDATE_NEWHIRE_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'REQUEST' THEN
+		SP_UPDATE_REQUEST_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'VACANCY' THEN
 		SP_UPDATE_VACANCY_TABLE(V_ID);
 	END IF;
