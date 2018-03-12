@@ -1,8 +1,5 @@
 package hhs.usas.dss.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "dataSet")
 public class Vacancy extends Report{
 	
 	public Vacancy() {
