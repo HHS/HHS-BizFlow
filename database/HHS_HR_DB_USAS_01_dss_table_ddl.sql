@@ -400,12 +400,18 @@ CREATE TABLE DSS_REQUEST_APPT_TYPE
 );
 
 ------------------------------------
---DDL for table DSS_REQUEST_SPECIALTY
+--DDL for table DSS_REQUEST_LOCATION
 ------------------------------------
-CREATE TABLE DSS_REQUEST_SPECIALTY
+CREATE TABLE DSS_REQUEST_LOCATION
 (
-    REQUEST_NUMBER VARCHAR2(50),
-    SPECIALTY      VARCHAR2(50)
+    REQUEST_NUMBER       VARCHAR2(50),
+    LOCATION_CODE        VARCHAR2(10),
+    LOCATION_DESCRIPTION VARCHAR2(50),
+    LOCATION_OPENINGS    VARCHAR2(4),
+    CITY                 VARCHAR2(50),
+    STATE                VARCHAR2(50),
+    COUNTY               VARCHAR2(50),
+    COUNTRY              VARCHAR2(50)
 );
 
 ------------------------------------
@@ -418,29 +424,13 @@ CREATE TABLE DSS_REQUEST_POSITION
     PD_TITLE       VARCHAR2(100)
 );
 
-
 ------------------------------------
---DDL for table DSS_REQUEST_LOCATION
+--DDL for table DSS_REQUEST_SPECIALTY
 ------------------------------------
-CREATE TABLE DSS_REQUEST_LOCATION
-(
-    REQUEST_NUMBER       VARCHAR2(50),
-    LOCATION_DESCRIPTION VARCHAR2(50),
-    LOCATION_OPENINGS    VARCHAR2(4),
-    CITY                 VARCHAR2(50),
-    STATE                VARCHAR2(50),
-    COUNTY               VARCHAR2(50),
-    COUNTRY              VARCHAR2(50),
-    LOCATION_CODE        VARCHAR2(10)
-);
-
-------------------------------------
---DDL for table DSS_REQUEST_WORK_SCHED
-------------------------------------
-CREATE TABLE DSS_REQUEST_WORK_SCHED
+CREATE TABLE DSS_REQUEST_SPECIALTY
 (
     REQUEST_NUMBER VARCHAR2(50),
-    WORK_SCHEDULE  VARCHAR2(18)
+    SPECIALTY      VARCHAR2(50)
 );
 
 ------------------------------------
@@ -451,6 +441,15 @@ CREATE TABLE DSS_REQUEST_VACANCY
     REQUEST_NUMBER    VARCHAR2(50),
     VACANCY_NUMBER    NUMBER(10),
     VACANCY_STATUS    VARCHAR2(10)
+);
+
+------------------------------------
+--DDL for table DSS_REQUEST_WORK_SCHED
+------------------------------------
+CREATE TABLE DSS_REQUEST_WORK_SCHED
+(
+    REQUEST_NUMBER VARCHAR2(50),
+    WORK_SCHEDULE  VARCHAR2(18)
 );
 
 
@@ -465,20 +464,20 @@ CREATE TABLE DSS_REQUEST_VACANCY
 ------------------------------------
 CREATE TABLE DSS_REVIEW_DETAIL
 (
+    NAME                    VARCHAR2(200),
+    OWNER                   VARCHAR2(100),
+    REVIEW_STATUS           VARCHAR2(10),
     CREATION_DATE           DATE,
-    RECALL_STATUS_DATE      DATE,
+    REVIEW_SENT_DATE        DATE,
     REVIEW_DUE_DATE         DATE,
+    RECALL_STATUS_DATE      DATE,
+    RECALL_REASON           VARCHAR2(100),
+    REVIEW_RETURNED_DATE    DATE,
     REVIEW_INSTRUCTIONS     VARCHAR2(1000),
     IS_ANNOUNCEMENT_QNR     VARCHAR2(3),
     IS_ANNOUNCEMENT_TEXT    VARCHAR2(3),
     IS_CERTIFICATE_REVIEW   VARCHAR2(3),
-    LAST_UPDATE_DATE        DATE,
-    NAME                    VARCHAR2(200),
-    OWNER                   VARCHAR2(100),
-    RECALL_REASON           VARCHAR2(100),
-    REVIEW_RETURNED_DATE    DATE,
-    REVIEW_SENT_DATE        DATE,
-    REVIEW_STATUS           VARCHAR2(10)
+    LAST_UPDATE_DATE        DATE
 );
 
 ------------------------------------
@@ -487,9 +486,9 @@ CREATE TABLE DSS_REVIEW_DETAIL
 CREATE TABLE DSS_REVIEWERS
 (
     REVIEWER_NAME     VARCHAR2(100),
-    COMPLETION_DATE   DATE,
+    REVIEWER_STATUS   VARCHAR2(30),
     ASSIGNMENT_TYPE   VARCHAR2(30),
-    REVIEWER_STATUS   VARCHAR2(30)
+    COMPLETION_DATE   DATE
 );
 
 
@@ -592,6 +591,17 @@ CREATE TABLE DSS_VACANCY_CUSTOMER
 );
 
 ------------------------------------
+--DDL for table DSS_VACANCY_DOCUMENT
+------------------------------------
+CREATE TABLE DSS_VACANCY_DOCUMENT
+(
+    VACANCY_NUMBER                NUMBER(10),
+    SUPPORTING_DOC_TYPE           VARCHAR2(50),
+    SUPPORTING_DOC_CUSTM_TITLE    VARCHAR2(100),
+    REQUIRED_DOC                  VARCHAR2(3)
+);
+
+------------------------------------
 --DDL for table DSS_VACANCY_ELIGIBILITY
 ------------------------------------
 CREATE TABLE DSS_VACANCY_ELIGIBILITY
@@ -612,26 +622,6 @@ CREATE TABLE DSS_VACANCY_POSITION
 );
 
 ------------------------------------
---DDL for table DSS_VACANCY_SPECIALTY
-------------------------------------
-CREATE TABLE DSS_VACANCY_SPECIALTY
-(
-    VACANCY_NUMBER NUMBER(10),
-    SPECIALTY      VARCHAR2(50)
-);
-
-------------------------------------
---DDL for table DSS_VACANCY_DOCUMENT
-------------------------------------
-CREATE TABLE DSS_VACANCY_DOCUMENT
-(
-    VACANCY_NUMBER                NUMBER(10),
-    SUPPORTING_DOC_TYPE           VARCHAR2(50),
-    SUPPORTING_DOC_CUSTM_TITLE    VARCHAR2(100),
-    REQUIRED_DOC                  VARCHAR2(3)
-);
-
-------------------------------------
 --DDL for table DSS_VACANCY_REQUEST
 ------------------------------------
 CREATE TABLE DSS_VACANCY_REQUEST
@@ -641,14 +631,13 @@ CREATE TABLE DSS_VACANCY_REQUEST
     REQUEST_STATUS    VARCHAR2(30)
 );
 
-
 ------------------------------------
---DDL for table DSS_VACANCY_APP_CNT
+--DDL for table DSS_VACANCY_SPECIALTY
 ------------------------------------
-CREATE TABLE DSS_VACANCY_APP_CNT
+CREATE TABLE DSS_VACANCY_SPECIALTY
 (
-    VACANCY_NUMBER    NUMBER(10),
-    APPLICATION_CNT   NUMBER(4)
+    VACANCY_NUMBER NUMBER(10),
+    SPECIALTY      VARCHAR2(50)
 );
 
 
