@@ -12,9 +12,10 @@ public class Certificate extends Report {
 		this.setSvpUseval("CertificateLastUpdateDate");
 		this.setSvpDisplay("Certificate Last Update Date");
 		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-60);		
-
+		this.setRptIteration(1);
+		this.setDateIncrement(-60);
+		this.setEndDate("");
+		this.setSpTruncate("SP_TRUNC_CERTIFICATE_TABLE");
 	}
 
 }
