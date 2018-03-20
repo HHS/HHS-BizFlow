@@ -111,25 +111,25 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementDetail"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
-						, VACANCY_NUMBER                    NUMBER(10)      PATH 'Vacancy__Number'
-						, ANN_CONTROL_NUMBER                NUMBER(10)      PATH 'Announcement__Control__Number'
-						, ANNOUNCEMENT_STATUS               VARCHAR2(30)    PATH 'Announcement__Status'
-						, IS_RELEASED                       VARCHAR2(3)     PATH 'Announcement__Is__Released'
-						, RELEASED_DATE_STR                 VARCHAR2(50)    PATH 'Announcement__Released__Date_x002fTime'
-						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Announcement__Last__Update__Date_x002fTime'
-						, EXTERNAL_CONTACT_NAME             VARCHAR2(100)   PATH 'Announcement__External__Contact__Name'
-						, INTERNAL_CONTACT_NAME             VARCHAR2(100)   PATH 'Announcement__Internal__Contact__Name'
-						, SALARY_TYPE                       VARCHAR2(20)    PATH 'Announcement__Salary__Type'
-						, MINIMUM_SALARY                    NUMBER(8,2)     PATH 'Announcement__Minimum__Salary'
-						, MAXIMUM_SALARY                    NUMBER(8,2)     PATH 'Announcement__Maximum__Salary'
-						, OPEN_DATE_STR                     VARCHAR2(50)    PATH 'Announcement__Open__Date'
-						, CLOSE_DATE_STR                    VARCHAR2(50)    PATH 'Announcement__Close__Date'
-						, TOTAL_VACANCIES                   VARCHAR2(4)     PATH 'Announcement__Total__Vacancies'
-						, PART_TIME_HOURS                   NUMBER(2)       PATH 'Announcement__Part__Time__Hours'
-						, NOT_TO_EXCEED                     VARCHAR2(20)    PATH 'Announcement__Not__To__Exceed'
-						, WHO_MAY_APPLY                     VARCHAR2(100)   PATH 'Announcement__Who__May__Apply'
-						, TEMPLATE                          VARCHAR2(200)   PATH 'Announcement__Template'
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(56)      PATH 'Announcement__Number'
+						, VACANCY_NUMBER                    NUMBER(10)        PATH 'Vacancy__Number'
+						, ANN_CONTROL_NUMBER                NUMBER(10)        PATH 'Announcement__Control__Number'
+						, ANNOUNCEMENT_STATUS               VARCHAR2(1002)    PATH 'Announcement__Status'
+						, IS_RELEASED                       VARCHAR2(8)       PATH 'Announcement__Is__Released'
+						, RELEASED_DATE_STR                 VARCHAR2(50)      PATH 'Announcement__Released__Date_x002fTime'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)      PATH 'Announcement__Last__Update__Date_x002fTime'
+						, EXTERNAL_CONTACT_NAME             VARCHAR2(206)     PATH 'Announcement__External__Contact__Name'
+						, INTERNAL_CONTACT_NAME             VARCHAR2(206)     PATH 'Announcement__Internal__Contact__Name'
+						, SALARY_TYPE                       VARCHAR2(1002)    PATH 'Announcement__Salary__Type'
+						, MINIMUM_SALARY                    NUMBER(19,4)      PATH 'Announcement__Minimum__Salary'
+						, MAXIMUM_SALARY                    NUMBER(19,4)      PATH 'Announcement__Maximum__Salary'
+						, OPEN_DATE_STR                     VARCHAR2(50)      PATH 'Announcement__Open__Date'
+						, CLOSE_DATE_STR                    VARCHAR2(50)      PATH 'Announcement__Close__Date'
+						, TOTAL_VACANCIES                   VARCHAR2(12)      PATH 'Announcement__Total__Vacancies'
+						, PART_TIME_HOURS                   NUMBER(10)        PATH 'Announcement__Part__Time__Hours'
+						, NOT_TO_EXCEED                     VARCHAR2(26)      PATH 'Announcement__Not__To__Exceed'
+						, WHO_MAY_APPLY                     VARCHAR2(1002)    PATH 'Announcement__Who__May__Apply'
+						, TEMPLATE                          VARCHAR2(2050)    PATH 'Announcement__Template'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
@@ -216,8 +216,8 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementAppointmentType"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
-						, APPOINTMENT_TYPE                  VARCHAR2(35)    PATH 'Announcement__Appointment__Type'
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(56)      PATH 'Announcement__Number'
+						, APPOINTMENT_TYPE                  VARCHAR2(1002)    PATH 'Announcement__Appointment__Type'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
@@ -253,8 +253,8 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementWorkSchedule"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
-						, WORK_SCHEDULE                     VARCHAR2(18)    PATH 'Announcement__Work__Schedule'
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(56)      PATH 'Announcement__Number'
+						, WORK_SCHEDULE                     VARCHAR2(1002)    PATH 'Announcement__Work__Schedule'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
@@ -296,28 +296,27 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnouncementLocation"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						ANNOUNCEMENT_NUMBER                 VARCHAR2(30)    PATH 'Announcement__Number'
-						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Announcement__Location__Description'
-						, LOCATION_OPENINGS                 VARCHAR2(4)     PATH 'Announcement__Location__Openings'
-						, CITY                              VARCHAR2(50)    PATH 'Announcement__Location__City'
-						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Announcement__Location__State__Abbreviation'
-						, COUNTY                            VARCHAR2(50)    PATH 'Announcement__Location__County'
-						, COUNTRY                           VARCHAR2(50)    PATH 'Announcement__Location__Country'
-						, LOCATION_CODE                     VARCHAR2(10)    PATH 'Announcement__Location__Code'
+						ANNOUNCEMENT_NUMBER                 VARCHAR2(56)    PATH 'Announcement__Number'
+						, LOCATION_DESCRIPTION              VARCHAR2(334)   PATH 'Announcement__Location__Description'
+						, LOCATION_OPENINGS                 VARCHAR2(12)    PATH 'Announcement__Location__Openings'
+						, CITY                              VARCHAR2(122)   PATH 'Announcement__Location__City'
+						, STATE_ABBREV                      VARCHAR2(8)     PATH 'Announcement__Location__State__Abbreviation'
+						, COUNTY                            VARCHAR2(202)   PATH 'Announcement__Location__County'
+						, COUNTRY                           VARCHAR2(202)   PATH 'Announcement__Location__Country'
+						, LOCATION_CODE                     VARCHAR2(34)    PATH 'Announcement__Location__Code'
 				) X
 			WHERE IDX.ID = I_ID
-		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER)
+		) SRC ON (SRC.ANNOUNCEMENT_NUMBER = TRG.ANNOUNCEMENT_NUMBER AND SRC.LOCATION_CODE = TRG.LOCATION_CODE)
 
 --TODO: finalize the match condition
 
 		WHEN MATCHED THEN UPDATE SET
-			TRG.LOCATION_DESCRIPTION            = SRC.LOCATION_DESCRIPTION
+			  TRG.LOCATION_DESCRIPTION          = SRC.LOCATION_DESCRIPTION
 			, TRG.LOCATION_OPENINGS             = SRC.LOCATION_OPENINGS
 			, TRG.CITY                          = SRC.CITY
 			, TRG.STATE_ABBREV                  = SRC.STATE_ABBREV
 			, TRG.COUNTY                        = SRC.COUNTY
 			, TRG.COUNTRY                       = SRC.COUNTRY
-			, TRG.LOCATION_CODE                 = SRC.LOCATION_CODE
 		WHEN NOT MATCHED THEN INSERT
 		(
 			TRG.ANNOUNCEMENT_NUMBER
@@ -454,37 +453,37 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationDetail"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
-						, VACANCY_NUMBER                    NUMBER(10)      PATH 'Vacancy__Number'
-						, ANNOUNCEMENT_NUMBER               VARCHAR2(30)    PATH 'Announcement__Number'
-						, APP_CONTROL_NUMBER                NUMBER(10)      PATH 'Application__Control__Number'
-						, APPLICATION_STATUS                VARCHAR2(40)    PATH 'Application__Status'
-						, LAST_SUBMITTED_DATE_STR           VARCHAR2(50)    PATH 'Application__Last__Submitted__Date_x002fTime'
-						, FIRST_NAME                        VARCHAR2(50)    PATH 'Applicant__First__Name'
-						, MIDDLE_NAME                       VARCHAR2(50)    PATH 'Applicant__Middle__Name'
-						, LAST_NAME                         VARCHAR2(50)    PATH 'Applicant__Last__Name'
-						, SUFFIX                            VARCHAR2(3)     PATH 'Applicant__Suffix'
-						, ADDRESS_1                         VARCHAR2(75)    PATH 'Applicant__Address__Line__1'
-						, ADDRESS_2                         VARCHAR2(75)    PATH 'Applicant__Address__Line__2'
-						, ADDRESS_3                         VARCHAR2(75)    PATH 'Applicant__Address__Line__3'
-						, POSTAL_CODE                       VARCHAR2(10)    PATH 'Applicant__Address__Postal__Code'
-						, CITY                              VARCHAR2(50)    PATH 'Applicant__Address__City'
-						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Applicant__Address__State__Abbreviation'
-						, COUNTRY                           VARCHAR2(50)    PATH 'Applicant__Address__Country'
-						, CITIZENSHIP                       VARCHAR2(50)    PATH 'Applicant__Citizenship'
-						, EMAIL                             VARCHAR2(100)   PATH 'Applicant__Email'
-						, RECORD_STATUS_DESCRIPTION         VARCHAR2(100)   PATH 'Application__Record__Status__Description'
-						, RECORD_STATUS_CODE                VARCHAR2(2)     PATH 'Application__Record__Status__Code'
-						, CLAIMED_VET_PREF                  VARCHAR2(130)   PATH 'Application__Veterans__Preference__Claimed'
-						, CLAIMED_VET_PREF_CODE             VARCHAR2(3)     PATH 'Application__Veterans__Preference__Claimed__Code'
-						, ADJ_VET_PREF                      VARCHAR2(130)   PATH 'Application__Veterans__Preference__Adjudicated'
-						, ADJ_VET_PREF_CODE                 VARCHAR2(3)     PATH 'Application__Veterans__Preference__Adjudicated__Code'
-						, VET_DOC_DATE_STR                  VARCHAR2(50)    PATH 'Application__Veterans__Document__Date'
-						, LOWEST_GRADE                      VARCHAR2(2)     PATH 'Application__Lowest__Acceptable__Grade'
-						, ELIGIBILITY_START_DATE_STR        VARCHAR2(50)    PATH 'Application__Eligibility__Start__Date'
-						, ELIGIBILITY_END_DATE_STR          VARCHAR2(50)    PATH 'Application__Eligibility__End__Date'
-						, IS_FOLLOWUP                       VARCHAR2(3)     PATH 'Application__Is__Followup'
-						, IS_REVIEWED                       VARCHAR2(3)     PATH 'Application__Is__Reviewed'
+						APPLICATION_NUMBER                  VARCHAR2(22)     PATH 'Application__Number'
+						, VACANCY_NUMBER                    NUMBER(10)       PATH 'Vacancy__Number'
+						, ANNOUNCEMENT_NUMBER               VARCHAR2(56)     PATH 'Announcement__Number'
+						, APP_CONTROL_NUMBER                NUMBER(10)       PATH 'Application__Control__Number'
+						, APPLICATION_STATUS                VARCHAR2(1002)   PATH 'Application__Status'
+						, LAST_SUBMITTED_DATE_STR           VARCHAR2(50)     PATH 'Application__Last__Submitted__Date_x002fTime'
+						, FIRST_NAME                        VARCHAR2(62)     PATH 'Applicant__First__Name'
+						, MIDDLE_NAME                       VARCHAR2(62)     PATH 'Applicant__Middle__Name'
+						, LAST_NAME                         VARCHAR2(62)     PATH 'Applicant__Last__Name'
+						, SUFFIX                            VARCHAR2(22)     PATH 'Applicant__Suffix'
+						, ADDRESS_1                         VARCHAR2(202)    PATH 'Applicant__Address__Line__1'
+						, ADDRESS_2                         VARCHAR2(202)    PATH 'Applicant__Address__Line__2'
+						, ADDRESS_3                         VARCHAR2(202)    PATH 'Applicant__Address__Line__3'
+						, POSTAL_CODE                       VARCHAR2(42)     PATH 'Applicant__Address__Postal__Code'
+						, CITY                              VARCHAR2(122)    PATH 'Applicant__Address__City'
+						, STATE_ABBREV                      VARCHAR2(8)      PATH 'Applicant__Address__State__Abbreviation'
+						, COUNTRY                           VARCHAR2(202)    PATH 'Applicant__Address__Country'
+						, CITIZENSHIP                       VARCHAR2(202)    PATH 'Applicant__Citizenship'
+						, EMAIL                             VARCHAR2(258)    PATH 'Applicant__Email'
+						, RECORD_STATUS_DESCRIPTION         VARCHAR2(1002)   PATH 'Application__Record__Status__Description'
+						, RECORD_STATUS_CODE                VARCHAR2(102)    PATH 'Application__Record__Status__Code'
+						, CLAIMED_VET_PREF                  VARCHAR2(1002)   PATH 'Application__Veterans__Preference__Claimed'
+						, CLAIMED_VET_PREF_CODE             VARCHAR2(22)     PATH 'Application__Veterans__Preference__Claimed__Code'
+						, ADJ_VET_PREF                      VARCHAR2(1002)   PATH 'Application__Veterans__Preference__Adjudicated'
+						, ADJ_VET_PREF_CODE                 VARCHAR2(22)     PATH 'Application__Veterans__Preference__Adjudicated__Code'
+						, VET_DOC_DATE_STR                  VARCHAR2(50)     PATH 'Application__Veterans__Document__Date'
+						, LOWEST_GRADE                      VARCHAR2(6)      PATH 'Application__Lowest__Acceptable__Grade'
+						, ELIGIBILITY_START_DATE_STR        VARCHAR2(50)     PATH 'Application__Eligibility__Start__Date'
+						, ELIGIBILITY_END_DATE_STR          VARCHAR2(50)     PATH 'Application__Eligibility__End__Date'
+						, IS_FOLLOWUP                       VARCHAR2(8)      PATH 'Application__Is__Followup'
+						, IS_REVIEWED                       VARCHAR2(8)      PATH 'Application__Is__Reviewed'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
@@ -612,13 +611,13 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationDocuments"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
-						, DOC_NAME                          VARCHAR2(100)   PATH 'Application__Document__Name'
-						, DOC_TYPE                          VARCHAR2(50)    PATH 'Application__Document__Type'
+						APPLICATION_NUMBER                  VARCHAR2(22)    PATH 'Application__Number'
+						, DOC_NAME                          VARCHAR2(202)   PATH 'Application__Document__Name'
+						, DOC_TYPE                          VARCHAR2(1002)    PATH 'Application__Document__Type'
 						, DOC_PROCESSED_DATE_STR            VARCHAR2(50)    PATH 'Application__Document__Processed__Date_x002fTime'
 						, APP_RETREIVED_DATE_STR            VARCHAR2(50)    PATH 'Application__Document__Retrieved__Date_x002fTime'
-						, DOC_HM_VIEWABLE                   VARCHAR2(3)     PATH 'Application__Document__HM__Viewable'
-						, DOC_NH_VIEWABLE                   VARCHAR2(3)     PATH 'Application__Document__NH__Viewable'
+						, DOC_HM_VIEWABLE                   VARCHAR2(8)     PATH 'Application__Document__HM__Viewable'
+						, DOC_NH_VIEWABLE                   VARCHAR2(8)     PATH 'Application__Document__NH__Viewable'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.DOC_NAME = TRG.DOC_NAME)
@@ -669,9 +668,9 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationEligibility"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
-						, ELIGIBILITY                       VARCHAR2(100)   PATH 'Application__Eligibility'
-						, ELIGIBILITY_ADJ                   VARCHAR2(10)    PATH 'Application__Eligibility__Adjudication'
+						APPLICATION_NUMBER                  VARCHAR2(22)     PATH 'Application__Number'
+						, ELIGIBILITY                       VARCHAR2(202)    PATH 'Application__Eligibility'
+						, ELIGIBILITY_ADJ                   VARCHAR2(1002)   PATH 'Application__Eligibility__Adjudication'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.ELIGIBILITY = TRG.ELIGIBILITY)
@@ -714,26 +713,25 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationLocation"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
-						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Application__Location__Description'
-						, CITY                              VARCHAR2(50)    PATH 'Application__Location__City'
-						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Application__Location__State__Abbreviation'
-						, COUNTY                            VARCHAR2(50)    PATH 'Application__Location__County'
-						, COUNTRY                           VARCHAR2(50)    PATH 'Application__Location__Country'
-						, LOCATION_CODE                     VARCHAR2(10)    PATH 'Application__Location__Code'
+						APPLICATION_NUMBER                  VARCHAR2(22)     PATH 'Application__Number'
+						, LOCATION_DESCRIPTION              VARCHAR2(334)    PATH 'Application__Location__Description'
+						, CITY                              VARCHAR2(122)    PATH 'Application__Location__City'
+						, STATE_ABBREV                      VARCHAR2(8)      PATH 'Application__Location__State__Abbreviation'
+						, COUNTY                            VARCHAR2(202)    PATH 'Application__Location__County'
+						, COUNTRY                           VARCHAR2(202)    PATH 'Application__Location__Country'
+						, LOCATION_CODE                     VARCHAR2(34)     PATH 'Application__Location__Code'
 				) X
 			WHERE IDX.ID = I_ID
-		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
+		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.LOCATION_CODE = TRG.LOCATION_CODE)
 
 --TODO: finalize the match condition
 
 		WHEN MATCHED THEN UPDATE SET
-			TRG.LOCATION_DESCRIPTION            = SRC.LOCATION_DESCRIPTION
+			 TRG.LOCATION_DESCRIPTION          = SRC.LOCATION_DESCRIPTION
 			, TRG.CITY                          = SRC.CITY
 			, TRG.STATE_ABBREV                  = SRC.STATE_ABBREV
 			, TRG.COUNTY                        = SRC.COUNTY
 			, TRG.COUNTRY                       = SRC.COUNTRY
-			, TRG.LOCATION_CODE                 = SRC.LOCATION_CODE
 		WHEN NOT MATCHED THEN INSERT
 		(
 			TRG.APPLICATION_NUMBER
@@ -772,9 +770,9 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationPhone"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
-						, PHONE_TYPE                        VARCHAR2(8)     PATH 'Applicant__Phone__Type'
-						, PHONE_NUMBER                      VARCHAR2(30)    PATH 'Applicant__Phone__Number'
+						APPLICATION_NUMBER                  VARCHAR2(22)     PATH 'Application__Number'
+						, PHONE_TYPE                        VARCHAR2(102)    PATH 'Applicant__Phone__Type'
+						, PHONE_NUMBER                      VARCHAR2(52)     PATH 'Applicant__Phone__Number'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER AND SRC.PHONE_TYPE = TRG.PHONE_TYPE)
@@ -823,19 +821,19 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ApplicationRating"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Application__Number'
-						, SERIES                            VARCHAR2(4)     PATH 'Application__Series'
-						, GRADE                             VARCHAR2(2)     PATH 'Application__Grade'
-						, SPECIALTY                         VARCHAR2(100)   PATH 'Application__Specialty'
-						, RATING_MSG_CODE                   VARCHAR2(4)     PATH 'Application__Rating__Notification__Message__Code'
-						, DISPLAY_RATING                    VARCHAR2(10)    PATH 'Application__Display__Rating'
-						, FINAL_RATING                      NUMBER(7,4)     PATH 'Application__Final__Rating'
-						, AUGMENTED_RATING                  NUMBER(7,4)     PATH 'Application__Augmented__Rating'
-						, RATING_CREATION_DATE_STR          VARCHAR2(50)    PATH 'Application__Rating__Creation__Date_x002fTime'
-						, RATING_AVAIL_STATUS               VARCHAR2(20)    PATH 'Application__Rating__Availability__Status'
-						, RATING_CATEGORY_LBL               VARCHAR2(20)    PATH 'Application__Rating__Category__Label'
-						, IS_OVERRIDE                       VARCHAR2(3)     PATH 'Application__Rating__Is__Override'
-						, RATING_MODIFIED_DATE_STR          VARCHAR2(50)    PATH 'Application__Rating__Modified__Date_x002fTime'
+						APPLICATION_NUMBER                  VARCHAR2(22)      PATH 'Application__Number'
+						, SERIES                            VARCHAR2(22)      PATH 'Application__Series'
+						, GRADE                             VARCHAR2(6)       PATH 'Application__Grade'
+						, SPECIALTY                         VARCHAR2(102)     PATH 'Application__Specialty'
+						, RATING_MSG_CODE                   VARCHAR2(22)      PATH 'Application__Rating__Notification__Message__Code'
+						, DISPLAY_RATING                    VARCHAR2(32)      PATH 'Application__Display__Rating'
+						, FINAL_RATING                      NUMBER(12,4)      PATH 'Application__Final__Rating'
+						, AUGMENTED_RATING                  NUMBER(12,4)      PATH 'Application__Augmented__Rating'
+						, RATING_CREATION_DATE_STR          VARCHAR2(50)      PATH 'Application__Rating__Creation__Date_x002fTime'
+						, RATING_AVAIL_STATUS               VARCHAR2(1002)    PATH 'Application__Rating__Availability__Status'
+						, RATING_CATEGORY_LBL               VARCHAR2(202)     PATH 'Application__Rating__Category__Label'
+						, IS_OVERRIDE                       VARCHAR2(8)       PATH 'Application__Rating__Is__Override'
+						, RATING_MODIFIED_DATE_STR          VARCHAR2(50)      PATH 'Application__Rating__Modified__Date_x002fTime'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
@@ -986,22 +984,22 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "Lst_Certificate"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						CERTIFICATE_NUMBER                  VARCHAR2(20)    PATH 'Certificate__Number'
-	                    , AUDITED                           VARCHAR2(3)     PATH 'Certificate__Audited'
-						, AUDITOR                           VARCHAR2(100)   PATH 'Certificate__Auditor'
-						, CUTOFF_NUMBER                     NUMBER(4)       PATH 'Certificate__Cutoff__Number'
-						, FINAL_AUDIT_DATE_STR              VARCHAR2(50)    PATH 'Certificate__Final__Audit__Complete__Date'
-						, INITIAL_AUDIT_DATE_STR            VARCHAR2(50)    PATH 'Certificate__Initial__Audit__Complete__Date'
-						, ISSUE_DATE_STR                    VARCHAR2(50)    PATH 'Certificate__Issue__Date'
-						, ISSUER                            VARCHAR2(100)   PATH 'Certificate__Issuer'
-						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Certificate__Last__Updated__Date_x002fTime'
-						, CERT_ORDER                        VARCHAR2(10)    PATH 'Certificate__Order'
-						, PRIORITY_ORDER                    VARCHAR2(40)    PATH 'Certificate__Priority__Order'
-						, QUALIFIED_SCORE                   NUMBER(3)       PATH 'Certificate__Qualified__Score'
-						, RANK_BY_DESCRIPTION               VARCHAR2(40)    PATH 'Certificate__Rank__By__Description'
-						, REFER_METHOD                      VARCHAR2(20)    PATH 'Certificate__Refer__Method'
-						, TIE_BREAKER                       VARCHAR2(20)    PATH 'Certificate__Tie__Breaker'
-						, CERTIFICATE_TYPE                  VARCHAR2(30)    PATH 'Certificate__Type'
+						CERTIFICATE_NUMBER                  VARCHAR2(102)     PATH 'Certificate__Number'
+	                    , AUDITED                           VARCHAR2(8)       PATH 'Certificate__Audited'
+						, AUDITOR                           VARCHAR2(206)     PATH 'Certificate__Auditor'
+						, CUTOFF_NUMBER                     NUMBER(18,2)      PATH 'Certificate__Cutoff__Number'
+						, FINAL_AUDIT_DATE_STR              VARCHAR2(50)      PATH 'Certificate__Final__Audit__Complete__Date'
+						, INITIAL_AUDIT_DATE_STR            VARCHAR2(50)      PATH 'Certificate__Initial__Audit__Complete__Date'
+						, ISSUE_DATE_STR                    VARCHAR2(50)      PATH 'Certificate__Issue__Date'
+						, ISSUER                            VARCHAR2(206)     PATH 'Certificate__Issuer'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)      PATH 'Certificate__Last__Updated__Date_x002fTime'
+						, CERT_ORDER                        VARCHAR2(1002)    PATH 'Certificate__Order'
+						, PRIORITY_ORDER                    VARCHAR2(1002)    PATH 'Certificate__Priority__Order'
+						, QUALIFIED_SCORE                   NUMBER(18,2)      PATH 'Certificate__Qualified__Score'
+						, RANK_BY_DESCRIPTION               VARCHAR2(1002)    PATH 'Certificate__Rank__By__Description'
+						, REFER_METHOD                      VARCHAR2(1002)    PATH 'Certificate__Refer__Method'
+						, TIE_BREAKER                       VARCHAR2(1002)    PATH 'Certificate__Tie__Breaker'
+						, CERTIFICATE_TYPE                  VARCHAR2(82)      PATH 'Certificate__Type'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.CERTIFICATE_NUMBER = TRG.CERTIFICATE_NUMBER)
@@ -1102,31 +1100,31 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "Lst_CertificateApplication"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						APPLICATION_NUMBER                  VARCHAR2(10)    PATH 'Certificate__Application__Number'
-						, ADDED                             VARCHAR2(3)     PATH 'Certificate__Application__Added'
+						APPLICATION_NUMBER                  VARCHAR2(22)    PATH 'Certificate__Application__Number'
+						, ADDED                             VARCHAR2(8)     PATH 'Certificate__Application__Added'
 						, ADD_DATE_STR                      VARCHAR2(50)    PATH 'Certificate__Application__Add__Date'
-						, AUDIT_CODE                        VARCHAR2(20)    PATH 'Certificate__Application__Audit__Code'
+						, AUDIT_CODE                        VARCHAR2(82)    PATH 'Certificate__Application__Audit__Code'
 						, AUDIT_DATE_STR                    VARCHAR2(50)    PATH 'Certificate__Application__Audit__Date'
 						, CERTIFIED_DATE_STR                VARCHAR2(50)    PATH 'Certificate__Application__Certified__Date'
-						, FIRST_NAME                        VARCHAR2(50)    PATH 'Certificate__Application__First__Name'
-						, MIDDLE_NAME                       VARCHAR2(50)    PATH 'Certificate__Application__Middle__Name'
-						, LAST_NAME                         VARCHAR2(50)    PATH 'Certificate__Application__Last__Name'
-						, SUFFIX                            VARCHAR2(3)     PATH 'Certificate__Application__Suffix'
-						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__Description'
-						, CITY                              VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__City'
-						, STATE                             VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__State'
-						, COUNTRY                           VARCHAR2(50)    PATH 'Certificate__Application__Hired__Location__Country'
-						, PD_NUMBER                         VARCHAR2(20)    PATH 'Certificate__Application__Hired__Position__Description__Number'
-						, POSITION_TITLE                    VARCHAR2(100)   PATH 'Certificate__Application__Hired__Position__Title'
-						, SERIES                            VARCHAR2(4)     PATH 'Certificate__Application__Hired__Series'
-						, SERIES_TITLE                      VARCHAR2(100)   PATH 'Certificate__Application__Hired__Series__Title'
-						, PRIORITY_DESCRIPTION              VARCHAR2(50)    PATH 'Certificate__Application__Priority__Description'
-						, RANK_ORDER                        NUMBER(3)       PATH 'Certificate__Application__Rank__Order'
-						, RATING                            VARCHAR2(4)     PATH 'Certificate__Application__Rating'
-						, REORDERED                         VARCHAR2(3)     PATH 'Certificate__Application__Reordered'
-						, RETURN_STATUS                     VARCHAR2(20)    PATH 'Certificate__Application__Return__Status'
-						, VET_PREF_CODE                     VARCHAR2(3)     PATH 'Certificate__Application__Veterans__Preference__Code'
-						, VET_PREF_DESCRIPTION              VARCHAR2(250)   PATH 'Certificate__Application__Veterans__Preference__Description'
+						, FIRST_NAME                        VARCHAR2(62)    PATH 'Certificate__Application__First__Name'
+						, MIDDLE_NAME                       VARCHAR2(62)    PATH 'Certificate__Application__Middle__Name'
+						, LAST_NAME                         VARCHAR2(62)    PATH 'Certificate__Application__Last__Name'
+						, SUFFIX                            VARCHAR2(22)     PATH 'Certificate__Application__Suffix'
+						, LOCATION_DESCRIPTION              VARCHAR2(334)    PATH 'Certificate__Application__Hired__Location__Description'
+						, CITY                              VARCHAR2(122)    PATH 'Certificate__Application__Hired__Location__City'
+						, STATE                             VARCHAR2(202)    PATH 'Certificate__Application__Hired__Location__State'
+						, COUNTRY                           VARCHAR2(202)    PATH 'Certificate__Application__Hired__Location__Country'
+						, PD_NUMBER                         VARCHAR2(202)    PATH 'Certificate__Application__Hired__Position__Description__Number'
+						, POSITION_TITLE                    VARCHAR2(202)   PATH 'Certificate__Application__Hired__Position__Title'
+						, SERIES                            VARCHAR2(22)     PATH 'Certificate__Application__Hired__Series'
+						, SERIES_TITLE                      VARCHAR2(202)   PATH 'Certificate__Application__Hired__Series__Title'
+						, PRIORITY_DESCRIPTION              VARCHAR2(1002)    PATH 'Certificate__Application__Priority__Description'
+						, RANK_ORDER                        NUMBER(10)       PATH 'Certificate__Application__Rank__Order'
+						, RATING                            VARCHAR2(32)     PATH 'Certificate__Application__Rating'
+						, REORDERED                         VARCHAR2(8)     PATH 'Certificate__Application__Reordered'
+						, RETURN_STATUS                     VARCHAR2(1002)    PATH 'Certificate__Application__Return__Status'
+						, VET_PREF_CODE                     VARCHAR2(22)     PATH 'Certificate__Application__Veterans__Preference__Code'
+						, VET_PREF_DESCRIPTION              VARCHAR2(602)   PATH 'Certificate__Application__Veterans__Preference__Description'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.APPLICATION_NUMBER = TRG.APPLICATION_NUMBER)
@@ -1335,44 +1333,44 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_NewHire"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						NEW_HIRE_NUMBER                     VARCHAR2(10)    PATH 'New__Hire__Number'
-						, NEW_HIRE_FIRST_NAME               VARCHAR2(50)    PATH 'New__Hire__First__Name'
-						, NEW_HIRE_MIDDLE_NAME              VARCHAR2(50)    PATH 'New__Hire__Middle__Name'
-						, NEW_HIRE_LAST_NAME                VARCHAR2(50)    PATH 'New__Hire__Last__Name'
-						, NEW_HIRE_SUFFIX                   VARCHAR2(3)     PATH 'New__Hire__Suffix'
-						, NEW_HIRE_MAIDEN_NAME              VARCHAR2(50)    PATH 'New__Hire__Maiden__Name'
-						, NEW_HIRE_NAME                     VARCHAR2(100)   PATH 'New__Hire__Name'
-						, NEW_HIRE_EMAIL                    VARCHAR2(100)   PATH 'New__Hire__Email'
-						, NEW_HIRE_ADDRESS_1                VARCHAR2(75)    PATH 'New__Hire__Address__1'
-						, NEW_HIRE_ADDRESS_2                VARCHAR2(75)    PATH 'New__Hire__Address__2'
-						, NEW_HIRE_APT                      VARCHAR2(20)    PATH 'New__Hire__Apt_x002fSuite'
-						, NEW_HIRE_CITY                     VARCHAR2(50)    PATH 'New__Hire__City'
-						, NEW_HIRE_STATE                    VARCHAR2(50)    PATH 'New__Hire__State'
-						, NEW_HIRE_COUNTRY                  VARCHAR2(50)    PATH 'New__Hire__Country'
-						, NEW_HIRE_POSTAL_CODE              VARCHAR2(10)    PATH 'New__Hire__Postal__Code'
-						, AGENCY                            VARCHAR2(100)   PATH 'New__Hire__Agency_x002fDepartment'
-						, AGENCY_ADDRESS_1                  VARCHAR2(75)    PATH 'New__Hire__Agency_x002fDepartment__Address__1'
-						, AGENCY_ADDRESS_2                  VARCHAR2(75)    PATH 'New__Hire__Agency_x002fDepartment__Address__2'
-						, AGENCY_ADDRESS_3                  VARCHAR2(75)    PATH 'New__Hire__Agency_x002fDepartment__Address__3'
-						, AGENCY_CITY                       VARCHAR2(50)    PATH 'New__Hire__Agency_x002fDepartment__Address__City'
-						, AGENCY_STATE                      VARCHAR2(50)    PATH 'New__Hire__Agency_x002fDepartment__Address__State'
-						, AGENCY_COUNTRY                    VARCHAR2(50)    PATH 'New__Hire__Agency_x002fDepartment__Address__Country'
-						, AGENCY_POSTAL_CODE                VARCHAR2(10)    PATH 'New__Hire__Agency_x002fDepartment__Address__Postal__Code'
-						, BRANCH                            VARCHAR2(100)   PATH 'New__Hire__Branch_x002fOrganization'
-						, BUREAU                            VARCHAR2(100)   PATH 'New__Hire__Bureau_x002fDivision'
-						, UNIT                              VARCHAR2(30)    PATH 'New__Hire__Activity_x002fUnit'
-						, PD_NUMBER                         VARCHAR2(50)    PATH 'New__Hire__Position__Description__Number'
-						, POSITION_TITLE                    VARCHAR2(100)   PATH 'New__Hire__Position__Title'
-						, PAY_PLAN                          VARCHAR2(2)     PATH 'New__Hire__Pay__Plan'
-						, SERIES                            VARCHAR2(4)     PATH 'New__Hire__Series'
-						, GRADE                             VARCHAR2(2)     PATH 'New__Hire__Grade'
-						, DUTY_LOCATION                     VARCHAR2(100)   PATH 'New__Hire__Duty__Location'
-						, DUTY_LOCATION_CODE                VARCHAR2(50)    PATH 'New__Hire__Duty__Location__Code'
-						, PROJECTED_START_DATE_STR          VARCHAR2(50)    PATH 'New__Hire__Projected__Start__Date'
-						, PROLONGED_START_DATE_RSN          VARCHAR2(50)    PATH 'New__Hire__Prolonged__Start__Date__Reason'
-						, ACTUAL_START_DATE_STR             VARCHAR2(50)    PATH 'New__Hire__Actual__Start__Date'
-						, VET_PREF_STATUS                   VARCHAR2(130)   PATH 'New__Hire__Veterans__Preference__Status'
-						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'New__Hire__Last__Update__Date_x002fTime'
+						NEW_HIRE_NUMBER                     VARCHAR2(22)      PATH 'New__Hire__Number'
+						, NEW_HIRE_FIRST_NAME               VARCHAR2(2050)    PATH 'New__Hire__First__Name'
+						, NEW_HIRE_MIDDLE_NAME              VARCHAR2(2050)    PATH 'New__Hire__Middle__Name'
+						, NEW_HIRE_LAST_NAME                VARCHAR2(2050)    PATH 'New__Hire__Last__Name'
+						, NEW_HIRE_SUFFIX                   VARCHAR2(2050)    PATH 'New__Hire__Suffix'
+						, NEW_HIRE_MAIDEN_NAME              VARCHAR2(2050)    PATH 'New__Hire__Maiden__Name'
+						, NEW_HIRE_NAME                     VARCHAR2(2050)    PATH 'New__Hire__Name'
+						, NEW_HIRE_EMAIL                    VARCHAR2(2050)    PATH 'New__Hire__Email'
+						, NEW_HIRE_ADDRESS_1                VARCHAR2(2050)    PATH 'New__Hire__Address__1'
+						, NEW_HIRE_ADDRESS_2                VARCHAR2(2050)    PATH 'New__Hire__Address__2'
+						, NEW_HIRE_APT                      VARCHAR2(2050)    PATH 'New__Hire__Apt_x002fSuite'
+						, NEW_HIRE_CITY                     VARCHAR2(2050)    PATH 'New__Hire__City'
+						, NEW_HIRE_STATE                    VARCHAR2(2050)    PATH 'New__Hire__State'
+						, NEW_HIRE_COUNTRY                  VARCHAR2(2050)    PATH 'New__Hire__Country'
+						, NEW_HIRE_POSTAL_CODE              VARCHAR2(2050)    PATH 'New__Hire__Postal__Code'
+						, AGENCY                            VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment'
+						, AGENCY_ADDRESS_1                  VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__1'
+						, AGENCY_ADDRESS_2                  VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__2'
+						, AGENCY_ADDRESS_3                  VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__3'
+						, AGENCY_CITY                       VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__City'
+						, AGENCY_STATE                      VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__State'
+						, AGENCY_COUNTRY                    VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__Country'
+						, AGENCY_POSTAL_CODE                VARCHAR2(2050)    PATH 'New__Hire__Agency_x002fDepartment__Address__Postal__Code'
+						, BRANCH                            VARCHAR2(2050)    PATH 'New__Hire__Branch_x002fOrganization'
+						, BUREAU                            VARCHAR2(2050)    PATH 'New__Hire__Bureau_x002fDivision'
+						, UNIT                              VARCHAR2(2050)    PATH 'New__Hire__Activity_x002fUnit'
+						, PD_NUMBER                         VARCHAR2(2050)    PATH 'New__Hire__Position__Description__Number'
+						, POSITION_TITLE                    VARCHAR2(2050)    PATH 'New__Hire__Position__Title'
+						, PAY_PLAN                          VARCHAR2(2050)    PATH 'New__Hire__Pay__Plan'
+						, SERIES                            VARCHAR2(2050)    PATH 'New__Hire__Series'
+						, GRADE                             VARCHAR2(2050)    PATH 'New__Hire__Grade'
+						, DUTY_LOCATION                     VARCHAR2(2050)    PATH 'New__Hire__Duty__Location'
+						, DUTY_LOCATION_CODE                VARCHAR2(2050)    PATH 'New__Hire__Duty__Location__Code'
+						, PROJECTED_START_DATE_STR          VARCHAR2(50)      PATH 'New__Hire__Projected__Start__Date'
+						, PROLONGED_START_DATE_RSN          VARCHAR2(2050)    PATH 'New__Hire__Prolonged__Start__Date__Reason'
+						, ACTUAL_START_DATE_STR             VARCHAR2(50)      PATH 'New__Hire__Actual__Start__Date'
+						, VET_PREF_STATUS                   VARCHAR2(2050)    PATH 'New__Hire__Veterans__Preference__Status'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)      PATH 'New__Hire__Last__Update__Date_x002fTime'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.NEW_HIRE_NUMBER = TRG.NEW_HIRE_NUMBER)
@@ -1616,40 +1614,40 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestDetail"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, REQUEST_DESCRIPTION               VARCHAR2(30)    PATH 'Request__Description'
-						, REQUEST_STATUS                    VARCHAR2(30)    PATH 'Request__Status'
-						, REQUEST_TYPE                      VARCHAR2(20)    PATH 'Request__Type'
-						, REQUEST_SOURCE                    VARCHAR2(10)    PATH 'Request__Source'
-						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Request__Last__Update__Date_x002fTime'
-						, CREATION_DATE_STR                 VARCHAR2(50)    PATH 'Request__Creation__Date'
-						, SUBMISSION_DATE_STR               VARCHAR2(50)    PATH 'Request__Submission__Date'
-						, REQUESTER_NAME                    VARCHAR2(100)   PATH 'Requester__Name'
-						, REQUESTER_EMAIL                   VARCHAR2(100)   PATH 'Requester__Email'
-						, APPROVER_NAME                     VARCHAR2(100)   PATH 'Request__Approver__Name'
-						, APPROVER_EMAIL                    VARCHAR2(100)   PATH 'Request__Approver__Email'
-						, APPROVAL_DATE_STR                 VARCHAR2(50)    PATH 'Request__Approval__Date'
-						, CUSTOMER_NAME                     VARCHAR2(100)   PATH 'Request__Customer__Name'
-						, CUSTOMER_DEPARTMENT_NAME          VARCHAR2(100)   PATH 'Request__Customer__Department__Name'
-						, CUSTOMER_DEPARTMENT_CODE          VARCHAR2(2)     PATH 'Request__Customer__Department__Code'
-						, CUSTOMER_AGENCY_NAME              VARCHAR2(100)   PATH 'Request__Customer__Agency__Name'
-						, CUSTOMER_AGENCY_CODE              VARCHAR2(4)     PATH 'Request__Customer__Agency__Code'
-						, CUSTOMER_ADDRESS_LINE_1           VARCHAR2(75)    PATH 'Request__Customer__Address__Line__1'
-						, CUSTOMER_ADDRESS_LINE_2           VARCHAR2(75)    PATH 'Request__Customer__Address__Line__2'
-						, CUSTOMER_ADDRESS_LINE_3           VARCHAR2(75)    PATH 'Request__Customer__Address__Line__3'
-						, CUSTOMER_CITY                     VARCHAR2(50)    PATH 'Request__Customer__Address__City'
-						, CUSTOMER_STATE                    VARCHAR2(50)    PATH 'Request__Customer__Address__State'
-						, CUSTOMER_POSTAL_CODE              VARCHAR2(10)    PATH 'Request__Customer__Address__Postal__Code'
-						, CUSTOMER_COUNTRY                  VARCHAR2(50)    PATH 'Request__Customer__Address__Country'
-						, HIRING_ORGANIZATION               VARCHAR2(100)   PATH 'Request__Hiring__Organization'
-						, STAFFING_ORGANIZATION             VARCHAR2(100)   PATH 'Request__Staffing__Organization'
-						, PERSONNEL_ACTION_DATE_STR         VARCHAR2(50)    PATH 'Request__Personnel__Action__Date'
-						, MAXIMUM_AGE                       NUMBER(3)       PATH 'Request__Maximum__Age'
-						, MINIMUM_AGE                       NUMBER(3)       PATH 'Request__Minimum__Age'
-						, RELOCATION                        VARCHAR2(3)     PATH 'Request__Relocation'
-						, SECURITY_CLEARANCE                VARCHAR2(50)    PATH 'Request__Security__Clearance'
-						, SUPERVISORY_POSITION              VARCHAR2(3)     PATH 'Request__Supervisory__Position'
-						, TRAVEL_PREFERENCE                 VARCHAR2(20)    PATH 'Request__Travel__Preference'
+						REQUEST_NUMBER                      VARCHAR2(202)     PATH 'Request__Number'
+						, REQUEST_DESCRIPTION               CLOB              PATH 'Request__Description'
+						, REQUEST_STATUS                    VARCHAR2(1002)    PATH 'Request__Status'
+						, REQUEST_TYPE                      VARCHAR2(1002)    PATH 'Request__Type'
+						, REQUEST_SOURCE                    VARCHAR2(1002)    PATH 'Request__Source'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)      PATH 'Request__Last__Update__Date_x002fTime'
+						, CREATION_DATE_STR                 VARCHAR2(50)      PATH 'Request__Creation__Date'
+						, SUBMISSION_DATE_STR               VARCHAR2(50)      PATH 'Request__Submission__Date'
+						, REQUESTER_NAME                    VARCHAR2(206)     PATH 'Requester__Name'
+						, REQUESTER_EMAIL                   VARCHAR2(242)     PATH 'Requester__Email'
+						, APPROVER_NAME                     VARCHAR2(206)     PATH 'Request__Approver__Name'
+						, APPROVER_EMAIL                    VARCHAR2(252)     PATH 'Request__Approver__Email'
+						, APPROVAL_DATE_STR                 VARCHAR2(50)      PATH 'Request__Approval__Date'
+						, CUSTOMER_NAME                     VARCHAR2(202)     PATH 'Request__Customer__Name'
+						, CUSTOMER_DEPARTMENT_NAME          VARCHAR2(202)     PATH 'Request__Customer__Department__Name'
+						, CUSTOMER_DEPARTMENT_CODE          VARCHAR2(10)      PATH 'Request__Customer__Department__Code'
+						, CUSTOMER_AGENCY_NAME              VARCHAR2(202)     PATH 'Request__Customer__Agency__Name'
+						, CUSTOMER_AGENCY_CODE              VARCHAR2(10)      PATH 'Request__Customer__Agency__Code'
+						, CUSTOMER_ADDRESS_LINE_1           VARCHAR2(202)     PATH 'Request__Customer__Address__Line__1'
+						, CUSTOMER_ADDRESS_LINE_2           VARCHAR2(202)     PATH 'Request__Customer__Address__Line__2'
+						, CUSTOMER_ADDRESS_LINE_3           VARCHAR2(202)     PATH 'Request__Customer__Address__Line__3'
+						, CUSTOMER_CITY                     VARCHAR2(122)     PATH 'Request__Customer__Address__City'
+						, CUSTOMER_STATE                    VARCHAR2(202)     PATH 'Request__Customer__Address__State'
+						, CUSTOMER_POSTAL_CODE              VARCHAR2(42)      PATH 'Request__Customer__Address__Postal__Code'
+						, CUSTOMER_COUNTRY                  VARCHAR2(202)     PATH 'Request__Customer__Address__Country'
+						, HIRING_ORGANIZATION               VARCHAR2(202)     PATH 'Request__Hiring__Organization'
+						, STAFFING_ORGANIZATION             VARCHAR2(122)     PATH 'Request__Staffing__Organization'
+						, PERSONNEL_ACTION_DATE_STR         VARCHAR2(50)      PATH 'Request__Personnel__Action__Date'
+						, MAXIMUM_AGE                       NUMBER(3)         PATH 'Request__Maximum__Age'
+						, MINIMUM_AGE                       NUMBER(3)         PATH 'Request__Minimum__Age'
+						, RELOCATION                        VARCHAR2(8)       PATH 'Request__Relocation'
+						, SECURITY_CLEARANCE                VARCHAR2(1002)    PATH 'Request__Security__Clearance'
+						, SUPERVISORY_POSITION              VARCHAR2(8)       PATH 'Request__Supervisory__Position'
+						, TRAVEL_PREFERENCE                 VARCHAR2(1002)    PATH 'Request__Travel__Preference'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
@@ -1781,8 +1779,8 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestAppointmentType"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, APPOINTMENT_TYPE                  VARCHAR2(35)    PATH 'Request__Appointment__Type'
+						REQUEST_NUMBER                      VARCHAR2(202)    PATH 'Request__Number'
+						, APPOINTMENT_TYPE                  VARCHAR2(1002)    PATH 'Request__Appointment__Type'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
@@ -1821,14 +1819,14 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestLocation"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, LOCATION_DESCRIPTION              VARCHAR2(50)    PATH 'Request__Location__Description'
-						, LOCATION_OPENINGS                 VARCHAR2(4)     PATH 'Request__Location__Openings'
-						, CITY                              VARCHAR2(50)    PATH 'Request__Location__City'
-						, STATE                             VARCHAR2(50)    PATH 'Request__Location__State'
-						, COUNTY                            VARCHAR2(50)    PATH 'Request__Location__County'
-						, COUNTRY                           VARCHAR2(50)    PATH 'Request__Location__Country'
-						, LOCATION_CODE                     VARCHAR2(10)    PATH 'Request__Location__Code'
+						REQUEST_NUMBER                      VARCHAR2(202)    PATH 'Request__Number'
+						, LOCATION_DESCRIPTION              VARCHAR2(334)    PATH 'Request__Location__Description'
+						, LOCATION_OPENINGS                 VARCHAR2(12)     PATH 'Request__Location__Openings'
+						, CITY                              VARCHAR2(122)    PATH 'Request__Location__City'
+						, STATE                             VARCHAR2(202)    PATH 'Request__Location__State'
+						, COUNTY                            VARCHAR2(202)    PATH 'Request__Location__County'
+						, COUNTRY                           VARCHAR2(202)    PATH 'Request__Location__Country'
+						, LOCATION_CODE                     VARCHAR2(34)     PATH 'Request__Location__Code'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER AND SRC.LOCATION_CODE = TRG.LOCATION_CODE )
@@ -1882,9 +1880,9 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestPosition"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, PD_NUMBER                         VARCHAR2(50)    PATH 'Request__Position__Description__Number'
-						, PD_TITLE                          VARCHAR2(100)   PATH 'Request__Position__Description__Title'
+						REQUEST_NUMBER                      VARCHAR2(202)    PATH 'Request__Number'
+						, PD_NUMBER                         VARCHAR2(202)    PATH 'Request__Position__Description__Number'
+						, PD_TITLE                          VARCHAR2(202)    PATH 'Request__Position__Description__Title'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER AND SRC.PD_NUMBER = TRG.PD_NUMBER)
@@ -1922,8 +1920,8 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestSpecialty"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, SPECIALTY                         VARCHAR2(50)    PATH 'Request__Specialty'
+						REQUEST_NUMBER                      VARCHAR2(202)    PATH 'Request__Number'
+						, SPECIALTY                         VARCHAR2(102)    PATH 'Request__Specialty'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
@@ -1960,9 +1958,9 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestVacancy"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, VACANCY_NUMBER                    NUMBER(10)      PATH 'Vacancy__Number'
-						, VACANCY_STATUS                    VARCHAR2(10)    PATH 'Vacancy__Status'
+						REQUEST_NUMBER                      VARCHAR2(202)     PATH 'Request__Number'
+						, VACANCY_NUMBER                    NUMBER(10)        PATH 'Vacancy__Number'
+						, VACANCY_STATUS                    VARCHAR2(1002)    PATH 'Vacancy__Status'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
@@ -2001,8 +1999,8 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_RequestWorkSchedule"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						REQUEST_NUMBER                      VARCHAR2(50)    PATH 'Request__Number'
-						, WORK_SCHEDULE                     VARCHAR2(18)    PATH 'Request__Work__Schedule'
+						REQUEST_NUMBER                      VARCHAR2(202)     PATH 'Request__Number'
+						, WORK_SCHEDULE                     VARCHAR2(1002)    PATH 'Request__Work__Schedule'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
@@ -2053,6 +2051,340 @@ END;
 /
 
 
+
+--------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_REVIEW_TABLE
+--------------------------------------------------------
+/**
+ * Parses Review XML data and stores it
+ * into the operational tables for Review.
+ *
+ * @param I_ID - Record ID
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_REVIEW_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_REVIEW_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_REVIEW_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_REVIEW_DETAIL table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_REVIEW_DETAIL table');
+		MERGE INTO DSS_REVIEW_DETAIL TRG
+		USING
+		(
+			SELECT
+				  TO_DATE(SUBSTR(X.CREATION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CREATION_DATE
+				, TO_DATE(SUBSTR(X.RECALL_STATUS_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS RECALL_STATUS_DATE
+				, TO_DATE(SUBSTR(X.REVIEW_DUE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REVIEW_DUE_DATE
+				, X.REVIEW_INSTRUCTIONS
+				, X.IS_ANNOUNCEMENT_QNR
+				, X.IS_ANNOUNCEMENT_TEXT
+				, X.IS_CERTIFICATE_REVIEW
+				, TO_DATE(SUBSTR(X.LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_UPDATE_DATE
+				, X.REVIEW_NAME
+				, X.OWNER
+				, X.RECALL_REASON
+				, TO_DATE(SUBSTR(X.REVIEW_RETURNED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REVIEW_RETURNED_DATE
+				, TO_DATE(SUBSTR(X.REVIEW_SENT_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REVIEW_SENT_DATE
+				, X.REVIEW_STATUS
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_ReviewDetail"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						CREATION_DATE_STR                    VARCHAR2(50)      PATH 'Review__Creation__Date'
+						, RECALL_STATUS_DATE_STR             VARCHAR2(50)      PATH 'Review__Date__Of__Recall__Status'
+						, REVIEW_DUE_DATE_STR                VARCHAR2(50)      PATH 'Review__Due__Date'
+						, REVIEW_INSTRUCTIONS                CLOB              PATH 'Review__Instructions'
+						, IS_ANNOUNCEMENT_QNR                VARCHAR2(8)       PATH 'Review__Is__Announcement__Questionnaire'
+						, IS_ANNOUNCEMENT_TEXT               VARCHAR2(8)       PATH 'Review__Is__Announcement__Text'
+						, IS_CERTIFICATE_REVIEW              VARCHAR2(8)       PATH 'Review__Is__Certificate__Review'
+						, LAST_UPDATE_DATE_STR               VARCHAR2(50)      PATH 'Review__Last__Updated__Date_x002fTime'
+						, REVIEW_NAME                        VARCHAR2(202)     PATH 'Review__Name'
+						, OWNER                              VARCHAR2(206)     PATH 'Review__Owner'
+						, RECALL_REASON                      CLOB              PATH 'Review__Recall__Reason'
+						, REVIEW_RETURNED_DATE_STR           VARCHAR2(50)      PATH 'Review__Returned__Date'
+						, REVIEW_SENT_DATE_STR               VARCHAR2(50)      PATH 'Review__Sent__Date'
+						, REVIEW_STATUS                      VARCHAR2(1002)    PATH 'Review__Status'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.REVIEW_NAME = TRG.REVIEW_NAME)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.CREATION_DATE              = SRC.CREATION_DATE
+			, TRG.RECALL_STATUS_DATE       = SRC.RECALL_STATUS_DATE
+			, TRG.REVIEW_DUE_DATE          = SRC.REVIEW_DUE_DATE
+			, TRG.REVIEW_INSTRUCTIONS      = SRC.REVIEW_INSTRUCTIONS
+			, TRG.IS_ANNOUNCEMENT_QNR      = SRC.IS_ANNOUNCEMENT_QNR
+			, TRG.IS_ANNOUNCEMENT_TEXT     = SRC.IS_ANNOUNCEMENT_TEXT
+			, TRG.IS_CERTIFICATE_REVIEW    = SRC.IS_CERTIFICATE_REVIEW
+			, TRG.LAST_UPDATE_DATE         = SRC.LAST_UPDATE_DATE
+			, TRG.OWNER                    = SRC.OWNER
+			, TRG.RECALL_REASON            = SRC.RECALL_REASON
+			, TRG.REVIEW_RETURNED_DATE     = SRC.REVIEW_RETURNED_DATE
+			, TRG.REVIEW_SENT_DATE         = SRC.REVIEW_SENT_DATE
+			, TRG.REVIEW_STATUS            = SRC.REVIEW_STATUS
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.CREATION_DATE
+			, TRG.RECALL_STATUS_DATE
+			, TRG.REVIEW_DUE_DATE
+			, TRG.REVIEW_INSTRUCTIONS
+			, TRG.IS_ANNOUNCEMENT_QNR
+			, TRG.IS_ANNOUNCEMENT_TEXT
+			, TRG.IS_CERTIFICATE_REVIEW
+			, TRG.LAST_UPDATE_DATE
+			, TRG.REVIEW_NAME
+			, TRG.OWNER
+			, TRG.RECALL_REASON
+			, TRG.REVIEW_RETURNED_DATE
+			, TRG.REVIEW_SENT_DATE
+			, TRG.REVIEW_STATUS
+		)
+		VALUES
+		(
+			SRC.CREATION_DATE
+			, SRC.RECALL_STATUS_DATE
+			, SRC.REVIEW_DUE_DATE
+			, SRC.REVIEW_INSTRUCTIONS
+			, SRC.IS_ANNOUNCEMENT_QNR
+			, SRC.IS_ANNOUNCEMENT_TEXT
+			, SRC.IS_CERTIFICATE_REVIEW
+			, SRC.LAST_UPDATE_DATE
+			, SRC.REVIEW_NAME
+			, SRC.OWNER
+			, SRC.RECALL_REASON
+			, SRC.REVIEW_RETURNED_DATE
+			, SRC.REVIEW_SENT_DATE
+			, SRC.REVIEW_STATUS
+		)
+		;
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_REVIEW_TABLE: Invalid REQUEST data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_REVIEW_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_REVIEW_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_REVIEW_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_REVIEW_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+/
+
+
+--------------------------------------------------------
+--  DDL for Procedure SP_UPDATE_TASK_TABLE
+--------------------------------------------------------
+/**
+ * Parses Task XML data and stores it
+ * into the operational tables for Task.
+ *
+ * @param I_ID - Record ID
+ */
+CREATE OR REPLACE PROCEDURE SP_UPDATE_TASK_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_TASK_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_TASK_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_TASK_DETAIL table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_TASK_DETAIL table');
+		MERGE INTO DSS_TASK_DETAIL TRG
+		USING
+		(
+			SELECT
+				X.VACANCY_STAFFING_OFFICE_NAME
+				, X.TASK_ID
+				, TO_DATE(SUBSTR(X.ACTIVATION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ACTIVATION_DATE
+				, TO_DATE(SUBSTR(X.COMPLETED_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS COMPLETED_DATE
+				, TO_DATE(SUBSTR(X.CREATION_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CREATION_DATE
+				, X.DAYS_TO_COMPLETE
+				, TO_DATE(SUBSTR(X.DUE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS DUE_DATE
+				, TO_DATE(SUBSTR(X.LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS LAST_UPDATE_DATE
+				, X.TASK_NAME
+				, X.OWNER_FIRST_NAME
+				, X.OWNER_LAST_NAME
+				, X.OWNER_NAME
+				, X.TASK_STATUS
+				, X.ACTUAL_DAYS_TO_COMPLETE
+				, X.TASK_TYPE
+				, X.REQUEST_NUMBER
+				, X.VACANCY_NUMBER
+			FROM INTG_DATA_DTL IDX
+				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_Taskdetail"]'
+					PASSING IDX.FIELD_DATA
+					COLUMNS
+						VACANCY_STAFFING_OFFICE_NAME           VARCHAR2(202)    PATH 'Task__Vacancy__Staffing__Office__Name'
+						, TASK_ID                              NUMBER(10)       PATH 'Task__ID'
+						, ACTIVATION_DATE_STR                  VARCHAR2(50)     PATH 'Task__Activation__Date_x002fTime'
+						, COMPLETED_DATE_STR                   VARCHAR2(50)     PATH 'Task__Completed__Date_x002fTime'
+						, CREATION_DATE_STR                    VARCHAR2(50)     PATH 'Task__Creation__Date'
+						, DAYS_TO_COMPLETE                     NUMBER(10)       PATH 'Task__Days__To__Complete'
+						, DUE_DATE_STR                         VARCHAR2(50)     PATH 'Task__Due__Date_x002fTime'
+						, LAST_UPDATE_DATE_STR                 VARCHAR2(50)     PATH 'Task__Last__Update__Date_x002fTime'
+						, TASK_NAME                            VARCHAR2(202)    PATH 'Task__Name'
+						, OWNER_FIRST_NAME                     VARCHAR2(102)    PATH 'Task__Owner__First__Name'
+						, OWNER_LAST_NAME                      VARCHAR2(102)    PATH 'Task__Owner__Last__Name'
+						, OWNER_NAME                           VARCHAR2(206)    PATH 'Task__Owner__Name'
+						, TASK_STATUS                          VARCHAR2(1002)   PATH 'Task__Status'
+						, ACTUAL_DAYS_TO_COMPLETE              NUMBER(10)       PATH 'Task__Actual__Days__To__Complete'
+						, TASK_TYPE                            VARCHAR2(1002)   PATH 'Task__Type'
+						, REQUEST_NUMBER                       VARCHAR2(202)    PATH 'Task__Request__Number'
+						, VACANCY_NUMBER                       NUMBER(10)       PATH 'Task__Vacancy__Number'
+				) X
+			WHERE IDX.ID = I_ID
+		) SRC ON (SRC.TASK_ID = TRG.TASK_ID)
+
+--TODO: finalize the match condition
+
+		WHEN MATCHED THEN UPDATE SET
+			TRG.VACANCY_STAFFING_OFFICE_NAME    = SRC.VACANCY_STAFFING_OFFICE_NAME
+			, TRG.ACTIVATION_DATE               = SRC.ACTIVATION_DATE
+			, TRG.COMPLETED_DATE                = SRC.COMPLETED_DATE
+			, TRG.CREATION_DATE                 = SRC.CREATION_DATE
+			, TRG.DAYS_TO_COMPLETE              = SRC.DAYS_TO_COMPLETE
+			, TRG.DUE_DATE                      = SRC.DUE_DATE
+			, TRG.LAST_UPDATE_DATE              = SRC.LAST_UPDATE_DATE
+			, TRG.TASK_NAME                     = SRC.TASK_NAME
+			, TRG.OWNER_FIRST_NAME              = SRC.OWNER_FIRST_NAME
+			, TRG.OWNER_LAST_NAME               = SRC.OWNER_LAST_NAME
+			, TRG.OWNER_NAME                    = SRC.OWNER_NAME
+			, TRG.TASK_STATUS                   = SRC.TASK_STATUS
+			, TRG.ACTUAL_DAYS_TO_COMPLETE       = SRC.ACTUAL_DAYS_TO_COMPLETE
+			, TRG.TASK_TYPE                     = SRC.TASK_TYPE
+			, TRG.REQUEST_NUMBER                = SRC.REQUEST_NUMBER
+			, TRG.VACANCY_NUMBER                = SRC.VACANCY_NUMBER
+		WHEN NOT MATCHED THEN INSERT
+		(
+			TRG.VACANCY_STAFFING_OFFICE_NAME
+			, TRG.TASK_ID
+			, TRG.ACTIVATION_DATE
+			, TRG.COMPLETED_DATE
+			, TRG.CREATION_DATE
+			, TRG.DAYS_TO_COMPLETE
+			, TRG.DUE_DATE
+			, TRG.LAST_UPDATE_DATE
+			, TRG.TASK_NAME
+			, TRG.OWNER_FIRST_NAME
+			, TRG.OWNER_LAST_NAME
+			, TRG.OWNER_NAME
+			, TRG.TASK_STATUS
+			, TRG.ACTUAL_DAYS_TO_COMPLETE
+			, TRG.TASK_TYPE
+			, TRG.REQUEST_NUMBER
+			, TRG.VACANCY_NUMBER
+		)
+		VALUES
+		(
+			SRC.VACANCY_STAFFING_OFFICE_NAME
+			, SRC.TASK_ID
+			, SRC.ACTIVATION_DATE
+			, SRC.COMPLETED_DATE
+			, SRC.CREATION_DATE
+			, SRC.DAYS_TO_COMPLETE
+			, SRC.DUE_DATE
+			, SRC.LAST_UPDATE_DATE
+			, SRC.TASK_NAME
+			, SRC.OWNER_FIRST_NAME
+			, SRC.OWNER_LAST_NAME
+			, SRC.OWNER_NAME
+			, SRC.TASK_STATUS
+			, SRC.ACTUAL_DAYS_TO_COMPLETE
+			, SRC.TASK_TYPE
+			, SRC.REQUEST_NUMBER
+			, SRC.VACANCY_NUMBER
+		)
+		;
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_TASK_TABLE: Invalid REQUEST data.  I_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_TASK_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_TASK_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_TASK_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_TASK_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+/
 
 
 --------------------------------------------------------
@@ -2134,8 +2466,8 @@ BEGIN
 				, X.IS_AGE_FORMULA
 				, X.HAS_MAX_AGE
 				, X.HAS_MIN_AGE
-				, X.MAX_AGE
-				, X.MIN_AGE
+				, X.MAXIMUM_AGE
+				, X.MINIMUM_AGE
 				, X.PERIOD_OF_ELIGIBILITY
 				, X.RELOCATION
 				, X.RNO
@@ -2146,47 +2478,47 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyDetail"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, VACANCY_STATUS                    VARCHAR2(10)    PATH 'Vacancy__Status'
-						, JOB_TITLE                         VARCHAR2(100)   PATH 'Vacancy__USAJOBS__Job__Title'
-						, VACANCY_DESCRIPTION               VARCHAR2(50)    PATH 'Vacancy__Description'
-						, VACANCY_TYPE                      VARCHAR2(30)    PATH 'Vacancy__Type'
-						, DISPLAY_TYPE                      VARCHAR2(30)    PATH 'Vacancy__USAJOBS__Display__Type'
-						, IS_INTERNAL_MERIT_PROMO           VARCHAR2(3)     PATH 'Vacancy__USAJOBS__Announcement__Type___x0028Is__Internal__Merit__Promotion_x0029'
-						, IS_PUBLIC                         VARCHAR2(3)     PATH 'Vacancy__USAJOBS__Announcement__Type___x0028Is__Public_x0029'
-						, IS_STATUS                         VARCHAR2(3)     PATH 'Vacancy__USAJOBS__Announcement__Type___x0028Is__Status_x0029'
-						, CREATION_DATE_STR                 VARCHAR2(50)    PATH 'Vacancy__Creation__Date'
-						, LAST_UPDATE_DATE_STR              VARCHAR2(50)    PATH 'Vacancy__Last__Update__Date_x002fTime'
-						, ANNOUNCEMENT_NUMBER               VARCHAR2(30)    PATH 'Announcement__Number'
-						, IS_UNDER_LITIGATION               VARCHAR2(3)     PATH 'Vacancy__Is__Under__Litigation'
-						, ORGANIZATION_NAME                 VARCHAR2(100)   PATH 'Vacancy__Staffing__Organization__Name'
-						, ORGANIZATION_CODE                 VARCHAR2(4)     PATH 'Vacancy__Staffing__Organization__Code'
-						, OFFICE_NAME                       VARCHAR2(100)   PATH 'Vacancy__Staffing__Office__Name'
-						, OFFICE_CODE                       VARCHAR2(4)     PATH 'Vacancy__Staffing__Office__Code'
-						, ADDRESS_LINE_1                    VARCHAR2(75)    PATH 'Vacancy__Staffing__Office__Address__Line__1'
-						, ADDRESS_LINE_2                    VARCHAR2(75)    PATH 'Vacancy__Staffing__Office__Address__Line__2'
-						, ADDRESS_LINE_3                    VARCHAR2(75)    PATH 'Vacancy__Staffing__Office__Address__Line__3'
-						, CITY                              VARCHAR2(50)    PATH 'Vacancy__Staffing__Office__Address__City'
-						, STATE_ABBREV                      VARCHAR2(3)     PATH 'Vacancy__Staffing__Office__Address__State__Abbreviation'
-						, POSTALCODE                        VARCHAR2(10)    PATH 'Vacancy__Staffing__Office__Address__Postal__Code'
-						, COUNTRY                           VARCHAR2(50)    PATH 'Vacancy__Staffing__Office__Address__Country'
-						, HIRING_ORGANIZATION_NAME          VARCHAR2(100)   PATH 'Vacancy__Staffing__Hiring__Organization__Name'
-						, ACWA                              VARCHAR2(3)     PATH 'Vacancy__ACWA'
-						, AGE_SCREENING                     VARCHAR2(3)     PATH 'Vacancy__Age__Screening'
-						, APPLICANT_UPDT_RESTRICTED         VARCHAR2(3)     PATH 'Vacancy__Applicant__Update__Restricted'
-						, APPLY_ONLINE                      VARCHAR2(3)     PATH 'Vacancy__Apply__Online'
-						, CITIZENSHIP_SCREENING             VARCHAR2(3)     PATH 'Vacancy__Citizenship__Screening'
-						, IS_AGE_FORMULA                    VARCHAR2(3)     PATH 'Vacancy__Is__Age__Formula'
-						, HAS_MAX_AGE                       VARCHAR2(3)     PATH 'Vacancy__Has__Maximum__Age'
-						, HAS_MIN_AGE                       VARCHAR2(3)     PATH 'Vacancy__Has__Minimum__Age'
-						, MAX_AGE                           NUMBER(3)       PATH 'Vacancy__Maximum__Age'
-						, MIN_AGE                           NUMBER(3)       PATH 'Vacancy__Minimum__Age'
-						, PERIOD_OF_ELIGIBILITY             NUMBER(2)       PATH 'Vacancy__Period__of__Eligibility'
-						, RELOCATION                        VARCHAR2(3)     PATH 'Vacancy__Relocation'
-						, RNO                               VARCHAR2(3)     PATH 'Vacancy__RNO'
-						, SECURITY_CLEARANCE                VARCHAR2(50)    PATH 'Vacancy__Security__Clearance'
-						, SUPERVISORY_POSITION              VARCHAR2(3)     PATH 'Vacancy__Supervisory__Position'
-						, TRAVEL_PREFERENCE                 VARCHAR2(25)    PATH 'Vacancy__Travel__Preference'
+						VACANCY_NUMBER                      NUMBER(10)        PATH 'Vacancy__Number'
+						, VACANCY_STATUS                    VARCHAR2(1002)    PATH 'Vacancy__Status'
+						, JOB_TITLE                         VARCHAR2(202)     PATH 'Vacancy__USAJOBS__Job__Title'
+						, VACANCY_DESCRIPTION               VARCHAR2(1002)    PATH 'Vacancy__Description'
+						, VACANCY_TYPE                      VARCHAR2(1002)    PATH 'Vacancy__Type'
+						, DISPLAY_TYPE                      VARCHAR2(24)      PATH 'Vacancy__USAJOBS__Display__Type'
+						, IS_INTERNAL_MERIT_PROMO           VARCHAR2(8)       PATH 'Vacancy__USAJOBS__Announcement__Type___x0028Is__Internal__Merit__Promotion_x0029'
+						, IS_PUBLIC                         VARCHAR2(8)       PATH 'Vacancy__USAJOBS__Announcement__Type___x0028Is__Public_x0029'
+						, IS_STATUS                         VARCHAR2(8)       PATH 'Vacancy__USAJOBS__Announcement__Type___x0028Is__Status_x0029'
+						, CREATION_DATE_STR                 VARCHAR2(50)      PATH 'Vacancy__Creation__Date'
+						, LAST_UPDATE_DATE_STR              VARCHAR2(50)      PATH 'Vacancy__Last__Update__Date_x002fTime'
+						, ANNOUNCEMENT_NUMBER               VARCHAR2(56)      PATH 'Announcement__Number'
+						, IS_UNDER_LITIGATION               VARCHAR2(8)       PATH 'Vacancy__Is__Under__Litigation'
+						, ORGANIZATION_NAME                 VARCHAR2(122)     PATH 'Vacancy__Staffing__Organization__Name'
+						, ORGANIZATION_CODE                 VARCHAR2(10)      PATH 'Vacancy__Staffing__Organization__Code'
+						, OFFICE_NAME                       VARCHAR2(202)     PATH 'Vacancy__Staffing__Office__Name'
+						, OFFICE_CODE                       VARCHAR2(10)      PATH 'Vacancy__Staffing__Office__Code'
+						, ADDRESS_LINE_1                    VARCHAR2(202)     PATH 'Vacancy__Staffing__Office__Address__Line__1'
+						, ADDRESS_LINE_2                    VARCHAR2(202)     PATH 'Vacancy__Staffing__Office__Address__Line__2'
+						, ADDRESS_LINE_3                    VARCHAR2(202)     PATH 'Vacancy__Staffing__Office__Address__Line__3'
+						, CITY                              VARCHAR2(122)     PATH 'Vacancy__Staffing__Office__Address__City'
+						, STATE_ABBREV                      VARCHAR2(8)       PATH 'Vacancy__Staffing__Office__Address__State__Abbreviation'
+						, POSTALCODE                        VARCHAR2(42)      PATH 'Vacancy__Staffing__Office__Address__Postal__Code'
+						, COUNTRY                           VARCHAR2(202)     PATH 'Vacancy__Staffing__Office__Address__Country'
+						, HIRING_ORGANIZATION_NAME          VARCHAR2(102)     PATH 'Vacancy__Staffing__Hiring__Organization__Name'
+						, ACWA                              VARCHAR2(8)       PATH 'Vacancy__ACWA'
+						, AGE_SCREENING                     VARCHAR2(8)       PATH 'Vacancy__Age__Screening'
+						, APPLICANT_UPDT_RESTRICTED         VARCHAR2(8)       PATH 'Vacancy__Applicant__Update__Restricted'
+						, APPLY_ONLINE                      VARCHAR2(8)       PATH 'Vacancy__Apply__Online'
+						, CITIZENSHIP_SCREENING             VARCHAR2(8)       PATH 'Vacancy__Citizenship__Screening'
+						, IS_AGE_FORMULA                    VARCHAR2(8)       PATH 'Vacancy__Is__Age__Formula'
+						, HAS_MAX_AGE                       VARCHAR2(8)       PATH 'Vacancy__Has__Maximum__Age'
+						, HAS_MIN_AGE                       VARCHAR2(8)       PATH 'Vacancy__Has__Minimum__Age'
+						, MAXIMUM_AGE                       NUMBER(3)         PATH 'Vacancy__Maximum__Age'
+						, MINIMUM_AGE                       NUMBER(3)         PATH 'Vacancy__Minimum__Age'
+						, PERIOD_OF_ELIGIBILITY             NUMBER(10)        PATH 'Vacancy__Period__of__Eligibility'
+						, RELOCATION                        VARCHAR2(8)       PATH 'Vacancy__Relocation'
+						, RNO                               VARCHAR2(8)       PATH 'Vacancy__RNO'
+						, SECURITY_CLEARANCE                VARCHAR2(1002)    PATH 'Vacancy__Security__Clearance'
+						, SUPERVISORY_POSITION              VARCHAR2(8)       PATH 'Vacancy__Supervisory__Position'
+						, TRAVEL_PREFERENCE                 VARCHAR2(1002)    PATH 'Vacancy__Travel__Preference'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER)
@@ -2224,8 +2556,8 @@ BEGIN
 			, TRG.IS_AGE_FORMULA                = SRC.IS_AGE_FORMULA
 			, TRG.HAS_MAX_AGE                   = SRC.HAS_MAX_AGE
 			, TRG.HAS_MIN_AGE                   = SRC.HAS_MIN_AGE
-			, TRG.MAX_AGE                       = SRC.MAX_AGE
-			, TRG.MIN_AGE                       = SRC.MIN_AGE
+			, TRG.MAXIMUM_AGE                   = SRC.MAXIMUM_AGE
+			, TRG.MINIMUM_AGE                   = SRC.MINIMUM_AGE
 			, TRG.PERIOD_OF_ELIGIBILITY         = SRC.PERIOD_OF_ELIGIBILITY
 			, TRG.RELOCATION                    = SRC.RELOCATION
 			, TRG.RNO                           = SRC.RNO
@@ -2267,8 +2599,8 @@ BEGIN
 			, TRG.IS_AGE_FORMULA
 			, TRG.HAS_MAX_AGE
 			, TRG.HAS_MIN_AGE
-			, TRG.MAX_AGE
-			, TRG.MIN_AGE
+			, TRG.MAXIMUM_AGE
+			, TRG.MINIMUM_AGE
 			, TRG.PERIOD_OF_ELIGIBILITY
 			, TRG.RELOCATION
 			, TRG.RNO
@@ -2311,8 +2643,8 @@ BEGIN
 			, SRC.IS_AGE_FORMULA
 			, SRC.HAS_MAX_AGE
 			, SRC.HAS_MIN_AGE
-			, SRC.MAX_AGE
-			, SRC.MIN_AGE
+			, SRC.MAXIMUM_AGE
+			, SRC.MINIMUM_AGE
 			, SRC.PERIOD_OF_ELIGIBILITY
 			, SRC.RELOCATION
 			, SRC.RNO
@@ -2341,12 +2673,12 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyCustomer"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, CUSTOMER_NAME                     VARCHAR2(100)   PATH 'Vacancy__Customer__Name'
-						, DEPARTMENT_NAME                   VARCHAR2(100)   PATH 'Vacancy__Customer__Department__Name'
-						, DEPARTMENT_CODE                   VARCHAR2(4)     PATH 'Vacancy__Customer__Department__Code'
-						, AGENCY_NAME                       VARCHAR2(100)   PATH 'Vacancy__Customer__Agency__Name'
-						, AGENCY_CODE                       VARCHAR2(4)     PATH 'Vacancy__Customer__Agency__Code'
+						VACANCY_NUMBER                      NUMBER(10)       PATH 'Vacancy__Number'
+						, CUSTOMER_NAME                     VARCHAR2(202)    PATH 'Vacancy__Customer__Name'
+						, DEPARTMENT_NAME                   VARCHAR2(202)    PATH 'Vacancy__Customer__Department__Name'
+						, DEPARTMENT_CODE                   VARCHAR2(10)     PATH 'Vacancy__Customer__Department__Code'
+						, AGENCY_NAME                       VARCHAR2(202)    PATH 'Vacancy__Customer__Agency__Name'
+						, AGENCY_CODE                       VARCHAR2(10)     PATH 'Vacancy__Customer__Agency__Code'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.CUSTOMER_NAME = TRG.CUSTOMER_NAME)
@@ -2397,8 +2729,8 @@ BEGIN
 					PASSING IDX.FIELD_DATA
 					COLUMNS
 						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, ELIGIBILITY                       VARCHAR2(100)   PATH 'Vacancy__Eligibility'
-						, ELIGIBILITY_LABEL                 VARCHAR2(30)    PATH 'Vacancy__Eligibility__Label'
+						, ELIGIBILITY                       VARCHAR2(202)   PATH 'Vacancy__Eligibility'
+						, ELIGIBILITY_LABEL                 VARCHAR2(34)    PATH 'Vacancy__Eligibility__Label'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.ELIGIBILITY = TRG.ELIGIBILITY)
@@ -2439,9 +2771,9 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyPosition"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, POSITION_DESCRIPTION              VARCHAR2(50)    PATH 'Vacancy__Position__Description__Number'
-						, POSITION_DESCRIPTION_TITLE        VARCHAR2(100)   PATH 'Vacancy__Position__Description__Title'
+						VACANCY_NUMBER                      NUMBER(10)       PATH 'Vacancy__Number'
+						, POSITION_DESCRIPTION              VARCHAR2(202)    PATH 'Vacancy__Position__Description__Number'
+						, POSITION_DESCRIPTION_TITLE        VARCHAR2(202)    PATH 'Vacancy__Position__Description__Title'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.POSITION_DESCRIPTION = TRG.POSITION_DESCRIPTION)
@@ -2481,12 +2813,8 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancySpecialty"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, SPECIALTY                         VARCHAR2(50)    PATH 'Vacancy__Specialty'
-
---TODO: older xml has other specialty detail fields (Vacancy__Grade, Vacancy__Series).  Which one is correct?
---      If only two columns, update should be removed, only insert makes sense
-
+						VACANCY_NUMBER                      NUMBER(10)       PATH 'Vacancy__Number'
+						, SPECIALTY                         VARCHAR2(102)    PATH 'Vacancy__Specialty'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.SPECIALTY = TRG.SPECIALTY)
@@ -2525,10 +2853,10 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyDocuments"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, SUPPORTING_DOC_TYPE               VARCHAR2(50)    PATH 'Vacancy__Supporting__Document__Type'
-						, SUPPORTING_DOC_CUSTM_TITLE        VARCHAR2(100)   PATH 'Vacancy__Supporting__Document__Custom__Title'
-						, REQUIRED_DOC                      VARCHAR2(3)     PATH 'Vacancy__Required__Document'
+						VACANCY_NUMBER                      NUMBER(10)        PATH 'Vacancy__Number'
+						, SUPPORTING_DOC_TYPE               VARCHAR2(1002)    PATH 'Vacancy__Supporting__Document__Type'
+						, SUPPORTING_DOC_CUSTM_TITLE        VARCHAR2(1002)    PATH 'Vacancy__Supporting__Document__Custom__Title'
+						, REQUIRED_DOC                      VARCHAR2(8)       PATH 'Vacancy__Required__Document'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.SUPPORTING_DOC_TYPE = TRG.SUPPORTING_DOC_TYPE)
@@ -2536,8 +2864,6 @@ BEGIN
 --TODO: finalize the match condition
 
 		WHEN MATCHED THEN UPDATE SET
-			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
-			--TRG.SUPPORTING_DOC_TYPE             = SRC.SUPPORTING_DOC_TYPE
 			TRG.SUPPORTING_DOC_CUSTM_TITLE      = SRC.SUPPORTING_DOC_CUSTM_TITLE
 			, TRG.REQUIRED_DOC                  = SRC.REQUIRED_DOC
 		WHEN NOT MATCHED THEN INSERT
@@ -2572,9 +2898,9 @@ BEGIN
 				, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_VacancyRequest"]'
 					PASSING IDX.FIELD_DATA
 					COLUMNS
-						VACANCY_NUMBER                      NUMBER(10)      PATH 'Vacancy__Number'
-						, REQUEST_NUMBER                    VARCHAR2(50)    PATH 'Request__Number'
-						, REQUEST_STATUS                    VARCHAR2(30)    PATH 'Request__Status'
+						VACANCY_NUMBER                      NUMBER(10)        PATH 'Vacancy__Number'
+						, REQUEST_NUMBER                    VARCHAR2(202)     PATH 'Request__Number'
+						, REQUEST_STATUS                    VARCHAR2(1002)    PATH 'Request__Status'
 				) X
 			WHERE IDX.ID = I_ID
 		) SRC ON (SRC.VACANCY_NUMBER = TRG.VACANCY_NUMBER AND SRC.REQUEST_NUMBER = TRG.REQUEST_NUMBER)
@@ -2582,8 +2908,6 @@ BEGIN
 --TODO: finalize the match condition
 
 		WHEN MATCHED THEN UPDATE SET
-			--TRG.VACANCY_NUMBER                  = SRC.VACANCY_NUMBER
-			--TRG.REQUEST_NUMBER                  = SRC.REQUEST_NUMBER
 			TRG.REQUEST_STATUS                  = SRC.REQUEST_STATUS
 		WHEN NOT MATCHED THEN INSERT
 		(
@@ -2737,6 +3061,10 @@ BEGIN
 	ELSIF V_INTG_TYPE = 'NEWHIRE' THEN
 		SP_UPDATE_NEWHIRE_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'REQUEST' THEN
+		SP_UPDATE_REQUEST_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'REVIEW' THEN
+		SP_UPDATE_REQUEST_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'TASK' THEN
 		SP_UPDATE_REQUEST_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'VACANCY' THEN
 		SP_UPDATE_VACANCY_TABLE(V_ID);
