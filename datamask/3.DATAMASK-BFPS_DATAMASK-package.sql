@@ -149,20 +149,16 @@ end BFPS_DATAMASK;
 
 
 CREATE OR REPLACE package body BFPS_DATAMASK as
+    mem        num_array;
+    counter    BINARY_INTEGER := 55;
+    saved_norm NUMBER := NULL;
+    need_init  BOOLEAN := TRUE;
 
-    mem        num_array;           -- big internal state hidden from the user
-    counter    BINARY_INTEGER := 55;-- counter through the results
-    saved_norm NUMBER := NULL;      -- unused random normally distributed value
-    need_init  BOOLEAN := TRUE;     -- do we still need to initialize
-
-
-    -- Seed the random number generator with a binary_integer
     PROCEDURE seed(val IN BINARY_INTEGER) IS
     BEGIN
         seed(TO_CHAR(val));
     END seed;
 
-    -- Seed the random number generator with a string.
     PROCEDURE seed(val IN VARCHAR2) IS
         junk     VARCHAR2(2000);
         piece    VARCHAR2(20);
@@ -215,8 +211,6 @@ CREATE OR REPLACE package body BFPS_DATAMASK as
     END seed;
 
     -- Numberic Section ------------------------------------------------------------
-    -- give values to the user
-    -- Delayed Fibonacci
     FUNCTION randomNumber RETURN NUMBER  PARALLEL_ENABLE IS
     randval  NUMBER;
     BEGIN
