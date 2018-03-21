@@ -1,8 +1,35 @@
 CREATE OR REPLACE PACKAGE BFPS_PDAF AS 
 
-    FUNCTION greeting(yourname in varchar2) RETURN VARCHAR2 PARALLEL_ENABLE;
-        PRAGMA restrict_references (greeting, WNDS);
-
+    ------------------------------------------------------------------------------------------
+    --	Name				:	BFPS_PDAF-package.sql
+    --  Script/package name	: 	BFPS-DATAMASK
+    --	Author				:	Taeho Lee <thee@bizflow.com>
+    --	Copyright			:	BizFlow Corp.	
+    --	
+    --	Project				:	BizFlow Oracle PII DISCLOSURE AVOIDANCE FRAMEWORK library
+    --	Purpose				:	Tasking Processing package of BizFlow Oracle PII Disclosure Avoidance.
+    --
+    --                          Task descriptions are configured and registered in PDAF_PII_FIELD_META and
+    --                          PDAF_PII_FIELD_XML_MEATA tables. LOG is generated in PDAF_PII_LOG
+    --
+    --  Notes               :   The user who runs this packages must have write permission to target tables.
+    --  
+    --  Usage               : 
+    --                          conf_version = version number of the configuration. if you want to have version control
+    --                          conf_groupId = group id if you separte the tasks by group. like per each agencies or department.	
+    --                          conf_debugMode = [ 'Y' | 'N' ] 
+    --                                      If 'Y', not database fields update. only generating a log having SQL queries to be executed.
+    --                                      If 'N', perform database update.
+    --                          conf_mainSchema = database schema name where BFPS_PDAF AND BFPS_DATAMASK packages exists.
+    --       
+    -- 	WHEN		WHO			WHAT		
+    -- 	-----------	--------	-------------------------------------------------------
+    -- 	03/07/2018	THLEE		Created
+    --  03/14/2018  THLEE       Non-XML type logic
+    --  03/19/2018  THLEE       XMLTYPE logic
+    --  03/20/2018  THLEE       Bug fix - wrong delimiter use in Regular Expression.
+    ------------------------------------------------------------------------------------------
+    
     -- get function string for Dynamic PL SQL block
     PROCEDURE logMaskingTask(confVersion in varchar2
                             , groupId in varchar2
@@ -23,13 +50,6 @@ END BFPS_PDAF;
 
 
 CREATE OR REPLACE PACKAGE BODY BFPS_PDAF AS
-
-  FUNCTION greeting(yourname in varchar2) RETURN VARCHAR2 PARALLEL_ENABLE AS
-  BEGIN
-    
-    return 'Hello ' || yourname;
-    
-  END greeting;
   
     PROCEDURE logMaskingTask(confVersion in varchar2
                             , groupId in varchar2
@@ -42,7 +62,7 @@ CREATE OR REPLACE PACKAGE BODY BFPS_PDAF AS
                             , log_message in varchar2) PARALLEL_ENABLE as
         runDegree NUMBER(38);                            
     BEGIN
-        
+    
         runDegree := PDAF_PII_RUNDEGREE_SEQ.nextval;
         
         DBMS_OUTPUT.PUT_LINE('>logMaskingTask');

@@ -1,53 +1,62 @@
 CREATE OR REPLACE package BFPS_DATAMASK as 
 
-    ------------
-    --  OVERVIEW
-    --
-    --------
-    --  USAGE
-    --
-    --  This is a random number generator.  Do not use for cryptography.
-    --
-    --  By default, the package is initialized with the current user
-    --  name, current time down to the second, and the current session.
-    --
-    --  If this package is seeded twice with the same seed, then accessed
-    --  in the same way, it will produce the same results in both cases.
-    --
-    --------
-    --  EXAMPLES
-    --
-    --  To initialize or reset the generator, call the seed procedure as in:
-    --      execute hhshrworkflowpdaf.seed(12345678);
-    --    or
-    --      execute hhshrworkflowpdaf.seed(TO_CHAR(SYSDATE,'MM-DD-YYYY HH24:MI:SS'));
-    --  To get the random number, simply call the function, e.g.
-    --      my_random_real NUMBER;
-    --      my_random_real := hhshrworkflowpdaf.ramdomPrecisionNumber;
+    ------------------------------------------------------------------------------------------
+    --	Name				:	BFPS_DATAMASK-package.sql
+    --  Script/package name	: 	BFPS_DATAMASK
+    --	Author				:	Taeho Lee <thee@bizflow.com>
+    --	Copyright			:	BizFlow Corp.	
+    --	
+    --	Project				:	BizFlow Oracle Data Masking library
+    --	Purpose				:	Library package of BizFlow Oracle common utilities for Data Masking
+    --	
+    --  Example
     --  To use in SQL statements:
-    --      select hhshrworkflowpdaf.ramdomPrecisionNumber from dual;
-    --      insert into a values (hhshrworkflowpdaf.ramdomPrecisionNumber);
-    --      variable x NUMBER;
-    --      execute :x := hhshrworkflowpdaf.ramdomPrecisionNumber;
-    --      update a set a2=a2+1 where a1 < :x;
+    --      select BFPS_DATAMASK.ramdomNumber from dual;
+    --      insert into mytable (price) values (BFPS_DATAMASK.ramdomNumber());
+    --      execute :x := BFPS_DATAMASK.ramdomNumber;
+    --
+    --  Usage                : "opt" specifies that the returned string may contain:
+    --                          L = An uppercase Letter.	
+    --                          l = A lowercase letter.	
+    --                          M = A letter (upper or lower).
+    --                          V = An uppercase Vowel.
+    --                          v = A lowercase vowel.
+    --                          W = A vowel (upper or lower).
+    --                          C = An uppercase Consonant.	
+    --                          c = A lowercase consonant.
+    --                          E = A consonant (upper or lower).
+    --                          N = Any number, 0-9.
+    --                          n = Any number, 1-9.
+    --                          H = An Hexidecimal number (0-F)
+    --                          X = any alpha-numeric characters (upper) 
+    --                          x = any alpha-numeric characters (lower) 
+    --                          Z = any alpha-numeric characters (lower) 
+    --                          P = any printable char (ASCII subset) 
+    --       
+    -- 	WHEN		WHO			WHAT		
+    -- 	-----------	--------	-------------------------------------------------------
+    -- 	03/05/2018	THLEE		Created
+    --  03/08/2018  THLEE       String API
+    --  03/13/2018  THLEE       Number, Date API
+    --  03/15/2018  THLEE       Lookup
+    --  03/19/2018  THLEE       Bug fix - wrong delimiter use in Regular Expression.
+    ------------------------------------------------------------------------------------------
 
-/*
-
-PRAGMA is an instruction or a hint or information to the compiler. Pragmas are processed at compile time, not at run time.
-
-CREATE OR REPLACE PACKAGE pkg_salary
-IS
-function get_emp_salary(p_empno integer) return number;    
-PRAGMA restrict_references(get_emp_salary, RNDS, RNPS, WNDS, WNPS);
-END pkg_salary;
-
-RNDS – Read No Database State. Asserts that the function not to read or query tables
-RNDS – Read No Package State. Asserts that the function not to read or reference package variables
-WNDS – Write No Database State. Asserts that the function not modify database tables
-WNPS – Write No Package State. Asserts that the function not modify package variables
-TRUST – Asserts that the function can be trusted not to violate one or more rules. Used only when C or JAVA routines are called from PL/SQL.
-
-*/
+    /**
+        PRAGMA is an instruction or a hint or information to the compiler. Pragmas are processed at compile time, not at run time.
+        
+        CREATE OR REPLACE PACKAGE pkg_salary
+        IS
+        function get_emp_salary(p_empno integer) return number;    
+        PRAGMA restrict_references(get_emp_salary, RNDS, RNPS, WNDS, WNPS);
+        END pkg_salary;
+        
+        RNDS – Read No Database State. Asserts that the function not to read or query tables
+        RNDS – Read No Package State. Asserts that the function not to read or reference package variables
+        WNDS – Write No Database State. Asserts that the function not modify database tables
+        WNPS – Write No Package State. Asserts that the function not modify package variables
+        TRUST – Asserts that the function can be trusted not to violate one or more rules. Used only when C or JAVA routines are called from PL/SQL.
+    **/
 
     /**
     *   Common Dynamic Data Masking Library Section
@@ -140,7 +149,6 @@ end BFPS_DATAMASK;
 
 
 CREATE OR REPLACE package body BFPS_DATAMASK as
-
 
     mem        num_array;           -- big internal state hidden from the user
     counter    BINARY_INTEGER := 55;-- counter through the results
@@ -550,8 +558,6 @@ CREATE OR REPLACE package body BFPS_DATAMASK as
 
     end maskDateString;
 */
-
-
 
     function maskFieldStringValue(fieldName in varchar2, fieldValue in varchar2, maskType in varchar2, maskValue in varchar2) 
         RETURN VARCHAR2 PARALLEL_ENABLE as
