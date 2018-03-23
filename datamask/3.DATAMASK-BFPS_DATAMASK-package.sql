@@ -1,4 +1,4 @@
-CREATE OR REPLACE package BFPS_DATAMASK as 
+CREATE OR REPLACE PACKAGE BFPS_DATAMASK AS 
 
     ------------------------------------------------------------------------------------------
     --	Name				:	BFPS_DATAMASK-package.sql
@@ -62,51 +62,51 @@ CREATE OR REPLACE package BFPS_DATAMASK as
     *   Common Dynamic Data Masking Library Section
     **/
 
-    TYPE num_array IS TABLE OF NUMBER INDEX BY BINARY_INTEGER;
+    TYPE NUM_ARRAY IS TABLE OF NUMBER INDEX BY BINARY_INTEGER;
 
     -- Initialization Section ------------------------------------------------------------
     -- Seed with a binary integer
-    PROCEDURE seed(val IN BINARY_INTEGER);
-    PRAGMA restrict_references (seed, WNDS);
+    PROCEDURE SEED(VAL IN BINARY_INTEGER);
+    PRAGMA RESTRICT_REFERENCES (SEED, WNDS);
     -- Seed with a string (up to length 2000)
-    PROCEDURE seed(val IN VARCHAR2);
-    PRAGMA restrict_references (seed, WNDS);
+    PROCEDURE SEED(VAL IN VARCHAR2);
+    PRAGMA RESTRICT_REFERENCES (SEED, WNDS);
 
 
     -- Numberic Section ------------------------------------------------------------
     -- Get a random 38-digit precision number, 0.0 <= value < 1.0
-    FUNCTION randomNumber RETURN NUMBER PARALLEL_ENABLE;
-        PRAGMA restrict_references (randomNumber, WNDS);
+    FUNCTION RANDOMNUMBER RETURN NUMBER PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (RANDOMNUMBER, WNDS);
     -- get a random Oracle number x, low <= x < high
-    FUNCTION randomNumber (low IN NUMBER, high IN NUMBER) RETURN NUMBER PARALLEL_ENABLE;
-        PRAGMA restrict_references (randomNumber, WNDS);
+    FUNCTION RANDOMNUMBER (LOW IN NUMBER, HIGH IN NUMBER) RETURN NUMBER PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (RANDOMNUMBER, WNDS);
     -- get a random number from a normal distribution
-    FUNCTION normal RETURN NUMBER PARALLEL_ENABLE;
-        PRAGMA restrict_references (normal, WNDS);
+    FUNCTION NORMAL RETURN NUMBER PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (NORMAL, WNDS);
 
 
     -- Date Section ------------------------------------------------------------
     -- get a random date from 01/01/1990 to present
-    FUNCTION randomDate RETURN DATE PARALLEL_ENABLE;
-        PRAGMA restrict_references (randomDate, WNDS);
+    FUNCTION RANDOMDATE RETURN DATE PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (RANDOMDATE, WNDS);
     -- get a random date between startDate (mm/dd/yyyy) and endDate (mm/dd/yyyy)
-    FUNCTION randomDate(startDate varchar2, endDate varchar2) RETURN DATE PARALLEL_ENABLE;
-        PRAGMA restrict_references (randomDate, WNDS);
+    FUNCTION RANDOMDATE(STARTDATE VARCHAR2, ENDDATE VARCHAR2) RETURN DATE PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (RANDOMDATE, WNDS);
 
 
     -- Email Section ------------------------------------------------------------
-    FUNCTION randomEmail RETURN VARCHAR2 PARALLEL_ENABLE;    
-        PRAGMA restrict_references (randomEmail, WNDS);
-    FUNCTION randomEmail(domainName varchar2) RETURN VARCHAR2 PARALLEL_ENABLE;
-        PRAGMA restrict_references (randomEmail, WNDS);
+    FUNCTION RANDOMEMAIL RETURN VARCHAR2 PARALLEL_ENABLE;    
+        PRAGMA RESTRICT_REFERENCES (RANDOMEMAIL, WNDS);
+    FUNCTION RANDOMEMAIL(DOMAINNAME VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (RANDOMEMAIL, WNDS);
 
     -- Lookup Section ------------------------------------------------------------
-    FUNCTION lookupString(items varchar2) RETURN VARCHAR2 PARALLEL_ENABLE;
-        PRAGMA restrict_references (lookupString, WNDS);
-    FUNCTION lookupDate(items varchar2) RETURN DATE PARALLEL_ENABLE;
-        PRAGMA restrict_references (lookupDate, WNDS);
-    FUNCTION lookupNumber(items varchar2) RETURN NUMBER PARALLEL_ENABLE;
-        PRAGMA restrict_references (lookupNumber, WNDS);
+    FUNCTION LOOKUPSTRING(ITEMS VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (LOOKUPSTRING, WNDS);
+    FUNCTION LOOKUPDATE(ITEMS VARCHAR2) RETURN DATE PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (LOOKUPDATE, WNDS);
+    FUNCTION LOOKUPNUMBER(ITEMS VARCHAR2) RETURN NUMBER PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (LOOKUPNUMBER, WNDS);
 
     -- String Section ------------------------------------------------------------
     -- get a random string
@@ -128,416 +128,388 @@ CREATE OR REPLACE package BFPS_DATAMASK as
         Z: any alpha-numeric characters (lower) 
         P: any printable char (ASCII subset) 
     */    
-    FUNCTION fillString (opt char, len NUMBER) RETURN VARCHAR2 PARALLEL_ENABLE;  -- string of <len> characters
-        PRAGMA restrict_references (fillString, WNDS);
+    FUNCTION FILLSTRING (OPT CHAR, LEN NUMBER) RETURN VARCHAR2 PARALLEL_ENABLE;  -- string of <len> characters
+        PRAGMA RESTRICT_REFERENCES (FILLSTRING, WNDS);
     -- get a random string
     -- "udmask" is a set of opt i.e) LLLnnHH
-    FUNCTION maskString (udmask VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE;  -- string of <len> characters
-        PRAGMA restrict_references (maskString, WNDS);
+    FUNCTION MASKSTRING (UD_MASK VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE;  -- string of <len> characters
+        PRAGMA RESTRICT_REFERENCES (MASKSTRING, WNDS);
     -- get a random string
-    FUNCTION scrubString(word in varchar2)RETURN varchar2 PARALLEL_ENABLE;    
-        PRAGMA restrict_references (scrubString, WNDS);
+    FUNCTION SCRUBSTRING(WORD IN VARCHAR2)RETURN VARCHAR2 PARALLEL_ENABLE;    
+        PRAGMA RESTRICT_REFERENCES (SCRUBSTRING, WNDS);
     -- get function string for Dynamic PL SQL block
-    FUNCTION maskFieldStringValue(fieldName in varchar2, fieldValue in varchar2, maskType in varchar2, maskValue in varchar2) RETURN VARCHAR2 PARALLEL_ENABLE;
-        PRAGMA restrict_references (maskFieldStringValue, WNDS);
-    FUNCTION constanctString(maskValue in varchar2) RETURN VARCHAR2 PARALLEL_ENABLE;
-        PRAGMA restrict_references (constanctString, WNDS);
+    FUNCTION MASKFIELDSTRINGVALUE(FIELDNAME IN VARCHAR2, FIELDVALUE IN VARCHAR2, MASKTYPE IN VARCHAR2, MASKVALUE IN VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (MASKFIELDSTRINGVALUE, WNDS);
+    FUNCTION CONSTANCTSTRING(MASKVALUE IN VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE;
+        PRAGMA RESTRICT_REFERENCES (CONSTANCTSTRING, WNDS);
 
 
-end BFPS_DATAMASK;
+END BFPS_DATAMASK;
 /
 
 
-CREATE OR REPLACE package body BFPS_DATAMASK as
-    mem        num_array;
-    counter    BINARY_INTEGER := 55;
-    saved_norm NUMBER := NULL;
-    need_init  BOOLEAN := TRUE;
+CREATE OR REPLACE PACKAGE BODY BFPS_DATAMASK AS
 
-    PROCEDURE seed(val IN BINARY_INTEGER) IS
+    V_NUM_ARRAY             num_array;
+    V_COUNTER               BINARY_INTEGER := 55;
+    V_SAVED_NORM_DIST       NUMBER := NULL;
+    V_NEED_INIT             BOOLEAN := TRUE;
+
+    PROCEDURE SEED(VAL IN BINARY_INTEGER) IS
     BEGIN
-        seed(TO_CHAR(val));
-    END seed;
+        SEED(TO_CHAR(VAL));
+    END SEED;
 
-    PROCEDURE seed(val IN VARCHAR2) IS
-        junk     VARCHAR2(2000);
-        piece    VARCHAR2(20);
-        randval  NUMBER;
-        mytemp   NUMBER;
-        j        BINARY_INTEGER;
+    PROCEDURE SEED(VAL IN VARCHAR2) IS
+        JUNK     VARCHAR2(2000);
+        PIECE    VARCHAR2(20);
+        RANDVAL  NUMBER;
+        MYTEMP   NUMBER;
+        J        BINARY_INTEGER;
     BEGIN
-        need_init   := FALSE;
-        saved_norm  := NULL;
-        counter     := 0;
-        junk        := TO_SINGLE_BYTE(val);
-        FOR i IN 0..54 LOOP
-            piece   := SUBSTR(junk,1,19);
-            randval := 0;
-            j       := 1;
+        V_NEED_INIT         := FALSE;
+        V_SAVED_NORM_DIST   := NULL;
+        V_COUNTER           := 0;
+        JUNK                := TO_SINGLE_BYTE(VAL);
+        
+        FOR I IN 0..54 LOOP
+            PIECE   := SUBSTR(JUNK,1,19);
+            RANDVAL := 0;
+            J       := 1;
 
-            -- convert 19 characters to a 38-digit number
-            FOR j IN 1..19 LOOP
-                randval := 1e2*randval + NVL(ASCII(SUBSTR(piece,j,1)),0.0);
+            -- CONVERT 19 CHARACTERS TO A 38-DIGIT NUMBER
+            FOR J IN 1..19 LOOP
+                RANDVAL := 1E2*RANDVAL + NVL(ASCII(SUBSTR(PIECE,J,1)),0.0);
             END LOOP;
 
             -- try to avoid lots of zeros
-            randval := randval*1e-38+i*.01020304050607080910111213141516171819;
-            mem(i)  := randval - TRUNC(randval);
+            RANDVAL := RANDVAL*1E-38+I*.01020304050607080910111213141516171819;
+            V_NUM_ARRAY(I)  := RANDVAL - TRUNC(RANDVAL);
 
             -- we've handled these first 19 characters already; move on
-            junk    := SUBSTR(junk,20);
+            JUNK    := substr(JUNK,20);
         END LOOP;
 
-        randval := mem(54);
+        RANDVAL := V_NUM_ARRAY(54);
 
-        FOR j IN 0..10 LOOP
-            FOR i IN 0..54 LOOP
+        FOR J IN 0..10 LOOP
+            FOR I IN 0..54 LOOP
+                -- barrelshift V_NUM_ARRAY(i-1) by 24 digits
+                RANDVAL := RANDVAL * 1E24;
+                MYTEMP  := TRUNC(RANDVAL);
+                RANDVAL := (RANDVAL - MYTEMP) + (MYTEMP * 1E-38);
 
-                -- barrelshift mem(i-1) by 24 digits
-                randval := randval * 1e24;
-                mytemp  := TRUNC(randval);
-                randval := (randval - mytemp) + (mytemp * 1e-38);
-
-                -- add it to mem(i)
-                randval := mem(i)+randval;
-                IF (randval >= 1.0) THEN
-                    randval := randval - 1.0;
+                -- add it to V_NUM_ARRAY(i)
+                RANDVAL := V_NUM_ARRAY(I)+RANDVAL;
+                IF (RANDVAL >= 1.0) THEN
+                    RANDVAL := RANDVAL - 1.0;
                 END IF;
 
-		-- record the result
-                mem(i) := randval;
+                V_NUM_ARRAY(I) := RANDVAL;
             END LOOP;
         END LOOP;
-    END seed;
+    END SEED;
+
 
     -- Numberic Section ------------------------------------------------------------
-    FUNCTION randomNumber RETURN NUMBER  PARALLEL_ENABLE IS
-    randval  NUMBER;
+    FUNCTION RANDOMNUMBER RETURN NUMBER  PARALLEL_ENABLE IS
+        RANDVAL  NUMBER;
     BEGIN
-        counter := counter + 1;
-        IF counter >= 55 THEN
-            --dbms_output.put_line('counter=' || to_char(counter));
-
+        V_COUNTER := V_COUNTER + 1;
+        IF V_COUNTER >= 55 THEN
             -- initialize if needed
-            IF (need_init = TRUE) THEN
-                seed(TO_CHAR(SYSDATE,'MM-DD-YYYY HH24:MI:SS') ||
+            IF (V_NEED_INIT = TRUE) THEN
+                SEED(TO_CHAR(SYSDATE,'MM-DD-YYYY HH24:MI:SS') ||
                      USER || USERENV('SESSIONID'));
             ELSE
                 -- need to generate 55 more results
-                FOR i IN 0..30 LOOP
-                    randval := mem(i+24) + mem(i);
-                    IF (randval >= 1.0) THEN
-                        randval := randval - 1.0;
+                FOR I IN 0..30 LOOP
+                    RANDVAL := V_NUM_ARRAY(I+24) + V_NUM_ARRAY(I);
+                    IF (RANDVAL >= 1.0) THEN
+                        RANDVAL := RANDVAL - 1.0;
                     END IF;
-                    mem(i) := randval;
-                    --dbms_output.put_line('mem1(' || to_char(i) || ')=' || randval);
+                    V_NUM_ARRAY(I) := RANDVAL;
+
                 END LOOP;
-                FOR i IN 31..54 LOOP
-                    randval := mem(i-31) + mem(i);
-                    IF (randval >= 1.0) THEN
-                        randval := randval - 1.0;
+                FOR I IN 31..54 LOOP
+                    RANDVAL := V_NUM_ARRAY(I-31) + V_NUM_ARRAY(I);
+                    IF (RANDVAL >= 1.0) THEN
+                        RANDVAL := RANDVAL - 1.0;
                     END IF;
-                    mem(i) := randval;
-                    --dbms_output.put_line('mem2(' || to_char(i) || ')=' || randval);
+                    V_NUM_ARRAY(I) := RANDVAL;
                 END LOOP;
             END IF;
-
-            counter := 0;
+            V_COUNTER := 0;
         END IF;
-
-        --dbms_output.put_line('VALUE counter=' || TO_CHAR(counter) || ', mem(counter)=' || TO_CHAR(mem(counter)));
-        RETURN mem(counter);
-    END randomNumber;
+        RETURN V_NUM_ARRAY(V_COUNTER);
+    END RANDOMNUMBER;
 
     -- Random 38-digit number between LOW and HIGH.
-    FUNCTION randomNumber ( low in NUMBER, high in NUMBER) RETURN NUMBER 
-                   PARALLEL_ENABLE is
+    FUNCTION RANDOMNUMBER ( LOW IN NUMBER, HIGH IN NUMBER) RETURN NUMBER PARALLEL_ENABLE IS
     BEGIN
-        RETURN (randomNumber*(high-low))+low;
-    END randomNumber;
+        RETURN (RANDOMNUMBER*(HIGH-LOW))+LOW;
+    END RANDOMNUMBER;
 
     -- Random numbers in a normal distribution.
-    FUNCTION normal RETURN NUMBER PARALLEL_ENABLE is  
-                    -- 38 decimal places: Mean 0, Variance 1
-        v1  NUMBER;
-        v2  NUMBER;
-        r2  NUMBER;
-        fac NUMBER;
+    FUNCTION NORMAL RETURN NUMBER PARALLEL_ENABLE IS  
+        V1  NUMBER;
+        V2  NUMBER;
+        R2  NUMBER;
+        FAC NUMBER;
     BEGIN
-        IF saved_norm is not NULL THEN     -- saved from last time
-            v1 := saved_norm;              -- to be returned this time
-            saved_norm := NULL;
+        IF V_SAVED_NORM_DIST IS NOT NULL THEN     -- saved from last time
+            V1 := V_SAVED_NORM_DIST;              -- to be returned this time
+            V_SAVED_NORM_DIST := NULL;
         ELSE
-            r2 := 2;
+            R2 := 2;
             -- Find two independent uniform variables
-            WHILE r2 > 1 OR r2 = 0 LOOP
-                v1 := randomNumber();
-                v1 := v1 + v1 - 1;
-                v2 := randomNumber();
-                v2 := v2 + v2 - 1;
-                r2 := v1*v1 + v2*v2;  -- r2 is radius
+            WHILE R2 > 1 OR R2 = 0 LOOP
+                V1 := RANDOMNUMBER();
+                V1 := V1 + V1 - 1;
+                V2 := RANDOMNUMBER();
+                V2 := V2 + V2 - 1;
+                R2 := V1*V1 + V2*V2;  -- r2 is radius
             END LOOP;      -- 0 < r2 <= 1:  in unit circle
             /* Now derive two independent normally-distributed variables */
-            fac := sqrt(-2*ln(r2)/r2);
-            v1 := v1*fac;          -- to be returned this time
-            saved_norm := v2*fac;  -- to be saved for next time
+            FAC := SQRT(-2*ln(R2)/R2);
+            V1 := V1*FAC;          -- to be returned this time
+            V_SAVED_NORM_DIST := V2*FAC;  -- to be saved for next time
         END IF;
-        RETURN v1;
-    END  normal;
+        RETURN V1;
+    END  NORMAL;
 
 
     -- Date Section ------------------------------------------------------------    
-    FUNCTION randomDate RETURN DATE PARALLEL_ENABLE AS
+    FUNCTION RANDOMDATE RETURN DATE PARALLEL_ENABLE AS
     BEGIN
-
-        RETURN randomDate('01/01/1990', to_char(sysdate, 'mm/dd/yyyy'));
-
-    END randomDate;
+        RETURN RANDOMDATE('01/01/1990', TO_CHAR(SYSDATE, 'mm/dd/yyyy'));
+    END RANDOMDATE;
 
     -- get a random date between startDate (mm/dd/yyyy) and endDate (mm/dd/yyyy)
-    FUNCTION randomDate(startDate varchar2, endDate varchar2) RETURN DATE PARALLEL_ENABLE as
-        dt DATE;
-        dtStart DATE;
-        dtEnd DATE;
+    FUNCTION RANDOMDATE(startdate VARCHAR2, enddate VARCHAR2) RETURN DATE PARALLEL_ENABLE AS
+        DT DATE;
+        DT_START DATE;
+        DT_END DATE;
     BEGIN
         --date format mm/dd/yyyy
-        dtStart := to_date(startDate, 'mm/dd/yyyy');
-        dtEnd := to_date(endDate, 'mm/dd/yyyy');
-
-        dt := TO_DATE(
-                              TRUNC(
-                                    randomNumber(TO_CHAR(dtStart,'J'), TO_CHAR(dtEnd,'J'))
-                                    ),'J'
-                               );
-        RETURN dt;
-
-    END randomDate;
+        DT_START := TO_DATE(startdate, 'mm/dd/yyyy');
+        DT_END := TO_DATE(enddate, 'mm/dd/yyyy');
+        DT := TO_DATE( TRUNC( RANDOMNUMBER(TO_CHAR(DT_START,'J'), TO_CHAR(DT_END,'J')) ),'J');
+        RETURN DT;
+    END RANDOMDATE;
 
 
     -- Email Section ------------------------------------------------------------
-    FUNCTION randomEmail RETURN VARCHAR2 PARALLEL_ENABLE as
+    FUNCTION RANDOMEMAIL RETURN VARCHAR2 PARALLEL_ENABLE AS
     BEGIN
 
-        return scrubString('aaaaa.aaaaa@aaaaa') || '.com';
+        RETURN SCRUBSTRING('aaaaa.aaaaa@aaaaa') || '.com';
 
-    END randomEmail;
+    END RANDOMEMAIL;
 
-    FUNCTION randomEmail(domainName varchar2) RETURN VARCHAR2 PARALLEL_ENABLE as
+    FUNCTION RANDOMEMAIL(DOMAINNAME VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE AS
     BEGIN
 
-        return scrubString('aaaaa.aaaaa') || '@' || domainName;
+        RETURN SCRUBSTRING('aaaaa.aaaaa') || '@' || DOMAINNAME;
 
-    END randomEmail;
+    END RANDOMEMAIL;
 
     -- Lookup Section ------------------------------------------------------------
-    FUNCTION lookupString(items varchar2) RETURN VARCHAR2 PARALLEL_ENABLE AS
-        selectedItem VARCHAR2(2000);
-        idx NUMBER;
-        noOfItems NUMBER;
+    FUNCTION LOOKUPSTRING(ITEMS VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE AS
+        SELECTED_ITEM VARCHAR2(2000);
+        IDX NUMBER;
+        NUMBER_OF_ITEMS NUMBER;
     BEGIN
-        noOfItems := REGEXP_COUNT(items, '\|') + 1;
-        idx := TRUNC(randomNumber(1, noOfItems + 0.1));
-        selectedItem := REGEXP_SUBSTR(items, '[^|]+', 1, idx);
-        
-        DBMS_OUTPUT.PUT_LINE('items=' || items || ', noOfItems=' || noOfItems || ' , idx=' || idx || ', selectedItem=' || selectedItem); 
-        
-        
-        return selectedItem;
-    END lookupString;
+        NUMBER_OF_ITEMS := REGEXP_COUNT(ITEMS, '\|') + 1;
+        IDX := TRUNC(RANDOMNUMBER(1, NUMBER_OF_ITEMS + 0.1));
+        SELECTED_ITEM := REGEXP_SUBSTR(ITEMS, '[^|]+', 1, IDX);
+        RETURN SELECTED_ITEM;
+    END LOOKUPSTRING;
 
-    FUNCTION lookupDate(items varchar2) RETURN DATE PARALLEL_ENABLE AS
-        selectedItem VARCHAR2(2000);
+    FUNCTION LOOKUPDATE(ITEMS VARCHAR2) RETURN DATE PARALLEL_ENABLE AS
+        SELECTED_ITEM VARCHAR2(2000);
     BEGIN
-        selectedItem := lookupString(items);
-        return TO_DATE(selectedItem, 'mm/dd/yyyy');
-    END lookupDate;
+        SELECTED_ITEM := LOOKUPSTRING(ITEMS);
+        RETURN TO_DATE(SELECTED_ITEM, 'mm/dd/yyyy');
+    END LOOKUPDATE;
 
-    FUNCTION lookupNumber(items varchar2) RETURN NUMBER PARALLEL_ENABLE AS
-        selectedItem VARCHAR2(2000);
+    FUNCTION LOOKUPNUMBER(ITEMS VARCHAR2) RETURN NUMBER PARALLEL_ENABLE AS
+        SELECTED_ITEM VARCHAR2(2000);
     BEGIN
-        selectedItem := lookupString(items);
-        return TO_NUMBER(selectedItem);
-    END lookupNumber;
+        SELECTED_ITEM := LOOKUPSTRING(ITEMS);
+        RETURN TO_NUMBER(SELECTED_ITEM);
+    END LOOKUPNUMBER;
 
 
     -- String Section ------------------------------------------------------------
 
     -- Random string.
-    FUNCTION fillString (opt char, len NUMBER) 
-        RETURN VARCHAR2 PARALLEL_ENABLE is      -- string of <len> characters  
-        rng  NUMBER; 
-        n    BINARY_INTEGER; 
-        ccs  VARCHAR2 (128);    -- candidate character subset 
-        xstr VARCHAR2 (4000) := NULL; 
+    FUNCTION FILLSTRING (OPT CHAR, LEN NUMBER) 
+        RETURN VARCHAR2 PARALLEL_ENABLE IS
+        
+        LEN_OF_CHAR_SET     NUMBER; 
+        N                   BINARY_INTEGER; 
+        CANDIDATE_CHAR_SET  VARCHAR2 (128);
+        RESULT_STR          VARCHAR2 (4000) := NULL; 
+        
     BEGIN 
 
-        IF opt IS NULL THEN
-            xstr := NULL;
-        ELSIF opt = 'L' THEN --L : An uppercase Letter.	
-            ccs := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            rng := 26;
-        ELSIF opt = 'l' THEN --l : A lowercase letter.	
-            ccs := 'abcdefghijklmnopqrstuvwxyz'; 
-            rng := 26;
-        ELSIF opt = 'M' THEN --M : A letter (upper or lower).
-            ccs := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-                    || 'abcdefghijklmnopqrstuvwxyz';
-            rng := 52;
-        ELSIF opt = 'V' THEN --V : An uppercase Vowel.
-            ccs := 'AEIOU';
-            rng := 5;
-        ELSIF opt = 'v' THEN --v : A lowercase vowel.
-            ccs := 'aeiou'; 
-            rng := 5;
-        ELSIF opt = 'W' THEN --W : A vowel (upper or lower).
-            ccs := 'AEIOU'
-                    || 'aeiou';
-            rng := 10;
-        ELSIF opt = 'C' THEN --C : An uppercase Consonant.	
-            ccs := 'BCDFGHJKLMNPQRSTVWXYZ';
-            rng := 21;
-        ELSIF opt = 'c' THEN --c : A lowercase consonant.
-            ccs := 'bcdfghjklmnpqrstvwxyz';
-            rng := 21;
-        ELSIF opt = 'E' THEN --E : A consonant (upper or lower).
-            ccs := 'BCDFGHJKLMNPQRSTVWXYZ'
-                    || 'bcdfghjklmnpqrstvwxyz';
-            rng := 42;
-        ELSIF opt = 'N' THEN --N : Any number, 0-9.
-            ccs := '0123456789';
-            rng := 10;        	
-        ELSIF opt = 'n' THEN --N : Any number, 1-9.
-            ccs := '123456789';
-            rng := 9;
-        ELSIF opt = 'H' THEN --H : An Hexidecimal number (0-F)
-            ccs := '0123456789ABCDEF';
-            rng := 16;
-        ELSIF opt = 'X' THEN    --X: any alpha-numeric characters (upper) 
-            ccs := '0123456789'
-                  || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
-            rng := 36;
-        ELSIF opt = 'x' THEN    --x: any alpha-numeric characters (lower) 
-            ccs := '0123456789'
-                  || 'abcdefghijklmnopqrstuvwxyz'; 
-            rng := 36;
-        ELSIF opt = 'Y' THEN    --Y: any alpha-numeric characters (lower) 
-            ccs := '0123456789' 
-                  || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-                  || 'abcdefghijklmnopqrstuvwxyz'; 
-            rng := 62;
-        ELSIF opt = 'P' THEN    --P: any printable char (ASCII subset) 
-            ccs := ' !"#$%&''()*+,-./' 
-                    || '0123456789' 
-                    || ':;<=>?@' 
-                    || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 
-                    || '[\]^_`' 
-                    || 'abcdefghijklmnopqrstuvwxyz' 
-                    || '{|}~' ; 
-            rng := 95; 
+        IF OPT IS NULL THEN
+            RESULT_STR := NULL;
+        ELSIF OPT = 'L' THEN --L : An uppercase Letter.	
+            CANDIDATE_CHAR_SET := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            LEN_OF_CHAR_SET := 26;
+        ELSIF OPT = 'l' THEN --l : A lowercase letter.	
+            CANDIDATE_CHAR_SET := 'abcdefghijklmnopqrstuvwxyz'; 
+            LEN_OF_CHAR_SET := 26;
+        ELSIF OPT = 'M' THEN --M : A letter (upper or lower).
+            CANDIDATE_CHAR_SET := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                                    || 'abcdefghijklmnopqrstuvwxyz';
+            LEN_OF_CHAR_SET := 52;
+        ELSIF OPT = 'V' THEN --V : An uppercase Vowel.
+            CANDIDATE_CHAR_SET := 'AEIOU';
+            LEN_OF_CHAR_SET := 5;
+        ELSIF OPT = 'v' THEN --v : A lowercase vowel.
+            CANDIDATE_CHAR_SET := 'aeiou'; 
+            LEN_OF_CHAR_SET := 5;
+        ELSIF OPT = 'W' THEN --W : A vowel (upper or lower).
+            CANDIDATE_CHAR_SET := 'AEIOU'
+                                    || 'aeiou';
+            LEN_OF_CHAR_SET := 10;
+        ELSIF OPT = 'C' THEN --C : An uppercase Consonant.	
+            CANDIDATE_CHAR_SET := 'BCDFGHJKLMNPQRSTVWXYZ';
+            LEN_OF_CHAR_SET := 21;
+        ELSIF OPT = 'c' THEN --c : A lowercase consonant.
+            CANDIDATE_CHAR_SET := 'bcdfghjklmnpqrstvwxyz';
+            LEN_OF_CHAR_SET := 21;
+        ELSIF OPT = 'E' THEN --E : A consonant (upper or lower).
+            CANDIDATE_CHAR_SET := 'BCDFGHJKLMNPQRSTVWXYZ'
+                                    || 'bcdfghjklmnpqrstvwxyz';
+            LEN_OF_CHAR_SET := 42;
+        ELSIF OPT = 'N' THEN --N : Any number, 0-9.
+            CANDIDATE_CHAR_SET := '0123456789';
+            LEN_OF_CHAR_SET := 10;        	
+        ELSIF OPT = 'n' THEN --N : Any number, 1-9.
+            CANDIDATE_CHAR_SET := '123456789';
+            LEN_OF_CHAR_SET := 9;
+        ELSIF OPT = 'H' THEN --H : An Hexidecimal number (0-F)
+            CANDIDATE_CHAR_SET := '0123456789ABCDEF';
+            LEN_OF_CHAR_SET := 16;
+        ELSIF OPT = 'X' THEN    --X: any alpha-numeric characters (upper) 
+            CANDIDATE_CHAR_SET := '0123456789'
+                                    || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+            LEN_OF_CHAR_SET := 36;
+        ELSIF OPT = 'x' THEN    --x: any alpha-numeric characters (lower) 
+            CANDIDATE_CHAR_SET := '0123456789'
+                                    || 'abcdefghijklmnopqrstuvwxyz'; 
+            LEN_OF_CHAR_SET := 36;
+        ELSIF OPT = 'Y' THEN    --Y: any alpha-numeric characters (lower) 
+            CANDIDATE_CHAR_SET := '0123456789' 
+                                    || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                                    || 'abcdefghijklmnopqrstuvwxyz'; 
+            LEN_OF_CHAR_SET := 62;
+        ELSIF OPT = 'P' THEN    --P: any printable char (ASCII subset) 
+            CANDIDATE_CHAR_SET := ' !"#$%&''()*+,-./' 
+                                    || '0123456789' 
+                                    || ':;<=>?@' 
+                                    || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 
+                                    || '[\]^_`' 
+                                    || 'abcdefghijklmnopqrstuvwxyz' 
+                                    || '{|}~' ; 
+            LEN_OF_CHAR_SET := 95; 
         ELSE 
-            ccs := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
-            rng := 26;          -- default to upper case 
+            CANDIDATE_CHAR_SET := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+            LEN_OF_CHAR_SET := 26;
         END IF;
 
-        FOR i IN 1 .. least(len,4000) LOOP 
+        FOR I IN 1 .. least(LEN,4000) LOOP 
             /* Get random integer within specified range */ 
-            n := TRUNC(rng * randomNumber) + 1; 
+            N := TRUNC(LEN_OF_CHAR_SET * RANDOMNUMBER) + 1; 
             /* Append character to string  */ 
-            xstr := xstr || SUBSTR(ccs,n,1); 
+            RESULT_STR := RESULT_STR || substr(CANDIDATE_CHAR_SET,N,1); 
         END LOOP; 
-        RETURN xstr; 
+        RETURN RESULT_STR; 
 
-    END fillString; 
+    END FILLSTRING; 
 
     -- Random string with given user defined mask
-    FUNCTION maskString (udmask varchar2)
-        RETURN VARCHAR2 PARALLEL_ENABLE is -- string of <len> characters 
-        len  NUMBER;
-        rng  NUMBER; 
-        n    BINARY_INTEGER; 
-        ccs  VARCHAR2 (128);    -- candidate character subset 
-        xstr VARCHAR2 (4000) := NULL;
-        xchr CHAR(1);
+    FUNCTION MASKSTRING (UD_MASK VARCHAR2)
+        RETURN VARCHAR2 PARALLEL_ENABLE IS -- string of <len> characters 
+        LEN  NUMBER;
+        RESULT_STR VARCHAR2 (4000) := NULL;
+        XCHR CHAR(1);
     BEGIN 
 
-        --DBMS_OUTPUT.PUT_LINE('scrubing udmask=' || NVL(udmask, ''));
-
-        IF udmask IS NULL THEN
-            --DBMS_OUTPUT.PUT_LINE('DEBUG-A');
-            xstr := NULL;
+        IF UD_MASK IS NULL THEN
+            RESULT_STR := NULL;
         ELSE 
-            len := length(udmask);
+            LEN := LENGTH(UD_MASK);
 
-            FOR i IN 1 .. len LOOP 
+            FOR I IN 1 .. len LOOP 
 
-                xchr := substr(udmask, i, 1);
+                XCHR := substr(UD_MASK, I, 1);
 
-                IF xchr = 'u'
-                    or xchr = 'L'
-                    or xchr = 'l'
-                    or xchr = 'M'
-                    or xchr = 'V'
-                    or xchr = 'v'
-                    or xchr = 'W'
-                    or xchr = 'C'
-                    or xchr = 'c'
-                    or xchr = 'E'
-                    or xchr = 'N'
-                    or xchr = 'n'
-                    or xchr = 'H'
-                    or xchr = 'X'
-                    or xchr = 'x'
-                    or xchr = 'Y'
-                    or xchr = 'P' THEN
+                IF XCHR = 'u'
+                    OR XCHR = 'L'
+                    OR XCHR = 'l'
+                    OR XCHR = 'M'
+                    OR XCHR = 'V'
+                    OR XCHR = 'v'
+                    OR XCHR = 'W'
+                    OR XCHR = 'C'
+                    OR XCHR = 'c'
+                    OR XCHR = 'E'
+                    OR XCHR = 'N'
+                    OR XCHR = 'n'
+                    OR XCHR = 'H'
+                    OR XCHR = 'X'
+                    OR XCHR = 'x'
+                    OR XCHR = 'Y'
+                    OR XCHR = 'P' THEN
 
-                    xchr := fillString(xchr, 1);
+                    XCHR := FILLSTRING(XCHR, 1);
 
                 ELSE
 
-                    xchr := xchr;
+                    XCHR := XCHR;
                 END IF;
 
-                xstr := xstr || xchr;
+                RESULT_STR := RESULT_STR || XCHR;
 
             END LOOP;
 
         END IF; 
 
-        --DBMS_OUTPUT.PUT_LINE('scrubbed=' || NVL(xstr, 'NULL') || '!!!');
-        RETURN xstr; 
-    END maskString;
+        RETURN RESULT_STR; 
+    END MASKSTRING;
 
     -- Replace word with ramdon alphanumeric letters.
-    function scrubString(word in varchar2) return varchar2 PARALLEL_ENABLE as
-        xchr char(1);
-        xstr varchar2(4000);
-        len int;
-    begin
+    FUNCTION SCRUBSTRING(WORD IN VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE AS
+        XCHR CHAR(1);
+        RESULT_STR VARCHAR2(4000);
+        LEN INT;
+    BEGIN
 
-        len := length(word);
+        LEN := LENGTH(WORD);
 
-        FOR i IN 1 .. len LOOP 
-            xchr := substr(word, i, 1);
+        FOR I IN 1 .. len LOOP 
+            XCHR := substr(WORD, I, 1);
 
-            --dbms_output.put_line('xchr.0=[' || xchr || ']');
-            if REGEXP_LIKE (xchr,'[A-Za-z]') then
-                xchr := maskString('M');
-                --dbms_output.put_line('xchr.1=[' || xchr || ']');
+            IF REGEXP_LIKE (XCHR,'[A-Za-z]') THEN
+                XCHR := MASKSTRING('M');
 
-            elsif REGEXP_LIKE (xchr,'[0-9]') then
-                xchr := maskString('N');
-                --dbms_output.put_line('xchr.2=[' || xchr || ']');
-            else
-                xchr := xchr;
-                --dbms_output.put_line('xchr.3=[' || xchr || ']');
-            end if;
+            ELSIF REGEXP_LIKE (XCHR,'[0-9]') THEN
+                XCHR := MASKSTRING('N');
+            ELSE
+                XCHR := XCHR;
+            END IF;
 
-            xstr := xstr || xchr;
+            RESULT_STR := RESULT_STR || XCHR;
         END LOOP;
 
-        return xstr;
+        RETURN RESULT_STR;
 
-    end scrubString;
+    END SCRUBSTRING;
 
 
 
@@ -546,58 +518,54 @@ CREATE OR REPLACE package body BFPS_DATAMASK as
 
     begin
 
-        randomDate(dateMask varchar2, startDate varchar2, endDate varchar2) 
+        RANDOMDATE(dateMask varchar2, startDate varchar2, endDate varchar2) 
 
-        return to_date(to_char(sysdate, dateMask), dateMask);
+        return to_date(TO_CHAR(SYSDATE, dateMask), dateMask);
 
     end maskDateString;
 */
 
-    function maskFieldStringValue(fieldName in varchar2, fieldValue in varchar2, maskType in varchar2, maskValue in varchar2) 
-        RETURN VARCHAR2 PARALLEL_ENABLE as
+    FUNCTION MASKFIELDSTRINGVALUE(FIELDNAME IN VARCHAR2, FIELDVALUE IN VARCHAR2, MASKTYPE IN VARCHAR2, MASKVALUE IN VARCHAR2) 
+        RETURN VARCHAR2 PARALLEL_ENABLE AS
 
-        newFieldValue VARCHAR2(4000);
-        maskTypeID VARCHAR2(100);
+        newfieldvalue VARCHAR2(4000);
+        masktypeid VARCHAR2(100);
 
-        maskTypeChar CHAR(1);
-        fillLengthString VARCHAR2(100);
-        fillLength int := 0;
+        masktypechar CHAR(1);
+        filllengthstring VARCHAR2(100);
+        filllength INT := 0;
 
-    begin
-        maskTypeId := UPPER(maskType);
+    BEGIN
+        masktypeid := UPPER(masktype);
 
-        --DBMS_OUTPUT.PUT_LINE('maskFieldStringValue-maskValue=' || maskValue);
+        IF masktype = 'SCRUB' THEN
+            newfieldvalue := SCRUBSTRING(fieldvalue);
+        ELSIF masktype = 'MASK' THEN
+            newfieldvalue := MASKSTRING(maskvalue);
+        ELSIF masktype = 'FILL' THEN
 
-        IF maskType = 'SCRUB' THEN
-            newFieldValue := scrubString(fieldValue);
-        ELSIF maskType = 'MASK' THEN
-            newFieldValue := maskString(maskValue);
-        ELSIF maskType = 'FILL' THEN
+            masktypechar := substr(maskvalue, 1, 1);
+            filllengthstring := substr(maskvalue, 3, 100);
 
-            maskTypeChar := SUBSTR(maskValue, 1, 1);
-            fillLengthString := SUBSTR(maskValue, 3, 100);
-            --DBMS_OUTPUT.PUT_LINE('maskValue=' || maskValue ||', maskTypeChar=' || maskTypeChar || ', fillLengthString=' || fillLengthString);
-
-            IF fillLengthString IS NOT NULL and length(fillLengthString) > 0 THEN
-                fillLength := TO_NUMBER(fillLengthString);
-            ELSE
-                DBMS_OUTPUT.PUT_LINE('fillLengthString is null or empty.');
+            IF filllengthstring IS NOT NULL AND LENGTH(filllengthstring) > 0 THEN
+                filllength := TO_NUMBER(filllengthstring);
             END IF;
 
-            newFieldValue := fillString(maskTypeChar,fillLength);
+            newfieldvalue := FILLSTRING(masktypechar,filllength);
 
         ELSE
-            newFieldValue := fieldValue;
+            newfieldvalue := fieldvalue;
         END IF;
 
-        return newFieldValue;
+        RETURN newfieldvalue;
 
-    end maskFieldStringValue;
+    END MASKFIELDSTRINGVALUE;
 
-    FUNCTION constanctString(maskValue in varchar2) RETURN VARCHAR2 PARALLEL_ENABLE as
+    FUNCTION constanctstring(maskvalue IN VARCHAR2) RETURN VARCHAR2 PARALLEL_ENABLE AS
     BEGIN
-        return maskValue;
-    END constanctString;
+        --TODO:IMPLEMENT LOGIC
+        RETURN maskvalue;
+    END constanctstring;
     
-end BFPS_DATAMASK;
+END BFPS_DATAMASK;
 /
