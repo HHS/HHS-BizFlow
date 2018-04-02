@@ -9,8 +9,10 @@ public class Task extends Report{
 		this.setFileName("TaskDSS");
 		this.setParmNum(1);
 		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-30);		
+		this.setRptIteration(1);
+		this.setDateIncrement(-25);
+		this.setEndDate(""); //01/01/2015
+		this.setSpTruncate("SP_TRUNC_TASK_TABLE");
 	}
 	
 }
