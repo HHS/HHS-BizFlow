@@ -31,8 +31,10 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-<!-- 		<version>1.5.10.RELEASE</version> -->
-			<version>1.4.3.RELEASE</version>
+ 		<version>1.5.10.RELEASE</version>
+<!--		
+		<version>1.4.3.RELEASE</version>
+-->
 		<relativePath/> 
 	</parent>
 
@@ -46,30 +48,64 @@
 
 
 	<dependencies>
+		<!-- dependencies for spring boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-batch</artifactId>
 		</dependency>		
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>	
-		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<!-- dependencies from local repository -->
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.8</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>jaxrpc</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>saaj</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.5.1</version>
 		</dependency>
 	</dependencies>
 
