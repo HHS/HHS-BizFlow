@@ -1,0 +1,8 @@
+----------------------------------
+-- grant BizFlow object to HHS_HR 
+----------------------------------
+
+GRANT EXECUTE ON BIZFLOW.SP_GET_ID TO HHS_HR;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON BIZFLOW.MEMBERINFO TO HHS_HR;
+GRANT SELECT, INSERT, UPDATE, DELETE ON BIZFLOW.MEMBER TO HHS_HR;
