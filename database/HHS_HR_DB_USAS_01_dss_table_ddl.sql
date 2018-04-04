@@ -33,6 +33,10 @@ DROP TABLE DSS_VACANCY_DOCUMENT;
 DROP TABLE DSS_VACANCY_REQUEST;
 DROP TABLE DSS_TIME_TO_OFFER;
 DROP TABLE DSS_TIME_TO_RECRUIT;
+DROP TABLE DSS_IHS_VAC_ANNOUNCEMENT;
+DROP TABLE DSS_IHS_VAC_REVIEW;
+DROP TABLE DSS_IHS_VAC_CERTIFICATE;
+DROP TABLE DSS_IHS_VAC_NEW_HIRE;
 */
 
 
@@ -754,41 +758,153 @@ CREATE INDEX DSS_VACANCY_REQUEST_I1 ON DSS_VACANCY_REQUEST (VACANCY_NUMBER);
 --==================================
 --CUSTOM REPORT TABLES
 --==================================
+---------------------
+--CMS
+---------------------
+
 ------------------------------------
 --DDL for table DSS_TIME_TO_RECRUIT
 ------------------------------------
 CREATE TABLE DSS_TIME_TO_RECRUIT
 (
-    STAFFING_ORGANIZATION           VARCHAR2(100),
-    STAFFING_OFFICE                 VARCHAR2(100),
+    STAFFING_ORGANIZATION           VARCHAR2(122),
+    REQUEST_NUMBER                  VARCHAR2(202),
     REQUEST_CREATE_DATE             DATE,
-    REQUEST_NUMBER                  VARCHAR2(50),
-    REQUEST_STATUS                  VARCHAR2(30),
-    REQUEST_POS_DESC_TITLE          VARCHAR2(100),
-    REQUEST_DESCRIPTION             VARCHAR2(30),
-    DISPLAY_TYPE                    VARCHAR2(30),
-    CERT_ISSUE_DATE                 DATE,
-    CERT_REVIEW_SENT_DATE           DATE,
-    CERT_REVIEW_RETURNED_DATE       DATE,
-    CERT_INITIAL_AUDIT_DATE         DATE,
-    CERT_FINAL_AUDIT_DATE           DATE
+    REQUEST_APPROVAL_DATE           DATE,
+    REQUEST_STATUS                  VARCHAR2(1002),
+    REQUEST_TYPE                    VARCHAR2(1002),
+    POSITION_TITLE                  VARCHAR2(202),
+    PAYPLAN_SERIES_GRADE            VARCHAR2(1000),
+    AREA_CONSIDER                   VARCHAR2(24),
+    CERTIFICATE_NUMBER              VARCHAR2(102),
+    CERTIFICATE_SERIES              VARCHAR2(1028),
+    CERTIFICATE_GRADE               VARCHAR2(502),
+    CERTIFICATE_LOCATION            VARCHAR2(2050),
+    CERTIFICATE_ISSUE_DATE          DATE,
+    MAKE_RTRN_SEL_CMPL_DATE         DATE
 );
 
+----------------------------------------------
+--DDL for index DSS_TIME_TO_RECRUIT_I1
+----------------------------------------------
+CREATE INDEX DSS_TIME_TO_RECRUIT_I1 ON DSS_TIME_TO_RECRUIT (REQUEST_NUMBER);
 
 ------------------------------------
 --DDL for table DSS_TIME_TO_OFFER
 ------------------------------------
 CREATE TABLE DSS_TIME_TO_OFFER
 (
-    STAFFING_ORGANIZATION           VARCHAR2(100),
-    STAFFING_OFFICE                 VARCHAR2(100),
-    REQUEST_CREATE_DATE             DATE,
-    REQUEST_APPROVAL_DATE           DATE,
-    REQUEST_NUMBER                  VARCHAR2(50),
-    REQUEST_STATUS                  VARCHAR2(30),
-    REQUEST_POS_DESC_TITLE          VARCHAR2(100),
-    REQUEST_DESCRIPTION             VARCHAR2(30),
-    DISPLAY_TYPE                    VARCHAR2(30),
-    SEND_OFFICIAL_OFFER_CMPLT_DATE  DATE
+    STAFFING_ORGANIZATION           VARCHAR2(122),
+    REQUEST_NUMBER                  VARCHAR2(202),
+    NEW_HIRE_CREATE_DATE            DATE,
+    REQUEST_STATUS                  VARCHAR2(1002),
+    REQUEST_TYPE                    VARCHAR2(1002),
+    POSITION_TITLE                  VARCHAR2(2050),
+    AREA_CONSIDER                   VARCHAR2(24),
+    NEW_HIRE_PAY_PLAN               VARCHAR2(2050),
+    NEW_HIRE_SERIES                 VARCHAR2(2050),
+    NEW_HIRE_GRADE                  VARCHAR2(2050),
+    SEND_TENT_OFFR_CMPL_DATE        DATE,
+    INIT_BKGRND_INVST_DATE          DATE,
+    RCVE_BKGRND_INVST_DATE          DATE,
+    SEND_OFCL_OFFR_CMPL_DATE        DATE,
+    NEW_HIRE_NAME                   VARCHAR2(2050)
 );
 
+----------------------------------------------
+--DDL for index DSS_TIME_TO_OFFER_I1
+----------------------------------------------
+CREATE INDEX DSS_TIME_TO_OFFER_I1 ON DSS_TIME_TO_OFFER (REQUEST_NUMBER);
+
+---------------------
+--IHS
+---------------------
+--==================================
+--CUSTOM REPORT TABLES
+--==================================
+------------------------------------
+--DDL for table DSS_IHS_VAC_ANNOUNCEMENT
+------------------------------------
+CREATE TABLE DSS_IHS_VAC_ANNOUNCEMENT
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    VIN                         NUMBER(10),
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    VACANCY_TYPE                VARCHAR2(1002),
+    OPEN_DATE                   DATE,
+    CLOSE_DATE                  DATE,
+    ANNOUNCEMENT_TYPE           VARCHAR2(24),
+    LOCATION                    VARCHAR2(334),
+    ANNOUNCEMENT_CTRL_NUMBER    NUMBER(10),
+    ANNOUNCEMENT_STATUS         VARCHAR2(1002),
+    RELEASED_DATE               DATE,
+    LAST_UPDATE_DATE            DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_IHS_VAC_ANNOUNCEMENT_I1
+----------------------------------------------
+CREATE INDEX DSS_IHS_VAC_ANNOUNCEMENT_I1 ON DSS_IHS_VAC_ANNOUNCEMENT (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_IHS_VAC_REVIEW
+------------------------------------
+CREATE TABLE DSS_IHS_VAC_REVIEW
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    VIN                         NUMBER(10),
+    REVIEW_JOA_DATE             DATE,
+    REVIEW_JOA_SENT_DATE        DATE,
+    REVIEW_JOA_RETURN_DATE      DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_IHS_VAC_REVIEW_I1
+----------------------------------------------
+CREATE INDEX DSS_IHS_VAC_REVIEW_I1 ON DSS_IHS_VAC_REVIEW (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_IHS_VAC_CERTIFICATE
+------------------------------------
+CREATE TABLE DSS_IHS_VAC_CERTIFICATE
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    VIN                         NUMBER(10),
+    ISSUE_DATE                  DATE,
+    REVIEW_DUE_DATE             DATE,
+    REVIEW_RETURN_DATE          DATE,
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    AUDIT_CODE                  VARCHAR2(82),
+    AUDIT_DATE                  DATE,
+    LAST_UPDATE_DATE            DATE,
+    POSITION_TITLE              VARCHAR2(202),
+    DUTY_LOCATION               VARCHAR2(334),
+    PAYPLAN_SERIES_GRADE        CLOB
+);
+
+----------------------------------------------
+--DDL for index DSS_IHS_VAC_CERTIFICATE_I1
+----------------------------------------------
+CREATE INDEX DSS_IHS_VAC_CERTIFICATE_I1 ON DSS_IHS_VAC_CERTIFICATE (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_IHS_VAC_NEW_HIRE
+------------------------------------
+CREATE TABLE DSS_IHS_VAC_NEW_HIRE
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    VIN                         NUMBER(10),
+    NEW_HIRE_NAME               VARCHAR2(2050),
+    POSITION_TITLE              VARCHAR2(2050),
+    DUTY_LOCATION               VARCHAR2(2050),
+    PAYPLAN_SERIES_GRADE        CLOB,
+    SEND_TENT_OFFR_CMPL_DATE    DATE,
+    EFFECTIVE_DATE              DATE,
+    LAST_UPDATE_DATE            DATE,
+    VET_PREF_STATUS             VARCHAR2(2050)
+);
+
+----------------------------------------------
+--DDL for index DSS_IHS_VAC_NEW_HIRE_I1
+----------------------------------------------
+CREATE INDEX DSS_IHS_VAC_NEW_HIRE_I1 ON DSS_IHS_VAC_NEW_HIRE (REQUEST_NUMBER);
