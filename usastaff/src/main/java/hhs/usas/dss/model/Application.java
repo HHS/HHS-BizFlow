@@ -12,8 +12,11 @@ public class Application extends Report {
 		this.setSvpUseval("ApplicationLastUpdateDate");
 		this.setSvpDisplay("Application Last Update Date");
 		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-60);		
+		this.setRptIteration(1);
+		this.setDateIncrement(-25);
+		this.setEndDate(""); //01/01/2015
+		this.setSpTruncate("SP_TRUNC_APPLICATION_TABLE");
+		this.setRunReport(true);
 	}
 
 	

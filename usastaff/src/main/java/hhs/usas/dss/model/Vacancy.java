@@ -1,5 +1,7 @@
 package hhs.usas.dss.model;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Vacancy extends Report{
 	
 	public Vacancy() {
@@ -12,8 +14,11 @@ public class Vacancy extends Report{
 		this.setSvpUseval("VacancyLastUpdateDate");
 		this.setSvpDisplay("Vacancy Last Update Date");
 		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-60);		
+		this.setRptIteration(1);
+		this.setDateIncrement(-45);
+		this.setEndDate(""); //01/01/2015
+		this.setSpTruncate("SP_TRUNC_VACANCY_TABLE");
+		this.setRunReport(true);
 	}
 
 	
