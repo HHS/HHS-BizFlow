@@ -1,6 +1,7 @@
 package hhs.usas.dss;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,9 +49,8 @@ public class DateRange {
 		super();
 	}
 
-	public static Date generateDateRange(Date firstDate, int num) {
+	public static Date generateDateRange(Date currentDate, int num) {
 		
-		Date currentDate = firstDate;
 		Date pastDate;
 
 		DateFormat displayVal = new SimpleDateFormat("MMM dd,yyyy 12:00 'AM'"); //Jan 31, 2018 12:00 AM
@@ -67,8 +67,39 @@ public class DateRange {
 		setStartUseVal(useVal.format(pastDate));
 		setEndDisplayVal(displayVal.format(currentDate));
 		setEndUseVal(useVal.format(currentDate));
-		
 		return pastDate;
+		
+	}
+	
+	public static void generateDateRange(Date currentDate, String endDateStr) throws ParseException {
+		
+		Date endDate;
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
+		DateFormat displayVal = new SimpleDateFormat("MMM dd,yyyy 12:00 'AM'"); //i.e Jan 31, 2018 12:00 AM
+		DateFormat useVal = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00.000"); //i.e 2018-01-31T00:00:00.000			
+		
+		endDate =dateFormat.parse(endDateStr);
+		
+		setStartDisplayVal(displayVal.format(endDate));
+		setStartUseVal(useVal.format(endDate));
+		setEndDisplayVal(displayVal.format(currentDate));
+		setEndUseVal(useVal.format(currentDate));
+		
+	}
+	
+	public static int generateDateIteration(Date currentDate, String endDateStr, int dateIncrement) throws ParseException {
+		
+		Date endDate;
+		double dayDiff;
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
+		endDate =dateFormat.parse(endDateStr);
+		
+		dayDiff = ((currentDate.getTime()- endDate.getTime())/86400000);
+		
+		return (int) Math.ceil((dayDiff/Math.abs(dateIncrement)));
 		
 	}
 	

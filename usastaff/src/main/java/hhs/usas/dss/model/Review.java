@@ -9,8 +9,11 @@ public class Review extends Report {
 		this.setFileName("ReviewDSS");
 		this.setParmNum(1);
 		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-60);		
+		this.setRptIteration(1);
+		this.setDateIncrement(-60);
+		this.setEndDate("");
+		this.setSpTruncate("SP_TRUNC_REVIEW_TABLE");
+		this.setRunReport(true);
 	}
 
 }
