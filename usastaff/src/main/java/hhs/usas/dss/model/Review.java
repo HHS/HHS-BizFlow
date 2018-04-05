@@ -13,6 +13,7 @@ public class Review extends Report {
 		this.setDateIncrement(-60);
 		this.setEndDate("");
 		this.setSpTruncate("SP_TRUNC_REVIEW_TABLE");
+		this.setRunReport(true);
 	}
 
 }

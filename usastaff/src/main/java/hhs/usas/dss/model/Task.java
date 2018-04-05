@@ -13,6 +13,7 @@ public class Task extends Report{
 		this.setDateIncrement(-25);
 		this.setEndDate(""); //01/01/2015
 		this.setSpTruncate("SP_TRUNC_TASK_TABLE");
+		this.setRunReport(true);
 	}
 	
 }

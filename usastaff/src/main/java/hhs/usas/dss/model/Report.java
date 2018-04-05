@@ -35,8 +35,11 @@ public class Report {
 	//End date value-- pulls report from current date to end date value
 	private static String endDate;
 	
-	//Stored procedure for truncating report tables
+	//Stores Stored procedure for truncating report tables
 	private static String spTruncate;
+	
+	//Determines if report should be run, true or false value
+	private static boolean runReport;
 	
 	public static String getSearchPath() {
 		return searchPath;
@@ -164,6 +167,14 @@ public class Report {
 
 	public static void setSpTruncate(String spTruncate) {
 		Report.spTruncate = spTruncate;
+	}
+
+	public static boolean isRunReport() {
+		return runReport;
+	}
+
+	public static void setRunReport(boolean runReport) {
+		Report.runReport = runReport;
 	}
 
 	public Report() {

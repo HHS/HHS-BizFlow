@@ -16,6 +16,7 @@ public class Announcement extends Report {
 		this.setDateIncrement(-60);
 		this.setEndDate("");
 		this.setSpTruncate("SP_TRUNC_ANNOUNCEMENT_TABLE");
+		this.setRunReport(true);
 	}
 	
 }

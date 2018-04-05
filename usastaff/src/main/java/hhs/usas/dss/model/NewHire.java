@@ -13,6 +13,7 @@ public class NewHire extends Report {
 		this.setDateIncrement(-60);
 		this.setEndDate("");
 		this.setSpTruncate("SP_TRUNC_NEWHIRE_TABLE");
+		this.setRunReport(true);
 	}
 	
 }

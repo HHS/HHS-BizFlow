@@ -16,6 +16,7 @@ public class Certificate extends Report {
 		this.setDateIncrement(-60);
 		this.setEndDate("");
 		this.setSpTruncate("SP_TRUNC_CERTIFICATE_TABLE");
+		this.setRunReport(true);
 	}
 
 }

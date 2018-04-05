@@ -37,46 +37,50 @@ public class ReportTasklet extends Report implements Tasklet {
 		long start;
 		long time;
 				
-		try {
-			start = System.currentTimeMillis();
-			
-			currentDate = new Date();
-			
-			if (Util.isNull(this.getEndDate())) {
-				//If there is no specified end date range then use the default report iteration
-				rptIteration = this.getRptIteration();
-			}else {
-				//If there is a specified end date range then calculate the date iteration
-				rptIteration = DateRange.generateDateIteration(currentDate, this.getEndDate(), this.getDateIncrement());
-			}
-			
-			ReportGeneration.truncateReportTables(targetDataSource, this);
-			
-			for(int i=0; i< rptIteration; i++) {
+		try {			
+			if (this.isRunReport()) {
+				start = System.currentTimeMillis();
 				
-				if((!(i+1< rptIteration)) && (!Util.isNull(this.getEndDate()))) {
-					DateRange.generateDateRange(currentDate, this.getEndDate());
+				currentDate = new Date();
+				
+				if (Util.isNull(this.getEndDate())) {
+					//If there is no specified end date range then use the default report iteration
+					rptIteration = this.getRptIteration();
 				}else {
-					currentDate = DateRange.generateDateRange(currentDate, this.getDateIncrement());
+					//If there is a specified end date range then calculate the date iteration
+					rptIteration = DateRange.generateDateIteration(currentDate, this.getEndDate(), this.getDateIncrement());
 				}
 				
-				this.setRvpStartDisplay(DateRange.getStartDisplayVal());;
-				this.setRvpStartUseval(DateRange.getStartUseVal());
-				this.setRvpEndDisplay(DateRange.getEndDisplayVal());
-				this.setRvpEndUseval(DateRange.getEndUseVal());
-				
-				reportXml = ReportGeneration.generateReport(this);
-				
-				if(!Util.isNull(reportXml)) {
-					ReportGeneration.saveReportFile(this, reportXml);
-					ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
-				}else {
-					log.info("The report " + this.getFileName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+				if (!Util.isNull(this.getSpTruncate())) {
+					ReportGeneration.truncateReportTables(targetDataSource, this);
 				}
+				
+				for(int i=0; i< rptIteration; i++) {
+					
+					if((!(i+1< rptIteration)) && (!Util.isNull(this.getEndDate()))) {
+						DateRange.generateDateRange(currentDate, this.getEndDate());
+					}else {
+						currentDate = DateRange.generateDateRange(currentDate, this.getDateIncrement());
+					}
+					
+					this.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+					this.setRvpStartUseval(DateRange.getStartUseVal());
+					this.setRvpEndDisplay(DateRange.getEndDisplayVal());
+					this.setRvpEndUseval(DateRange.getEndUseVal());
+					
+					reportXml = ReportGeneration.generateReport(this);
+					
+					if(!Util.isNull(reportXml)) {
+						ReportGeneration.saveReportFile(this, reportXml);
+						ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
+					}else {
+						log.info("The report " + this.getFileName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+					}
 
+				}
+				time = System.currentTimeMillis() - start;
+				log.info("Time taken for downloading " + this.getFileName() + " data: " + time + "ms");
 			}
-			time = System.currentTimeMillis() - start;
-			log.info("Time taken for downloading " + this.getFileName() + " data: " + time + "ms");
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 			contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(),e.getMessage()));

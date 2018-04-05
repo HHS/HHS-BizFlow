@@ -1,5 +1,7 @@
 package hhs.usas.dss.model;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class TimeToOffer extends Report {
 
 	public TimeToOffer() {
@@ -13,6 +15,7 @@ public class TimeToOffer extends Report {
 		this.setDateIncrement(-365);
 		this.setEndDate("10/01/2016");
 		this.setSpTruncate("SP_TRUNC_TIME2OFFER_TABLE");
+		this.setRunReport(true);
 	}
 
 }

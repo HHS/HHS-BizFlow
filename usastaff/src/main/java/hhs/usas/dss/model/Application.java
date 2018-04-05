@@ -14,8 +14,9 @@ public class Application extends Report {
 		this.setRvpName("parm_StaffingDateRange");
 		this.setRptIteration(1);
 		this.setDateIncrement(-25);
-		this.setEndDate("01/01/2015");
+		this.setEndDate(""); //01/01/2015
 		this.setSpTruncate("SP_TRUNC_APPLICATION_TABLE");
+		this.setRunReport(true);
 	}
 
 	

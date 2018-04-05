@@ -3,7 +3,7 @@ package hhs.usas.dss;
 import javax.sql.DataSource;
 
 
-import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -16,6 +16,9 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,10 +26,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import hhs.usas.dss.model.Announcement;
 import hhs.usas.dss.model.Application;
 import hhs.usas.dss.model.Certificate;
+import hhs.usas.dss.model.IHSVacancy;
 import hhs.usas.dss.model.NewHire;
+import hhs.usas.dss.model.Report;
 import hhs.usas.dss.model.Request;
 import hhs.usas.dss.model.Review;
 import hhs.usas.dss.model.Task;
+import hhs.usas.dss.model.TimeToOffer;
+import hhs.usas.dss.model.TimeToRecruit;
 import hhs.usas.dss.model.Vacancy;
 
 
@@ -76,7 +83,11 @@ public class BatchConfiguration {
     	final Flow reviewFlow = new FlowBuilder<Flow>("reviewFlow").from(stepBuilderFactory.get("executeReviewReportStep").tasklet(reviewTasklet()).listener(stepListener).build()).end();
     	final Flow taskFlow = new FlowBuilder<Flow>("taskFlow").from(stepBuilderFactory.get("executeTaskReportStep").tasklet(taskTasklet()).listener(stepListener).build()).end();
     	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
-		
+    	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
+    	final Flow recruitFlow = new FlowBuilder<Flow>("recruitFlow").from(stepBuilderFactory.get("executeRecruitReportStep").tasklet(recruitTasklet()).listener(stepListener).build()).end();
+    	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get("executeIHSVacancyReportStep").tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
+    	
+    	
 		interfaceName = " USA Staffing Interface";
 		return jobBuilderFactory.get("importDSSReports")
 				.incrementer(new RunIdIncrementer())
@@ -89,7 +100,10 @@ public class BatchConfiguration {
 				.to(requestFlow).on("*")
 				.to(reviewFlow).on("*")
 				.to(taskFlow).on("*")
-				.to(vacFlow)
+				.to(vacFlow).on("*")
+				.to(offerFlow).on("*")
+				.to(recruitFlow).on("*")
+				.to(ihsVacancyFlow)
 				.end()
 				.build();		
 	}
@@ -157,7 +171,30 @@ public class BatchConfiguration {
 		Vacancy vac = new Vacancy();
 		return new ReportTasklet();
 	}
-				
+	
+	//Offer Tasklet
+	@Bean
+	@StepScope
+	public Tasklet offerTasklet() {
+		TimeToOffer offer = new TimeToOffer();
+		return new ReportTasklet();
+	}	
+		
+	//Recruit Tasklet
+	@Bean
+	@StepScope
+	public Tasklet recruitTasklet() {
+		TimeToRecruit recruit = new TimeToRecruit();
+		return new ReportTasklet();
+	}
+	
+	//IHS Vacancy Tasklet
+	@Bean
+	@StepScope
+	public Tasklet ihsVacancyTasklet() {
+		IHSVacancy ihsVac = new IHSVacancy();
+		return new ReportTasklet();
+	}	
 	
 	@Bean
 	public BatchConfigurer configurer() {

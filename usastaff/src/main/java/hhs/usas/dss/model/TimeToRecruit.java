@@ -12,7 +12,8 @@ public class TimeToRecruit extends Report {
 		this.setRptIteration(1);
 		this.setDateIncrement(-365);
 		this.setEndDate("10/01/2016");
-		this.setSpTruncate("SP_TRUNC_TIME2RECRUIT_TABLE");	
+		this.setSpTruncate("SP_TRUNC_TIME2RECRUIT_TABLE");
+		this.setRunReport(true);
 	}
 
 }

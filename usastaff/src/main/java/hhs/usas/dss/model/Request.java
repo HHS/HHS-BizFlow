@@ -13,6 +13,7 @@ public class Request extends Report {
 		this.setDateIncrement(-60);
 		this.setEndDate("");
 		this.setSpTruncate("SP_TRUNC_REQUEST_TABLE");
+		this.setRunReport(true);
 	}
 
 }
