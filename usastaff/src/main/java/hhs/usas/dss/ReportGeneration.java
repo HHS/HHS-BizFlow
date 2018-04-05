@@ -69,7 +69,7 @@ public class ReportGeneration {
 			@SuppressWarnings("resource")
 			FileOutputStream outputFile=new FileOutputStream("reports/"+ report.getFileName() + "_" + System.currentTimeMillis() +".xml"); 
 			outputFile.write(reportXml.getBytes());
-			log.info("The report output is saved in " + report.getFileName() + System.currentTimeMillis() +".xml file.");
+			log.info("The report output is saved in the " + report.getFileName() + "_" + System.currentTimeMillis() +".xml file for data between " + report.getRvpStartUseval() + " and " + report.getRvpEndUseval());
 		}
 		catch(Exception e)
 		{
@@ -92,6 +92,17 @@ public class ReportGeneration {
 		in.addValue("I_USER", "HHS_HR");
 		
 		simpleJdbcCall.execute(in);		
+	}
+	
+	public static void truncateReportTables(DataSource targetDataSource, Report report) throws Exception{
+		
+		JdbcTemplate template = new JdbcTemplate(targetDataSource);
+		
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(template)
+				.withSchemaName("HHS_HR")
+				.withProcedureName(report.getSpTruncate());
+		
+		simpleJdbcCall.execute();	
 	}
 
 }
