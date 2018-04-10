@@ -37,8 +37,7 @@ public class ReportTasklet extends Report implements Tasklet {
 		long start;
 		long time;
 				
-		try {
-			
+		try {			
 			if (this.isRunReport()) {
 				start = System.currentTimeMillis();
 				
@@ -82,7 +81,6 @@ public class ReportTasklet extends Report implements Tasklet {
 				time = System.currentTimeMillis() - start;
 				log.info("Time taken for downloading " + this.getFileName() + " data: " + time + "ms");
 			}
-
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 			contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(),e.getMessage()));

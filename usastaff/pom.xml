@@ -99,6 +99,11 @@
 		</dependency>
 		<dependency>
 			<groupId>proj.lib.local</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
 			<artifactId>saaj</artifactId>
 			<version>1.0.0</version>
 		</dependency>
@@ -200,6 +205,21 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>install-ojdbc-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/ojdbc7-12.1.0.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>ojdbc7</artifactId>
+							<version>12.1.0</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
 						<id>install-saaj-jar-lib</id>
 						<goals>
 							<goal>install-file</goal>
@@ -295,7 +315,7 @@
 				<groupId>proj.lib.local</groupId>
 				<artifactId>wsdl4j</artifactId>
 				<version>1.5.1</version>
-			</dependency>														
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>
