@@ -34,7 +34,6 @@ DROP TABLE DSS_VACANCY_REQUEST;
 DROP TABLE DSS_TIME_TO_OFFER;
 DROP TABLE DSS_TIME_TO_RECRUIT;
 DROP TABLE DSS_IHS_VAC_ANNOUNCEMENT;
-DROP TABLE DSS_IHS_VAC_REVIEW;
 DROP TABLE DSS_IHS_VAC_CERTIFICATE;
 DROP TABLE DSS_IHS_VAC_NEW_HIRE;
 */
@@ -819,6 +818,7 @@ CREATE INDEX DSS_TIME_TO_OFFER_I1 ON DSS_TIME_TO_OFFER (REQUEST_NUMBER);
 ---------------------
 --IHS
 ---------------------
+
 --==================================
 --CUSTOM REPORT TABLES
 --==================================
@@ -839,30 +839,16 @@ CREATE TABLE DSS_IHS_VAC_ANNOUNCEMENT
     ANNOUNCEMENT_STATUS         VARCHAR2(1002),
     IS_RELEASED                 VARCHAR2(8),
     RELEASED_DATE               DATE,
-    LAST_UPDATE_DATE            DATE
-);
-
-----------------------------------------------
---DDL for index DSS_IHS_VAC_ANNOUNCEMENT_I1
-----------------------------------------------
-CREATE INDEX DSS_IHS_VAC_ANNOUNCEMENT_I1 ON DSS_IHS_VAC_ANNOUNCEMENT (REQUEST_NUMBER);
-
-------------------------------------
---DDL for table DSS_IHS_VAC_REVIEW
-------------------------------------
-CREATE TABLE DSS_IHS_VAC_REVIEW
-(
-    REQUEST_NUMBER              VARCHAR2(202),
-    VIN                         NUMBER(10),
+    LAST_UPDATE_DATE            DATE,
     REVIEW_JOA_DATE             DATE,
     REVIEW_JOA_SENT_DATE        DATE,
     REVIEW_JOA_RETURN_DATE      DATE
 );
 
 ----------------------------------------------
---DDL for index DSS_IHS_VAC_REVIEW_I1
+--DDL for index DSS_IHS_VAC_ANNOUNCEMENT_I1
 ----------------------------------------------
-CREATE INDEX DSS_IHS_VAC_REVIEW_I1 ON DSS_IHS_VAC_REVIEW (REQUEST_NUMBER);
+CREATE INDEX DSS_IHS_VAC_ANNOUNCEMENT_I1 ON DSS_IHS_VAC_ANNOUNCEMENT (REQUEST_NUMBER);
 
 ------------------------------------
 --DDL for table DSS_IHS_VAC_CERTIFICATE
@@ -880,7 +866,9 @@ CREATE TABLE DSS_IHS_VAC_CERTIFICATE
     LAST_UPDATE_DATE            DATE,
     POSITION_TITLE              VARCHAR2(202),
     DUTY_LOCATION               VARCHAR2(334),
-    PAYPLAN_SERIES_GRADE        CLOB
+    PAYPLAN_SERIES_GRADE        VARCHAR2(1000),
+    HIRING_PLAN                 VARCHAR2(6),
+    APPLICANT_LIST_NAME         VARCHAR2(6)
 );
 
 ----------------------------------------------
@@ -895,10 +883,11 @@ CREATE TABLE DSS_IHS_VAC_NEW_HIRE
 (
     REQUEST_NUMBER              VARCHAR2(202),
     VIN                         NUMBER(10),
+    NEW_HIRE_NUMBER             VARCHAR2(22),
     NEW_HIRE_NAME               VARCHAR2(2050),
     POSITION_TITLE              VARCHAR2(2050),
     DUTY_LOCATION               VARCHAR2(2050),
-    PAYPLAN_SERIES_GRADE        CLOB,
+    PAYPLAN_SERIES_GRADE        VARCHAR2(1000),
     SEND_TENT_OFFR_CMPL_DATE    DATE,
     EFFECTIVE_DATE              DATE,
     LAST_UPDATE_DATE            DATE,
