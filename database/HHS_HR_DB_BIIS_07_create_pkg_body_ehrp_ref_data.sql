@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY EHRP_REF_DATA_PKS AS
+CREATE OR REPLACE PACKAGE BODY HHS_HR.EHRP_REF_DATA_PKS AS
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --THIS PACKAGE WILL HANDLE PULLING AND POPULATING REF DATA TABLES, IT DOESN'T NOT SUPPORT UPDATE, LOCAL TABLE ARE REFRESHED THEN INSERT NEW RECORDS NIGHTLY.
