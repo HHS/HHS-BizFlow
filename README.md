@@ -121,10 +121,12 @@ In order to call DSS web service, there should be an existing report created for
 
 		ant
 
-1. Capture the generated module JAR file as well as dependent library JAR files.
+1. Capture the generated module JAR file, configuration files, and shell script to run the module.
 
-		usastaff/dist/lib/usastaffdss.jar
-		usastaff/dist/lib/*.jar
+		usastaff/dist/usasdss-<version>.jar
+		usastaff/dist/application.properties
+		usastaff/dist/log4j.properties
+		usastaff/dist/run.sh
 
 
 ### Deployment Instruction
@@ -140,14 +142,22 @@ In order to call DSS web service, there should be an existing report created for
 1. Copy the module JAR file and its dependent library JAR files.
 
 	* From (build machine):
-		* usastaff/dist/lib/*.jar
+		* usastaff/dist/*
 	* To (target environment):
 		* <server_dir>/usastaff/
 
 
 ### Usage
-The deployed module can be run on demand as a stand alone application.  For on-demand run, assuming that the module is already built by ANT script following the build instruction above, you may use ANT script with run target.
+The deployed module can be run on demand or as a stand alone application.  
 
-	ant run
+
+For UNIX environment, make the run script executable.
+
+	cd <server_dir>/usastaff
+	chmod 744 run.sh
+
+For on-demand run, execute the shell script in command line.
+
+	./run.sh
 
 For regular usage in server environment, it is expected to be executed periodically by a cron job.
