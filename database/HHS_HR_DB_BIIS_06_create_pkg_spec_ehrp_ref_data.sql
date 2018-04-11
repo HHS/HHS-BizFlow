@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE EHRP_REF_DATA_PKS AS
+CREATE OR REPLACE PACKAGE HHS_HR.EHRP_REF_DATA_PKS AS
 
   /* TODO enter package declarations (types, exceptions, methods etc) here */ 
 --======================================================

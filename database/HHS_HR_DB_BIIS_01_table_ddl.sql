@@ -2,32 +2,32 @@
 -- Backout statement
 --------------------------------------------
 /*
-DROP TABLE MEMBERSTG;
-DROP TABLE MEMBERHISTORY;
-DROP SEQUENCE MEMBERHISTORY_SEQ;
-DROP TABLE EMPLOYEE_LOOKUP;
-DROP TABLE ADMINISTRATIVE_CODE;
-DROP TABLE APPOINTMENT_TYPE;
-DROP TABLE CYBERSECURITY_CODE;
-DROP TABLE DUTY_STATION;
-DROP TABLE LEGAL_AUTHORITY;
-DROP TABLE NATURE_OF_ACTION;
-DROP TABLE PAY_PLAN;
-DROP TABLE OCCUPATIONAL_SERIES;
-DROP TABLE PS_DEPT_TBL;
-DROP TABLE PS_HE_EWIT_DEPT_1;
-DROP TABLE PS_HE_RECRUIT_EWIT;
-DROP TABLE PS_HRS_JO_LOC;
-DROP TABLE PS_HRS_JO_NAME;
-DROP TABLE PS_HRS_JO_POSN;
-DROP TABLE PS_HRS_JO_RPL;
-DROP TABLE PS_HRS_JO_RQMT;
-DROP TABLE PS_HRS_JOB_OPENING;
-DROP TABLE PS_HRS_LOCATION_I;
-DROP TABLE PS_JOBCODE_TBL;
-DROP TABLE PS_PERSONAL_DATA_VW;
-DROP TABLE PS_POSITION_DATA;
-DROP TABLE PS_SAL_GRADE_TBL;
+DROP TABLE HHS_HR.MEMBERSTG;
+DROP TABLE HHS_HR.MEMBERHISTORY;
+DROP SEQUENCE HHS_HR.MEMBERHISTORY_SEQ;
+DROP TABLE HHS_HR.EMPLOYEE_LOOKUP;
+DROP TABLE HHS_HR.ADMINISTRATIVE_CODE;
+DROP TABLE HHS_HR.APPOINTMENT_TYPE;
+DROP TABLE HHS_HR.CYBERSECURITY_CODE;
+DROP TABLE HHS_HR.DUTY_STATION;
+DROP TABLE HHS_HR.LEGAL_AUTHORITY;
+DROP TABLE HHS_HR.NATURE_OF_ACTION;
+DROP TABLE HHS_HR.PAY_PLAN;
+DROP TABLE HHS_HR.OCCUPATIONAL_SERIES;
+DROP TABLE HHS_HR.PS_DEPT_TBL;
+DROP TABLE HHS_HR.PS_HE_EWIT_DEPT_1;
+DROP TABLE HHS_HR.PS_HE_RECRUIT_EWIT;
+DROP TABLE HHS_HR.PS_HRS_JO_LOC;
+DROP TABLE HHS_HR.PS_HRS_JO_NAME;
+DROP TABLE HHS_HR.PS_HRS_JO_POSN;
+DROP TABLE HHS_HR.PS_HRS_JO_RPL;
+DROP TABLE HHS_HR.PS_HRS_JO_RQMT;
+DROP TABLE HHS_HR.PS_HRS_JOB_OPENING;
+DROP TABLE HHS_HR.PS_HRS_LOCATION_I;
+DROP TABLE HHS_HR.PS_JOBCODE_TBL;
+DROP TABLE HHS_HR.PS_PERSONAL_DATA_VW;
+DROP TABLE HHS_HR.PS_POSITION_DATA;
+DROP TABLE HHS_HR.PS_SAL_GRADE_TBL;
 */
 
 SET DEFINE OFF;
@@ -35,7 +35,7 @@ SET DEFINE OFF;
 --------------------------------------------------------
 -- DDL for Table MEMBERSTG
 --------------------------------------------------------
-    CREATE TABLE MEMBERSTG
+    CREATE TABLE HHS_HR.MEMBERSTG
     (HHSID          VARCHAR2(64),
     FIRSTNAME       VARCHAR2(150),
     MIDDLENAME      VARCHAR2(80),
@@ -45,19 +45,19 @@ SET DEFINE OFF;
     LASTUPDATE      DATE
     );
 
-    COMMENT ON TABLE MEMBERSTG IS 'Member Staging table';
-    COMMENT ON COLUMN MEMBERSTG.HHSID IS 'HHSID of the employee';
-    COMMENT ON COLUMN MEMBERSTG.FIRSTNAME IS 'The first name of the employee';
-    COMMENT ON COLUMN MEMBERSTG.MIDDLENAME IS 'The middle name of the employee';
-    COMMENT ON COLUMN MEMBERSTG.LASTNAME IS 'The last name of the employee';
-    COMMENT ON COLUMN MEMBERSTG.EMAIL IS 'The email address of the employee';
-    COMMENT ON COLUMN MEMBERSTG.DEPTNAME IS 'The department name (OpDiv) of the employee';
-    COMMENT ON COLUMN MEMBERSTG.LASTUPDATE IS 'The last update time from the Person System';
+    COMMENT ON TABLE HHS_HR.MEMBERSTG IS 'Member Staging table';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.HHSID IS 'HHSID of the employee';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.FIRSTNAME IS 'The first name of the employee';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.MIDDLENAME IS 'The middle name of the employee';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.LASTNAME IS 'The last name of the employee';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.EMAIL IS 'The email address of the employee';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.DEPTNAME IS 'The department name (OpDiv) of the employee';
+    COMMENT ON COLUMN HHS_HR.MEMBERSTG.LASTUPDATE IS 'The last update time from the Person System';
     
 --------------------------------------------------------  
 --DDL for Table MEMBERHISTORY
 --------------------------------------------------------  
-    CREATE TABLE MEMBERHISTORY
+    CREATE TABLE HHS_HR.MEMBERHISTORY
     (HISTORYID      NUMBER(38),
     CHANGEDATE      DATE,
     MEMBERID        VARCHAR2(10),
@@ -69,63 +69,63 @@ SET DEFINE OFF;
     NEWVALUE        VARCHAR2(100)
     );
  
-   COMMENT ON TABLE MEMBERHISTORY IS 'Provides historical information on the transactions of the Bizflow MEMBER table';
-   COMMENT ON COLUMN MEMBERHISTORY.HISTORYID IS 'The unique memberhistory ID';
-   COMMENT ON COLUMN MEMBERHISTORY.CHANGEDATE IS 'The date that the transaction took place on the Bizflow MEMBER table';
-   COMMENT ON COLUMN MEMBERHISTORY.MEMBERID IS 'Corresponds to the memberid on the BizFlow MEMBER and MEMBERINFO tables';
-   COMMENT ON COLUMN MEMBERHISTORY.HHSID IS 'The HHS ID of the employee';
-   COMMENT ON COLUMN MEMBERHISTORY.OPDIV IS 'The Operating Division of the employee';
-   COMMENT ON COLUMN MEMBERHISTORY.DMLTYPE IS 'The type of DML: ''INSERT'' or ''UPDATE''';
-   COMMENT ON COLUMN MEMBERHISTORY.FIELDCHANGED IS 'The field that was updated on the Bizflow MEMBER table';
-   COMMENT ON COLUMN MEMBERHISTORY.OLDVALUE IS 'The old value on the Bizflow MEMBER table';
-   COMMENT ON COLUMN MEMBERHISTORY.NEWVALUE IS 'The new value on the Bizflow MEMBER table';
+   COMMENT ON TABLE HHS_HR.MEMBERHISTORY IS 'Provides historical information on the transactions of the Bizflow MEMBER table';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.HISTORYID IS 'The unique memberhistory ID';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.CHANGEDATE IS 'The date that the transaction took place on the Bizflow MEMBER table';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.MEMBERID IS 'Corresponds to the memberid on the BizFlow MEMBER and MEMBERINFO tables';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.HHSID IS 'The HHS ID of the employee';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.OPDIV IS 'The Operating Division of the employee';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.DMLTYPE IS 'The type of DML: ''INSERT'' or ''UPDATE''';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.FIELDCHANGED IS 'The field that was updated on the Bizflow MEMBER table';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.OLDVALUE IS 'The old value on the Bizflow MEMBER table';
+   COMMENT ON COLUMN HHS_HR.MEMBERHISTORY.NEWVALUE IS 'The new value on the Bizflow MEMBER table';
    
 --------------------------------------------------------
 --  DDL for Index MEMBERHISTORY_PK
 --------------------------------------------------------
-    CREATE UNIQUE INDEX MEMBERHISTORY_PK ON MEMBERHISTORY (HISTORYID);
+    CREATE UNIQUE INDEX HHS_HR.MEMBERHISTORY_PK ON HHS_HR.MEMBERHISTORY (HISTORYID);
 
 --------------------------------------------------------
 --  DDL for Index MEMBERHISTORY_I1
 --------------------------------------------------------
-    CREATE INDEX MEMBERHISTORY_I1 ON MEMBERHISTORY(HHSID);
+    CREATE INDEX HHS_HR.MEMBERHISTORY_I1 ON HHS_HR.MEMBERHISTORY(HHSID);
 
 --------------------------------------------------------  
 -- DDL for Sequence MEMBERHISTORY_SEQ
 --------------------------------------------------------  
-    CREATE SEQUENCE MEMBERHISTORY_SEQ nocache;
+    CREATE SEQUENCE HHS_HR.MEMBERHISTORY_SEQ nocache;
 
 
 --------------------------------------------------------  
 --  DDL for Trigger MEMBERHISTORY_TRG
 --------------------------------------------------------  
-    CREATE OR REPLACE TRIGGER MEMBERHISTORY_TRG
-    BEFORE INSERT ON MEMBERHISTORY
+    CREATE OR REPLACE TRIGGER HHS_HR.MEMBERHISTORY_TRG
+    BEFORE INSERT ON HHS_HR.MEMBERHISTORY
     FOR EACH ROW
     BEGIN
         <<COLUMN_SEQUENCES>>
         BEGIN
             IF INSERTING AND :NEW.HISTORYID IS NULL THEN
-                SELECT MEMBERHISTORY_SEQ.NEXTVAL INTO :NEW.HISTORYID FROM SYS.DUAL;
+                SELECT HHS_HR.MEMBERHISTORY_SEQ.NEXTVAL INTO :NEW.HISTORYID FROM SYS.DUAL;
             END IF;
         END COLUMN_SEQUENCES;
     END;
     /
-    ALTER TRIGGER MEMBERHISTORY_TRG ENABLE;
+    ALTER TRIGGER HHS_HR.MEMBERHISTORY_TRG ENABLE;
     
 --------------------------------------------------------
 -- Constraints for Table MEMBERHISTORY
 -------------------------------------------------------- 
-    ALTER TABLE MEMBERHISTORY ADD CONSTRAINT MEMBERHISTORY_PK PRIMARY KEY (HISTORYID) ENABLE;
-    ALTER TABLE MEMBERHISTORY MODIFY (HISTORYID NOT NULL ENABLE);
-    ALTER TABLE MEMBERHISTORY MODIFY (CHANGEDATE NOT NULL ENABLE);
-    ALTER TABLE MEMBERHISTORY MODIFY (MEMBERID NOT NULL ENABLE);
+    ALTER TABLE HHS_HR.MEMBERHISTORY ADD CONSTRAINT MEMBERHISTORY_PK PRIMARY KEY (HISTORYID) ENABLE;
+    ALTER TABLE HHS_HR.MEMBERHISTORY MODIFY (HISTORYID NOT NULL ENABLE);
+    ALTER TABLE HHS_HR.MEMBERHISTORY MODIFY (CHANGEDATE NOT NULL ENABLE);
+    ALTER TABLE HHS_HR.MEMBERHISTORY MODIFY (MEMBERID NOT NULL ENABLE);
     
     
 --------------------------------------------------------
 -- DDL for Table EMPLOYEE_LOOKUP
 --------------------------------------------------------
-    CREATE TABLE EMPLOYEE_LOOKUP
+    CREATE TABLE HHS_HR.EMPLOYEE_LOOKUP
     (LAST_NAME                      VARCHAR2(150),
     FIRST_NAME                      VARCHAR2(150),
     MIDDLE_NAME                     VARCHAR2(80),
@@ -156,7 +156,7 @@ SET DEFINE OFF;
 --------------------------------------------------------
 --  DDL for Table ADMINISTRATIVE_CODE
 --------------------------------------------------------
-CREATE TABLE ADMINISTRATIVE_CODE
+CREATE TABLE HHS_HR.ADMINISTRATIVE_CODE
 (
 	ADMIN_CODE              VARCHAR2(15),
 	ADMIN_CODE_DESC         VARCHAR2(72),
@@ -173,7 +173,7 @@ CREATE TABLE ADMINISTRATIVE_CODE
 --------------------------------------------------------
 --  DDL for Table APPOINTMENT_TYPE
 --------------------------------------------------------
-CREATE TABLE APPOINTMENT_TYPE
+CREATE TABLE HHS_HR.APPOINTMENT_TYPE
 (
 	APPMNT_CD          VARCHAR2(20),
 	DESCRIPTION        VARCHAR2(80)
@@ -183,7 +183,7 @@ CREATE TABLE APPOINTMENT_TYPE
 --  DDL for Table CYBERSECURITY_CODE
 --------------------------------------------------------
 
-CREATE TABLE CYBERSECURITY_CODE
+CREATE TABLE HHS_HR.CYBERSECURITY_CODE
 (
 	CYBERSECURITY_CODE           VARCHAR2(2),
 	CYBERSECURITY_CD_DESC        VARCHAR2(100)
@@ -192,7 +192,7 @@ CREATE TABLE CYBERSECURITY_CODE
 --------------------------------------------------------
 --  DDL for Table DUTY_STATION
 --------------------------------------------------------
-CREATE TABLE DUTY_STATION
+CREATE TABLE HHS_HR.DUTY_STATION
 (
 	STATE_OR_COUNTRY_NAME        VARCHAR2(30),
 	GEO_CODE                     VARCHAR2(12),
@@ -205,7 +205,7 @@ CREATE TABLE DUTY_STATION
 --------------------------------------------------------
 --  DDL for Table LEGAL_AUTHORITY
 --------------------------------------------------------
-CREATE TABLE LEGAL_AUTHORITY
+CREATE TABLE HHS_HR.LEGAL_AUTHORITY
 (
 	AUTH_CODE            VARCHAR2(20),
 	AUTH_DESC            VARCHAR2(100),
@@ -217,7 +217,7 @@ CREATE TABLE LEGAL_AUTHORITY
 --------------------------------------------------------
 --  DDL for Table NATURE_OF_ACTION
 --------------------------------------------------------
-CREATE TABLE NATURE_OF_ACTION
+CREATE TABLE HHS_HR.NATURE_OF_ACTION
 (
 	NOA_CODE             VARCHAR2(20),
 	NOA_DESC             VARCHAR2(100),
@@ -228,7 +228,7 @@ CREATE TABLE NATURE_OF_ACTION
 --------------------------------------------------------
 --  DDL for Table PAY_PLAN
 --------------------------------------------------------
-CREATE TABLE PAY_PLAN
+CREATE TABLE HHS_HR.PAY_PLAN
 (
 	POSITION_PAY_PLAN        VARCHAR2(2),
 	PAY_PLAN_DESC            VARCHAR2(100)
@@ -238,7 +238,7 @@ CREATE TABLE PAY_PLAN
 --------------------------------------------------------
 --  DDL for Table OCCUPATIONAL_SERIES
 --------------------------------------------------------
-CREATE TABLE OCCUPATIONAL_SERIES
+CREATE TABLE HHS_HR.OCCUPATIONAL_SERIES
 (
 	POSITION_SERIES        VARCHAR2(8),
 	SERIES_DESC            VARCHAR2(100)
@@ -247,7 +247,7 @@ CREATE TABLE OCCUPATIONAL_SERIES
 --------------------------------------------------------
 --  DDL for Table PS_DEPT_TBL
 --------------------------------------------------------
-CREATE TABLE "PS_DEPT_TBL" 
+CREATE TABLE "HHS_HR"."PS_DEPT_TBL" 
 (
 	"SETID" 					VARCHAR2(5) NOT NULL ENABLE, 
 	"DEPTID" 						VARCHAR2(10) NOT NULL ENABLE, 
@@ -305,7 +305,7 @@ CREATE TABLE "PS_DEPT_TBL"
 --------------------------------------------------------
 --  DDL for Table PS_HE_EWIT_DEPT_1
 --------------------------------------------------------
-CREATE TABLE "PS_HE_EWIT_DEPT_1" 
+CREATE TABLE "HHS_HR"."PS_HE_EWIT_DEPT_1" 
 (
 	"SETID" 				VARCHAR2(5) NOT NULL ENABLE, 
 	"DEPTID" 				VARCHAR2(10) NOT NULL ENABLE, 
@@ -323,7 +323,7 @@ CREATE TABLE "PS_HE_EWIT_DEPT_1"
 --------------------------------------------------------
 --  DDL for Table PS_HE_RECRUIT_EWIT
 --------------------------------------------------------
-CREATE TABLE "PS_HE_RECRUIT_EWIT"
+CREATE TABLE "HHS_HR"."PS_HE_RECRUIT_EWIT"
 (
 	"HRS_JOB_OPENING_ID" 			NUMBER(15,0) NOT NULL ENABLE, 
 	"HE_COMP_ALLOWANCE" 			VARCHAR2(1) NOT NULL ENABLE, 
@@ -338,7 +338,7 @@ CREATE TABLE "PS_HE_RECRUIT_EWIT"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_JO_LOC
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_JO_LOC" 
+CREATE TABLE "HHS_HR"."PS_HRS_JO_LOC" 
 (
 	"HRS_JOB_OPENING_ID" 			NUMBER(15,0) NOT NULL ENABLE, 
 	"LOCATION"						VARCHAR2(10) NOT NULL ENABLE, 
@@ -353,7 +353,7 @@ CREATE TABLE "PS_HRS_JO_LOC"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_JO_NAME
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_JO_NAME" 
+CREATE TABLE "HHS_HR"."PS_HRS_JO_NAME" 
 (
 	"HRS_JOB_OPENING_ID" 		NUMBER(15,0) NOT NULL ENABLE, 
 	"SEQUENCE_NBR" 				NUMBER(*,0) NOT NULL ENABLE, 
@@ -367,7 +367,7 @@ CREATE TABLE "PS_HRS_JO_NAME"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_JO_POSN
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_JO_POSN" 
+CREATE TABLE "HHS_HR"."PS_HRS_JO_POSN" 
 (
 	"HRS_JOB_OPENING_ID" 		NUMBER(15,0) NOT NULL ENABLE, 
 	"POSITION_NBR" 				VARCHAR2(8) NOT NULL ENABLE, 
@@ -381,7 +381,7 @@ CREATE TABLE "PS_HRS_JO_POSN"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_JO_RPL
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_JO_RPL" 
+CREATE TABLE "HHS_HR"."PS_HRS_JO_RPL" 
 (
 	"HRS_JOB_OPENING_ID" 		NUMBER(15,0) NOT NULL ENABLE, 
 	"EMPLID" 					VARCHAR2(11) NOT NULL ENABLE, 
@@ -395,7 +395,7 @@ CREATE TABLE "PS_HRS_JO_RPL"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_JO_RQMT
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_JO_RQMT" 
+CREATE TABLE "HHS_HR"."PS_HRS_JO_RQMT" 
 (
 	"HRS_JOB_OPENING_ID" 				NUMBER(15,0) NOT NULL ENABLE, 
 	"HRS_JO_RQMT_SEQ" 					NUMBER(*,0) NOT NULL ENABLE, 
@@ -448,7 +448,7 @@ CREATE TABLE "PS_HRS_JO_RQMT"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_JOB_OPENING
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_JOB_OPENING" 
+CREATE TABLE "HHS_HR"."PS_HRS_JOB_OPENING" 
 (
 	"HRS_JOB_OPENING_ID" 				NUMBER(15,0) NOT NULL ENABLE, 
 	"HRS_RCRT_TMPL_ID" 					NUMBER(15,0) NOT NULL ENABLE, 
@@ -505,7 +505,7 @@ CREATE TABLE "PS_HRS_JOB_OPENING"
 --------------------------------------------------------
 --  DDL for Table PS_HRS_LOCATION_I
 --------------------------------------------------------
-CREATE TABLE "PS_HRS_LOCATION_I" 
+CREATE TABLE "HHS_HR"."PS_HRS_LOCATION_I" 
 (
 	"SETID" 				VARCHAR2(5), 
 	"LOCATION" 				VARCHAR2(10), 
@@ -519,7 +519,7 @@ CREATE TABLE "PS_HRS_LOCATION_I"
 --------------------------------------------------------
 --  DDL for Table PS_JOBCODE_TBL
 --------------------------------------------------------
-CREATE TABLE "PS_JOBCODE_TBL" 
+CREATE TABLE "HHS_HR"."PS_JOBCODE_TBL" 
 (
 	"SETID" 					VARCHAR2(5) NOT NULL ENABLE, 
 	"JOBCODE" 					VARCHAR2(6) NOT NULL ENABLE, 
@@ -646,10 +646,14 @@ CREATE TABLE "PS_JOBCODE_TBL"
 	"DESCRLONG" 				LONG
 );
 
+CREATE INDEX HHS_HR.PS_JOBCODE_TBL_IDX1 ON HHS_HR.PS_JOBCODE_TBL (SETID ASC, JOBCODE ASC, EFFDT ASC);
+
+CREATE INDEX HHS_HR.PS_JOBCODE_TBL_IDX2 ON HHS_HR.PS_JOBCODE_TBL (EFF_STATUS ASC);
+
 --------------------------------------------------------
 --  DDL for Table PS_PERSONAL_DATA_VW
 --------------------------------------------------------
-CREATE TABLE "PS_PERSONAL_DATA_VW" 
+CREATE TABLE "HHS_HR"."PS_PERSONAL_DATA_VW" 
 (
 	"EMPLID" 					VARCHAR2(11), 
 	"COUNTRY_NM_FORMAT" 		VARCHAR2(3), 
@@ -785,7 +789,7 @@ CREATE TABLE "PS_PERSONAL_DATA_VW"
 --------------------------------------------------------
 --  DDL for Table PS_POSITION_DATA
 --------------------------------------------------------
-CREATE TABLE "PS_POSITION_DATA" 
+CREATE TABLE "HHS_HR"."PS_POSITION_DATA" 
 (
 	"POSITION_NBR" 					VARCHAR2(8) NOT NULL ENABLE, 
 	"EFFDT" 						DATE NOT NULL ENABLE, 
@@ -905,10 +909,20 @@ CREATE TABLE "PS_POSITION_DATA"
 	"DESCRLONG" 					LONG
 );
 
+CREATE INDEX HHS_HR.PS_POSITION_DATA_IDX1 ON HHS_HR.PS_POSITION_DATA (POSITION_NBR ASC);
+
+CREATE INDEX HHS_HR.PS_POSITION_DATA_IDX2 ON HHS_HR.PS_POSITION_DATA (BUSINESS_UNIT ASC, JOBCODE ASC);
+
+CREATE INDEX HHS_HR.PS_POSITION_DATA_IDX3 ON HHS_HR.PS_POSITION_DATA (POSITION_NBR ASC, EFFDT ASC);
+
+CREATE INDEX HHS_HR.PS_POSITION_DATA_IDX4 ON HHS_HR.PS_POSITION_DATA (JOBCODE ASC);
+
+CREATE INDEX HHS_HR.PS_POSITION_DATA_IDX5 ON HHS_HR.PS_POSITION_DATA (EFF_STATUS ASC);
+
 --------------------------------------------------------
 --  DDL for Table PS_SAL_GRADE_TBL
 --------------------------------------------------------
-CREATE TABLE "PS_SAL_GRADE_TBL" 
+CREATE TABLE "HHS_HR"."PS_SAL_GRADE_TBL" 
 (
 	"SETID" 					VARCHAR2(5) NOT NULL ENABLE, 
 	"SAL_ADMIN_PLAN" 			VARCHAR2(4) NOT NULL ENABLE, 
