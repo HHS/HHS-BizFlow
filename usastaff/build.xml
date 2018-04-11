@@ -8,12 +8,16 @@
 	<property name="proj.jdk.classpath" value="jdk.classpath.1.7" />
 
 	<property name="target.jvm" value="1.7" />
-	<property name="target.name" value="usastaffdss" />
+	<property name="target.name" value="usasdss" />
+	<property name="target.version" value="0.0.1-SNAPSHOT" />
+	<property name="spring.boot.version" value="1.5.10.RELEASE" />
 	<property name="proj.root.dir" value="${basedir}" />
 	<property name="src.dir" value="${proj.root.dir}/src" />
 	<property name="src.main.java.dir" value="${src.dir}/main/java" />
+	<property name="src.main.res.dir" value="${src.dir}/main/resources" />
 	<property name="build.dir" value="${proj.root.dir}/build" />
 	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="bootjar.dir" value="${build.dir}/bootjar" />
 	<property name="bin.dir" value="${proj.root.dir}/bin" />
 	<property name="lib.dir" value="${proj.root.dir}/lib" />
 	<property name="dist.dir" value="${proj.root.dir}/dist" />
@@ -29,13 +33,17 @@
 	</path>
 
 	<patternset id="module.dependncy.lib">
-		<include name="axis.jar" />
+		<!--
+		<include name="axis-1.4.jar" />
 		<include name="commons-discovery-0.2.jar" />
 		<include name="commons-logging-1.1.jar" />
 		<include name="log4j-1.2.8.jar" />
-		<include name="jaxrpc.jar" />
-		<include name="saaj.jar" />
+		<include name="ojdbc7-12.1.0.jar" />
+		<include name="jaxrpc-1.1.jar" />
+		<include name="saaj-1.2.jar" />
 		<include name="wsdl4j-1.5.1.jar" />
+		-->
+		<include name="*.jar" />
 	</patternset>
 
 	<path id="classpath">
@@ -63,6 +71,7 @@
 		<echo message="proj.root.dir       = ${proj.root.dir}" />
 		<echo message="src.dir             = ${src.dir}" />
 		<echo message="src.main.java.dir   = ${src.main.java.dir}" />
+		<echo message="src.main.res.dir    = ${src.main.res.dir}" />
 		<echo message="build.dir           = ${build.dir}" />
 		<echo message="classes.dir         = ${classes.dir}" />
 		<echo message="bin.dir             = ${bin.dir}" />
@@ -74,16 +83,17 @@
 	<target name="compile"
 			depends="init"
 			description="compiles java source files">
-		<delete dir="${classes.dir}" />
+		<delete dir="${build.dir}" />
 		<mkdir dir="${classes.dir}" />
 		<javac destdir="${classes.dir}"
 				fork="true" 
 				executable="${proj.jdk.bin}/javac"
-				debug="on" 
+				debug="true" nowarn="false"
 				source="${target.jvm}" target="${target.jvm}"
-				deprecation="off" optimize="on" encoding="utf-8">
+				deprecation="true" optimize="true" encoding="utf-8">
 			<classpath refid="classpath" />
 			<src path="${src.main.java.dir}" />
+			<exclude name="DSS_Java/**" />
 		</javac>
 	</target>
 
@@ -92,64 +102,43 @@
 			depends="compile"
 			description="creates jar file from DSS client class files">
 		<echo message="Packaging ${target.name}.jar file." />
-		<delete file="${dist.dir}/*.bat" />
-		<delete file="${dist.dir}/*.sh" />
+		<delete dir="${dist.dir}" />
+
 		<copy todir="${dist.dir}">
-			<fileset dir="${src.main.java.dir}/DSS_Java">
-				<include name="*.bat" />
-				<include name="*.sh" />
-			</fileset>
-		</copy>
-		<delete file="${manifest}" />
-		<echo file="${manifest}" append="false" message="Manifest-Version: ${version}&#13;&#10;Created-By: Deloitte LLP" />
-		<delete dir="${dist.dir}/lib" />
-		<copy todir="${dist.dir}/lib">
-			<fileset dir="${lib.dir}">
-				<patternset refid="module.dependncy.lib"/>
-			</fileset>
 			<fileset dir="${src.main.java.dir}">
 				<include name="log4j.properties" />
 			</fileset>
-		</copy>
-		<copy todir="${classes.dir}">
-			<fileset dir="${src.main.java.dir}">
-				<include name="log4j.properties" />
+			<fileset dir="${src.main.res.dir}">
+				<include name="application.properties" />
+			</fileset>
+			<fileset dir="${src.main.res.dir}">
+				<include name="run.sh" />
 			</fileset>
 		</copy>
-		<jar jarfile="${dist.dir}/lib/${target.name}.jar" basedir="${classes.dir}" includes="**/*" manifest="${manifest}" />
-		<delete file="${manifest}" />
+		<chmod file="${dist.dir}/run.sh" perm="774" />
+
+		<delete dir="${bootjar.dir}" />
+		<mkdir dir="${bootjar.dir}/BOOT-INF" />
+		<copy todir="${bootjar.dir}/BOOT-INF">
+			<fileset dir="${build.dir}">
+				<include name="classes/**" />
+			</fileset>
+			<fileset dir="${proj.root.dir}">
+				<include name="lib/*.jar" />
+				<exclude name="lib/spring-boot-loader-*.jar" />
+			</fileset>
+		</copy>
+		<unjar src="${lib.dir}/spring-boot-loader-${spring.boot.version}.jar"
+				dest="${bootjar.dir}"
+		/>
+		<jar destfile="${dist.dir}/${target.name}-${target.version}.jar" 
+				basedir="${bootjar.dir}" 
+				includes="**/*" 
+				compress="false"
+				manifest="${src.main.res.dir}/MANIFEST.MF"
+		/>
+
 	</target>
 
-	
-	<target name="run.gui"
-			depends="init"
-			description="runs DSS module">
-		<java classname="DSS_Java.DSS_JavaUI"
-				fork="true"
-				failonerror="true"
-				maxmemory="512m">
-			<classpath refid="run.classpath" />
-		</java>
-	</target>
-
-	
-	<target name="run.cli.genauthprompt"
-			depends="init"
-			description="runs DSS module">
-		<java classname="DSS_Java.genericAuthenticationPrompt"
-				fork="true"
-				failonerror="true"
-				maxmemory="512m">
-			<classpath refid="run.classpath" />
-			<!--
-			<jvmarg value="-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2" />
-			-->
-			<jvmarg value="-Dhttps.protocols=TLSv1.1,TLSv1.2 -Djdk.tls.client.protocols=TLSv1.1,TLSv1.2" />
-			<arg value="-u" />
-			<arg value="${genauthprompt.cli.arg.url}" />
-			<arg value="-l" />
-			<arg value="${genauthprompt.cli.arg.search}" />
-		</java>
-	</target>
 
 </project>
