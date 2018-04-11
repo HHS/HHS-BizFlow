@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: usasdss
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: gov.hhs.dss
+Spring-Boot-Version: 1.5.10.RELEASE
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: hhs.usas.dss.USASInterfaceApplication
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+
+
