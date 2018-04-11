@@ -2,6 +2,7 @@
 
 Modules
 
+- **biis** : BIIS interface where user information and reference data is pulled from the BIIS interface into the BizFlow and HHS common database. 
 - **database** : HHS BizFlow common database script.
 - **jdbcconn** : JDBC Connection test tool.
 - **persondirectory** : Person Directory interface where user information is pulled from PSC Locator database onto BizFlow database.
@@ -76,7 +77,10 @@ For example:
 	./run.sh oracle dev.dbhost.com 1521 dbsid dev devpass
 
 
+## BIIS Interface
+This module is to pull HHS employee directory information into BizFlow user profile database table. BIIS and EHRP reference data is also imported into HHS common database and is refreshed nightly.
 
+Note: Once the user profile information is imported, BizFlow system administrator will need to manually maintain license assignment, authority group assignment, and user group assignment through BizFlow Administration menu.
 
 
 ## Person Directory Interface

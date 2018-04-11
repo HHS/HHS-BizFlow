@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BIISInterface" default="package.jar" basedir=".">
+
+	<property name="target.jvm" value="1.7"/>
+	<property name="target.name" value="hhsbiisinterface" />
+	<property name="version" value="1.0.0.0"/>
+	<property name="manifest" value="MANIFEST.MF"/>
+	<property name="proj.root.dir" value="${basedir}" />
+	<property name="src.dir" value="${proj.root.dir}/src" />
+	<property name="lib.dir" value="${proj.root.dir}/lib" />
+	<property name="build.dir" value="${proj.root.dir}/build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="dist.dir" value="${proj.root.dir}/dist" />
+
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+
+
+	<target name="init">
+		<tstamp>
+			<format property="curtime" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<echo message="Start time          = ${curtime}" />
+		<echo message="target.jvm          = ${target.jvm}" />
+		<echo message="target.name         = ${target.name}" />
+		<echo message="proj.root.dir       = ${proj.root.dir}" />
+		<echo message="src.dir             = ${src.dir}" />
+		<echo message="lib.dir             = ${lib.dir}" />
+		<echo message="build.dir           = ${build.dir}" />
+		<echo message="classes.dir         = ${classes.dir}" />
+		<echo message="dist.dir            = ${dist.dir}" />
+	</target>
+
+
+	<target name="clean"
+			depends="init"
+			description="cleans generated directories and files">
+		<delete dir="${classes.dir}" />
+		<delete dir="${dist.dir}/lib" />
+	</target>
+
+
+	<target name="compile"
+			depends="init"
+			description="compiles java source files">
+		<delete dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<javac destdir="${classes.dir}"
+				debug="on"
+				source="${target.jvm}" target="${target.jvm}"
+				deprecation="off" optimize="on" encoding="utf-8">
+			<classpath refid="classpath"/>
+			<src path="${src.dir}"/>
+		</javac>
+	</target>
+
+
+	<target name="package.jar"
+			depends="compile"
+			description="creates jar file from class files">
+		<echo message="Building ${target.name}.jar file. "/>
+		<delete file="${manifest}"/>
+		<echo file="${manifest}" append="false" message="Manifest-Version: ${version}&#13;&#10;Created-By: Deloitte LLP"/>
+		<delete dir="${dist.dir}/lib"/>
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<jar jarfile="${dist.dir}/lib/${target.name}.jar" basedir="${classes.dir}" includes="com/**" manifest="${manifest}"/>
+		<delete file="${manifest}"/>
+	</target>
+
+
+</project>
