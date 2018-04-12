@@ -103,6 +103,44 @@
 			description="creates jar file from DSS client class files">
 		<echo message="Packaging ${target.name}.jar file." />
 		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/bin" />
+		<mkdir dir="${dist.dir}/conf" />
+		<mkdir dir="${dist.dir}/lib" />
+
+		<copy todir="${dist.dir}/bin">
+			<fileset dir="${src.main.res.dir}">
+				<include name="run.sh" />
+			</fileset>
+		</copy>
+		<chmod file="${dist.dir}/bin/run.sh" perm="774" />
+
+		<copy todir="${dist.dir}/conf">
+			<fileset dir="${src.main.java.dir}">
+				<include name="log4j.properties" />
+			</fileset>
+			<fileset dir="${src.main.res.dir}">
+				<include name="application.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<jar destfile="${dist.dir}/lib/${target.name}-${target.version}.jar" 
+				basedir="${classes.dir}" 
+				includes="**/*" 
+				compress="false"
+		/>
+	</target>
+
+
+	<target name="package.exejar"
+			depends="compile"
+			description="creates executable jar file from DSS client class files">
+		<echo message="Packaging ${target.name}.jar file." />
+		<delete dir="${dist.dir}" />
 
 		<copy todir="${dist.dir}">
 			<fileset dir="${src.main.java.dir}">
@@ -112,10 +150,10 @@
 				<include name="application.properties" />
 			</fileset>
 			<fileset dir="${src.main.res.dir}">
-				<include name="run.sh" />
+				<include name="run-jar.sh" />
 			</fileset>
 		</copy>
-		<chmod file="${dist.dir}/run.sh" perm="774" />
+		<chmod file="${dist.dir}/run-jar.sh" perm="774" />
 
 		<delete dir="${bootjar.dir}" />
 		<mkdir dir="${bootjar.dir}/BOOT-INF" />
@@ -137,7 +175,6 @@
 				compress="false"
 				manifest="${src.main.res.dir}/MANIFEST.MF"
 		/>
-
 	</target>
 
 
