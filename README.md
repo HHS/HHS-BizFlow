@@ -123,10 +123,11 @@ In order to call DSS web service, there should be an existing report created for
 
 1. Capture the generated module JAR file, configuration files, and shell script to run the module.
 
-		usastaff/dist/usasdss-<version>.jar
-		usastaff/dist/application.properties
-		usastaff/dist/log4j.properties
-		usastaff/dist/run.sh
+		usastaff/dist/bin/run.sh
+		usastaff/dist/conf/application.properties
+		usastaff/dist/conf/log4j.properties
+		usastaff/dist/lib/usasdss-<version>.jar
+		usastaff/dist/lib/*.jar
 
 
 ### Deployment Instruction
@@ -153,7 +154,7 @@ The deployed module can be run on demand or as a stand alone application.
 
 For UNIX environment, make the run script executable.
 
-	cd <server_dir>/usastaff
+	cd <server_dir>/usastaff/bin
 	chmod 744 run.sh
 
 For on-demand run, execute the shell script in command line.

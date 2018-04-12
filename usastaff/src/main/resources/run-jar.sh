@@ -18,7 +18,7 @@ EXECJAR=usasdss-0.0.1-SNAPSHOT
 #-----------------------------
 # Build the CLASSPATH required
 #-----------------------------
-CLASSPATH=$CLASSPATH:.:$LIB_DIR/*:$CONF_DIR
+CLASSPATH=$CLASSPATH:.:$LIB_DIR/*:$CONF_DIR:$EXECJAR.jar
 #for dir in ../common_class; do
 #  CLASSPATH="$CLASSPATH:$dir"
 #done
@@ -29,5 +29,5 @@ CLASSPATH=$CLASSPATH:.:$LIB_DIR/*:$CONF_DIR
 #-----------------------------
 # Run application
 #-----------------------------
-#$JAVA_HOME/bin/java -jar $EXECJAR.jar $1 $2 $3 $4 $5
-$JAVA_HOME/bin/java -classpath $CLASSPATH hhs.usas.dss.USASInterfaceApplication  $1 $2 $3 $4 $5
+$JAVA_HOME/bin/java -jar $EXECJAR.jar $1 $2 $3 $4 $5
+#$JAVA_HOME/bin/java -classpath $CLASSPATH org.springframework.boot.loader.JarLauncher  $1 $2 $3 $4 $5
