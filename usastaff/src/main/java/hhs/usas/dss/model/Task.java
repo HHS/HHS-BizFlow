@@ -1,19 +1,42 @@
 package hhs.usas.dss.model;
 
-public class Task extends Report{
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+@Component
+@PropertySource("classpath:report.properties")
+public class Task extends Report {
 	
+	@Value("${task.search.path}") private String searchPath;
+	@Value("${task.intg.type}") private String intgType;
+	@Value("${task.file.name}") private String fileName;
+	@Value("${task.parm.num}") private int parmNum;
+	@Value("${task.rvp.name}") private String rvpName;
+	@Value("${task.rpt.iteration}") private int rptIteration; 
+	@Value("${task.date.increment}") private int dateIncrement;
+	@Value("${task.end.date}") private String endDate;
+	@Value("${task.truncate}") private String spTruncate;
+	@Value("${task.run.report}") private boolean runReport;
+
 	public Task() {
-		super();
-		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Task Data Self Service']");
-		this.setIntgType("TASK");
-		this.setFileName("TaskDSS");
-		this.setParmNum(1);
-		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(1);
-		this.setDateIncrement(-25);
-		this.setEndDate(""); //01/01/2015
-		this.setSpTruncate("SP_TRUNC_TASK_TABLE");
-		this.setRunReport(true);
+
+	}
+	
+	@PostConstruct
+	public void construct() {
+		super.setSearchPath(searchPath);
+		super.setIntgType(intgType);
+		super.setFileName(fileName);
+		super.setParmNum(parmNum);
+		super.setRvpName(rvpName);
+		super.setRptIteration(rptIteration);
+		super.setDateIncrement(dateIncrement);
+		super.setEndDate(endDate);
+		super.setSpTruncate(spTruncate);
+		super.setRunReport(runReport);
 	}
 	
 }
