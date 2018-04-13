@@ -90,7 +90,6 @@
 				deprecation="true" optimize="true" encoding="utf-8">
 			<classpath refid="classpath" />
 			<src path="${src.main.java.dir}" />
-			<exclude name="DSS_Java/**" />
 		</javac>
 	</target>
 
