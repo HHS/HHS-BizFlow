@@ -1,5 +1,8 @@
 *.class
 *.log
+**/.project
+**/.classpath
+**/.sts4-cache/**
 **/build/**
 **/dist/**
 **/target/**

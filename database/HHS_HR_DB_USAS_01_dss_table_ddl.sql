@@ -857,10 +857,11 @@ CREATE TABLE HHS_HR.DSS_IHS_VAC_CERTIFICATE
 (
     REQUEST_NUMBER              VARCHAR2(202),
     VIN                         NUMBER(10),
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
     ISSUE_DATE                  DATE,
     REVIEW_DUE_DATE             DATE,
     REVIEW_RETURN_DATE          DATE,
-    CERTIFICATE_NUMBER          VARCHAR2(102),
     AUDIT_CODE                  VARCHAR2(82),
     AUDIT_DATE                  DATE,
     LAST_UPDATE_DATE            DATE,

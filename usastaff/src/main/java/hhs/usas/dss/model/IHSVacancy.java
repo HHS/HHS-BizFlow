@@ -1,19 +1,42 @@
 package hhs.usas.dss.model;
 
-public class IHSVacancy extends Report{
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+@Component
+@PropertySource("classpath:report.properties")
+public class IHSVacancy extends Report {
 	
+	@Value("${ihs.vac.search.path}") private String searchPath;
+	@Value("${ihs.vac.intg.type}") private String intgType;
+	@Value("${ihs.vac.file.name}") private String fileName;
+	@Value("${ihs.vac.parm.num}") private int parmNum;
+	@Value("${ihs.vac.rvp.name}") private String rvpName;
+	@Value("${ihs.vac.rpt.iteration}") private int rptIteration; 
+	@Value("${ihs.vac.date.increment}") private int dateIncrement;
+	@Value("${ihs.vac.end.date}") private String endDate;
+	@Value("${ihs.vac.truncate}") private String spTruncate;
+	@Value("${ihs.vac.run.report}") private boolean runReport;
+
 	public IHSVacancy() {
-		super();
-		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/folder[@name='HHS']/folder[@name='Organization Shared']/folder[@name='Indian Health Service']/folder[@name='Custom DSS']/report[@name='IHS Custom Report - Fill a Vacancy']");
-		this.setIntgType("IHS-VACANCY");
-		this.setFileName("IHSFillAVacancy");
-		this.setParmNum(1);
-		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(1);
-		this.setDateIncrement(-60);
-		this.setEndDate(""); //01/01/2015
-		this.setSpTruncate("SP_TRUNC_IHS_VAC_TABLE");
-		this.setRunReport(true);
+
+	}
+	
+	@PostConstruct
+	public void construct() {
+		super.setSearchPath(searchPath);
+		super.setIntgType(intgType);
+		super.setFileName(fileName);
+		super.setParmNum(parmNum);
+		super.setRvpName(rvpName);
+		super.setRptIteration(rptIteration);
+		super.setDateIncrement(dateIncrement);
+		super.setEndDate(endDate);
+		super.setSpTruncate(spTruncate);
+		super.setRunReport(runReport);
 	}
 	
 }
