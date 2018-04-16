@@ -807,7 +807,8 @@ CREATE TABLE HHS_HR.DSS_TIME_TO_OFFER
     INIT_BKGRND_INVST_DATE          DATE,
     RCVE_BKGRND_INVST_DATE          DATE,
     SEND_OFCL_OFFR_CMPL_DATE        DATE,
-    NEW_HIRE_NAME                   VARCHAR2(2050)
+    NEW_HIRE_NAME                   VARCHAR2(2050),
+    EOD_DATE                        DATE
 );
 
 ----------------------------------------------
@@ -899,3 +900,16 @@ CREATE TABLE HHS_HR.DSS_IHS_VAC_NEW_HIRE
 --DDL for index DSS_IHS_VAC_NEW_HIRE_I1
 ----------------------------------------------
 CREATE INDEX HHS_HR.DSS_IHS_VAC_NEW_HIRE_I1 ON DSS_IHS_VAC_NEW_HIRE (REQUEST_NUMBER);
+
+
+--==================================
+--REFERENCE TABLES
+--==================================
+------------------------------------
+--DDL for table AREA_CONSIDERATION
+------------------------------------
+CREATE TABLE HHS_HR.AREA_CONSIDERATION
+(
+    AREA_CONSIDER_CODE        VARCHAR2(8),
+    AREA_CONSIDER_DESC        VARCHAR2(30)
+);
