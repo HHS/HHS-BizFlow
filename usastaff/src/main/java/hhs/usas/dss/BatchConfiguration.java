@@ -70,6 +70,39 @@ public class BatchConfiguration {
 		return interfaceName;
 	}
 
+	@Autowired
+	private Announcement announcement;
+	
+	@Autowired
+	private Application application;
+	
+	@Autowired
+	private Certificate certificate;
+	
+	@Autowired
+	private IHSVacancy ihsVacancy;
+	
+	@Autowired
+	private NewHire newHire;
+	
+	@Autowired
+	private Request request;
+	
+	@Autowired
+	private Review review;
+	
+	@Autowired
+	private Task task;
+	
+	@Autowired
+	private TimeToOffer time2Offer;
+	
+	@Autowired
+	private TimeToRecruit time2Recruit;
+	
+	@Autowired
+	private Vacancy vacancy;
+	
 	/*
 	 * Job - importDSSReports
 	 */
@@ -113,7 +146,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet annTasklet() {
-		Announcement ann = new Announcement();
+		announcement.construct();
 		return new ReportTasklet();
 	}
     
@@ -121,7 +154,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet appTasklet() {		
-		Application app = new Application();
+		application.construct();
 		return new ReportTasklet();
 	}	
 	
@@ -129,7 +162,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet certTasklet() {
-		Certificate cert = new Certificate();
+		certificate.construct();
 		return new ReportTasklet();
 	}
 	
@@ -137,7 +170,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet newHireTasklet() {
-		NewHire newHire = new NewHire();
+		newHire.construct();
 		return new ReportTasklet();
 	}
 	
@@ -145,7 +178,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet requestTasklet() {
-		Request request = new Request();
+		request.construct();
 		return new ReportTasklet();
 	}
 	
@@ -153,7 +186,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet reviewTasklet() {
-		Review review = new Review();
+		review.construct();
 		return new ReportTasklet();
 	}
 	
@@ -161,7 +194,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet taskTasklet() {
-		Task task = new Task();
+		task.construct();
 		return new ReportTasklet();
 	}
 	
@@ -169,7 +202,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet vacTasklet() {
-		Vacancy vac = new Vacancy();
+		vacancy.construct();
 		return new ReportTasklet();
 	}
 	
@@ -177,7 +210,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet offerTasklet() {
-		TimeToOffer offer = new TimeToOffer();
+		time2Offer.construct();
 		return new ReportTasklet();
 	}	
 		
@@ -185,7 +218,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet recruitTasklet() {
-		TimeToRecruit recruit = new TimeToRecruit();
+		time2Recruit.construct();
 		return new ReportTasklet();
 	}
 	
@@ -193,7 +226,7 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet ihsVacancyTasklet() {
-		IHSVacancy ihsVac = new IHSVacancy();
+		ihsVacancy.construct();
 		return new ReportTasklet();
 	}	
 	
