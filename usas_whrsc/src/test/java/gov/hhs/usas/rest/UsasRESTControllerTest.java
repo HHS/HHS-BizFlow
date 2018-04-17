@@ -2,7 +2,13 @@ package gov.hhs.usas.rest;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -10,9 +16,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import gov.hhs.usas.rest.UsasRESTController;
-
+/*@RunWith(SpringRunner.class)
+//@SpringBootTest
+@WebMvcTest(UsasRESTController.class)
+@ActiveProfiles("test")*/
+@RunWith(SpringJUnit4ClassRunner.class)
 public class UsasRESTControllerTest {
-	@Autowired
+	//@Autowired
     private MockMvc mockMvc;
 
 	 @Before

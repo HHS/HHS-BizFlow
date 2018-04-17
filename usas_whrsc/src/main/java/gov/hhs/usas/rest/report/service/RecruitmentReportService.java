@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -14,7 +15,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import gov.hhs.usas.rest.model.USASResponse;
@@ -29,19 +32,21 @@ import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncement;
 import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncementResult;
 
-@Service
+@Configuration
 public class RecruitmentReportService extends ReportService
 {
 	private static final Logger log = LoggerFactory.getLogger(RecruitmentReportService.class);
+	
 	private RecruitmentReportParser parser;
 	private XMLInputFactory xif;
 	private StreamSource xml;
 	private XMLStreamReader xsr;
-	@Value("${package.recruitment}")
-	private String PACKAGE_NAME;
-	
+//	@Value("${package.recruitment}")
+	private String PACKAGE_NAME;	
 	private List<PreRecruitment> preRecruitmentPositions;
 	private List<CertificateInformation> certificates;
+	private List<ApplicantRating> applicantRatings;
+	private List<ApplicantRatingDates> applicantRatingDates;
 	private List<VacancyAnnouncement> vacancyAnnouncements;
 	
 	private PositionsResult positions;
@@ -57,9 +62,15 @@ public class RecruitmentReportService extends ReportService
 	
 
 	public RecruitmentReportService() {
+		super();
+		//this.PACKAGE_NAME = properties.getRecruitmentPackage();
+		//this.properties = new Properties();
+		this.PACKAGE_NAME = "gov.hhs.usas.rest.report.model.Recruitment.";
 		this.parser = new RecruitmentReportParser();
 		this.preRecruitmentPositions = new ArrayList<PreRecruitment>();
 		this.certificates = new ArrayList<CertificateInformation>();
+		this.applicantRatings = new ArrayList<ApplicantRating>();
+		this.applicantRatingDates = new ArrayList<ApplicantRatingDates>();
 		this.vacancyAnnouncements = new ArrayList<VacancyAnnouncement>();
 		this.positions = new PositionsResult();
 		this.certificateList = new ArrayList<CertificateResult>();
@@ -71,6 +82,13 @@ public class RecruitmentReportService extends ReportService
 		this.object = new Object();
 		this.object2 = new Object();
 	}
+	
+/*	@PostConstruct
+	public void postConstruct() {
+		if(properties.getRecruitmentPackage() == null)
+			properties = new Properties();
+		this.PACKAGE_NAME = properties.getRecruitmentPackage();
+	}*/
 
 	/**
 	 * This method is used when a Report is pulled from USA Staffing Cognos
@@ -103,6 +121,10 @@ public class RecruitmentReportService extends ReportService
 	 */
 	public USAStaffingRecruitmentResult parseReport()
 	{
+		//this.PACKAGE_NAME = properties.getRecruitmentPackage();
+		/*if(properties == null)
+			properties = new Properties();
+		this.PACKAGE_NAME = properties.getRecruitmentPackage();*/
 		try
 		{
 			this.xif = XMLInputFactory.newFactory();
@@ -123,6 +145,7 @@ public class RecruitmentReportService extends ReportService
 					{
 						className = this.xsr.getText().trim().substring(4, this.xsr.getText().trim().length());
 						this.cls = Class.forName(PACKAGE_NAME + className);
+//						this.cls = Class.forName(this.properties.getRecruitmentPackage() + className);
 					}
 				}
 				while (((!this.xsr.isStartElement()) || (!this.xsr.getLocalName().equals("row"))) && 
@@ -134,31 +157,37 @@ public class RecruitmentReportService extends ReportService
 					JAXBContext jc = JAXBContext.newInstance(new Class[] { this.cls });
 					Unmarshaller unmarshaller = jc.createUnmarshaller();
 					JAXBElement jbe = unmarshaller.unmarshal(this.xsr, this.cls);
-					if ((this.object instanceof gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating))
-					{
-						this.object2 = this.cls.newInstance();
-						this.object2 = jbe.getValue();
-					}
-					else
-					{
+//					if ((this.object instanceof ApplicantRating))
+//					{
+//						this.object2 = this.cls.newInstance();
+//						this.object2 = jbe.getValue();
+//					}
+//					else
+//					{
 						this.object = this.cls.newInstance();
 						this.object = jbe.getValue();
-					}
-					if ((this.object instanceof PreRecruitment))
+//					}
+					if (this.object instanceof PreRecruitment)
 					{
 						if (this.requestNumber.length() <= 0) {
 							this.requestNumber = ((PreRecruitment)this.object).getRequestNumber();
 						}
 						this.preRecruitmentPositions.add((PreRecruitment)this.object);
 					}
-					if ((this.object instanceof CertificateInformation)) {
+					if (this.object instanceof CertificateInformation) {
 						this.certificates.add((CertificateInformation)this.object);
 					}
-					if (((this.object instanceof ApplicantRating)) && ((this.object2 instanceof ApplicantRatingDates))) {
+					/*if (((this.object instanceof ApplicantRating)) && ((this.object2 instanceof ApplicantRatingDates))) {
 						this.applicantRatingList.add(this.parser.createApplicantRatingForVacancyAnnouncement((ApplicantRating)this.object, (ApplicantRatingDates)this.object2));
+					}*/
+					if (this.object instanceof ApplicantRating) {
+						this.applicantRatings.add((ApplicantRating) this.object);
 					}
-					if ((this.object2 instanceof VacancyAnnouncement)) {
-						this.vacancyAnnouncements.add((VacancyAnnouncement)this.object2);
+					if (this.object instanceof ApplicantRatingDates) {
+					this.applicantRatingDates.add((ApplicantRatingDates) this.object);	
+					}
+					if ((this.object instanceof VacancyAnnouncement)) {
+						this.vacancyAnnouncements.add((VacancyAnnouncement)this.object);
 					}
 					if ((this.object == null) || 
 
@@ -169,6 +198,7 @@ public class RecruitmentReportService extends ReportService
 			}
 			this.positions = this.parser.createPositionsForUSAStaffingRecruitment(this.preRecruitmentPositions);
 			this.certificateList = this.parser.createCertificateListForVacancyAnnouncement(this.certificates);
+			this.applicantRatingList = this.parser.createApplicantRatingForVacancyAnnouncement(this.applicantRatings, this.applicantRatingDates);
 			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingRecruitment(this.certificateList, this.applicantRatingList, this.vacancyAnnouncements);
 
 			this.usasRecruitment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList, this.positions);
