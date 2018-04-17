@@ -27,6 +27,7 @@ import gov.hhs.usas.rest.model.CognosReport;
 import gov.hhs.usas.rest.model.USASCredentials;
 import gov.hhs.usas.rest.model.USASRequest;
 import gov.hhs.usas.rest.model.USASResponse;
+import gov.hhs.usas.rest.report.service.Properties;
 
 /**
  * @author pvirdi
@@ -39,21 +40,23 @@ public class CognosRESTClient
 {
 	private static final Logger log = LoggerFactory.getLogger(CognosRESTClient.class);
 	@Autowired
+	private Properties properties;
+	@Autowired
 	private USASRequest usasRequest;
 	@Autowired
 	private USASResponse usasResponse;
 	@Autowired
 	private USASCredentials credentials;
-	@Value("${xml.data.login.template}")
+/*//	@Value("${xml.data.login.template}")
 	private String xmlDataLoginTemplate;
-	@Value("${xml.data.report.template}")
+//	@Value("${xml.data.report.template}")
 	private String xmlDataReportTemplate;	
-	@Value("${path.logon}")
+//	@Value("${path.logon}")
 	private String logonPath;
-	@Value("${path.logoff}")
+//	@Value("${path.logoff}")
 	private String logoffPath;
-	@Value("${path.reportdata}")
-	private String reportDataPath;
+//	@Value("${path.reportdata}")
+	private String reportDataPath;*/
 	private CookieManager manager;
 
 
@@ -88,8 +91,9 @@ public class CognosRESTClient
 		boolean isConnected = sendLogonRequest();
 
 		if(isConnected){
-			String vacancyReportURL = this.usasRequest.getServerURL() + reportDataPath + report.getId();
-			this.usasRequest.setPOSTParameters(this.xmlDataReportTemplate, report.getPrompt());
+			String vacancyReportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + report.getId();
+//			this.usasRequest.setPOSTParameters(this.xmlDataReportTemplate, report.getPrompt());
+			this.usasRequest.setPOSTParameters(properties.getXmlDataReportTemplate(), report.getPrompt());
 			try
 			{
 				URL url = new URL(vacancyReportURL);
@@ -159,9 +163,10 @@ public class CognosRESTClient
 		//String logonURL = this.usasRequest.getServerURL() + "/rds/auth/logon";
 		log.info("\nConnecting to USAS Cognos server...");
 		boolean isConnected = false;
-		String logonURL = this.usasRequest.getServerURL() + logonPath;
+		String logonURL = this.usasRequest.getServerURL() + properties.getLogonPath();
 		this.usasRequest.setRequestMethod("POST");
-		this.usasRequest.setPOSTParameters(this.xmlDataLoginTemplate, this.credentials);
+//		this.usasRequest.setPOSTParameters(this.xmlDataLoginTemplate, this.credentials);
+		this.usasRequest.setPOSTParameters(properties.getXmlDataLoginTemplate(), this.credentials);
 		try
 		{			
 			this.manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -223,7 +228,7 @@ public class CognosRESTClient
 	public void sendLogoffRequest()
 	{
 		//String logoffURL = this.usasRequest.getServerURL() + "/rds/auth/logoff";
-		String logoffURL = this.usasRequest.getServerURL() + logoffPath;
+		String logoffURL = this.usasRequest.getServerURL() + properties.getLogoffPath();
 		this.usasRequest.setRequestMethod("GET");
 		try
 		{

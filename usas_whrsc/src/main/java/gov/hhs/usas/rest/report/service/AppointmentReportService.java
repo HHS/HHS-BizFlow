@@ -14,7 +14,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import gov.hhs.usas.rest.model.USASResponse;
@@ -25,15 +27,15 @@ import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
 
-@Service
+
 public class AppointmentReportService extends ReportService {
 	
 	private static final Logger log = LoggerFactory.getLogger(AppointmentReportService.class);
+	
 	private AppointmentReportParser parser;
 	private XMLInputFactory xif;
 	private StreamSource xml;
 	private XMLStreamReader xsr;
-	@Value("${package.appointment}")
 	private String PACKAGE_NAME;
 	private List<ApptInfoCert> apptInfoCertList;
 	private List<ApptInfoNewHire> apptInfoNewHireList;
@@ -48,6 +50,7 @@ public class AppointmentReportService extends ReportService {
 	private Object object;	
 	
 	public AppointmentReportService() {
+		this.PACKAGE_NAME = "gov.hhs.usas.rest.report.model.Appointment.";
 		this.parser = new AppointmentReportParser();		
 		this.apptInfoCertList = new ArrayList<ApptInfoCert>();
 		this.apptInfoNewHireList = new ArrayList<ApptInfoNewHire>();
