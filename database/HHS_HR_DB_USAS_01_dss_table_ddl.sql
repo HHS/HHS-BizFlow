@@ -832,6 +832,7 @@ CREATE TABLE HHS_HR.DSS_IHS_VAC_ANNOUNCEMENT
     VIN                         NUMBER(10),
     ANNOUNCEMENT_NUMBER         VARCHAR2(56),
     VACANCY_TYPE                VARCHAR2(1002),
+    VACANCY_STATUS              VARCHAR2(1002),
     OPEN_DATE                   DATE,
     CLOSE_DATE                  DATE,
     ANNOUNCEMENT_TYPE           VARCHAR2(24),
@@ -843,7 +844,8 @@ CREATE TABLE HHS_HR.DSS_IHS_VAC_ANNOUNCEMENT
     LAST_UPDATE_DATE            DATE,
     REVIEW_JOA_DATE             DATE,
     REVIEW_JOA_SENT_DATE        DATE,
-    REVIEW_JOA_RETURN_DATE      DATE
+    REVIEW_JOA_RETURN_DATE      DATE,
+    REQUEST_CANCEL_DATE         DATE
 );
 
 ----------------------------------------------
@@ -891,9 +893,12 @@ CREATE TABLE HHS_HR.DSS_IHS_VAC_NEW_HIRE
     DUTY_LOCATION               VARCHAR2(2050),
     PAYPLAN_SERIES_GRADE        VARCHAR2(1000),
     SEND_TENT_OFFR_CMPL_DATE    DATE,
+    SEND_OFCL_OFFR_CMPL_DATE    DATE,
     EFFECTIVE_DATE              DATE,
     LAST_UPDATE_DATE            DATE,
-    VET_PREF_STATUS             VARCHAR2(2050)
+    VET_PREF_STATUS             VARCHAR2(2050),
+    PROJ_START_DATE             DATE,
+    ARRVL_VERIF_CMPL_DATE       DATE
 );
 
 ----------------------------------------------
