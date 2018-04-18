@@ -11,7 +11,8 @@ public class ApplicantRatingDates
 {
   @XmlElement(name="Request__Number", required=true)
   private String requestNumber;
-  @XmlElement(name="Vacancy__Identification__Number")
+  //@XmlElement(name="Vacancy__Identification__Number")
+  @XmlElement(name="Vacancy__Number")
   private String vacancyIdentificationNumber;
   @XmlElement(name="Announcement__Number")
   private String announcementNumber;

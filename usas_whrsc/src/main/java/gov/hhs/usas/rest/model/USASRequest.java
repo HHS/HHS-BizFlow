@@ -1,34 +1,55 @@
 package gov.hhs.usas.rest.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import gov.hhs.usas.rest.report.service.Properties;
 
 @Component
 public class USASRequest
 {
-  @Value("${server.url}")
+	@Autowired
+	private Properties properties;
+//  @Value("${server.url}")
   private String serverURL;
   private String requestMethod;
-  @Value("${request.user.agent.property}")
+//  @Value("${request.user.agent.property}")
   private String userAgentProperty;
-  @Value("${request.user.agent}")
+//  @Value("${request.user.agent}")
   private String userAgent;
-  @Value("${request.accept.language.property}")
+//  @Value("${request.accept.language.property}")
   private String acceptLanguageProperty;
-  @Value("${request.accept.language}")
+//  @Value("${request.accept.language}")
   private String acceptLanguage;
-  @Value("${request.content.type.property}")
+//  @Value("${request.content.type.property}")
   private String contentTypeProperty;
-  @Value("${request.content.type}")
+//  @Value("${request.content.type}")
   private String contentType;
   private String POSTParameters;
-  @Value("${request.cookie.property}")
+//  @Value("${request.cookie.property}")
   private String cookieProperty;
   private String cookie;
   
-  public String getServerURL()
+  
+  
+/*  public USASRequest() {
+	this.serverURL = properties.getServerURL();
+	this.requestMethod = "";
+	this.userAgentProperty = properties.getUserAgentProperty();
+	this.userAgent = properties.getUserAgent();
+	this.acceptLanguageProperty = properties.getAcceptLanguageProperty();
+	this.acceptLanguage = properties.getAcceptLanguage();
+	this.contentTypeProperty = properties.getContentTypeProperty();
+	this.contentType = properties.getContentType();
+	this.POSTParameters = "";
+	this.cookieProperty = properties.getCookieProperty();
+	this.cookie = "";
+}*/
+
+public String getServerURL()
   {
-    return this.serverURL;
+    return properties.getServerURL();
   }
   
   public String getRequestMethod()
@@ -43,32 +64,32 @@ public class USASRequest
   
   public String getUserAgentProperty()
   {
-    return this.userAgentProperty;
+    return properties.getUserAgentProperty();
   }
   
   public String getUserAgent()
   {
-    return this.userAgent;
+    return properties.getUserAgent();
   }
   
   public String getAcceptLanguageProperty()
   {
-    return this.acceptLanguageProperty;
+    return properties.getAcceptLanguageProperty();
   }
   
   public String getAcceptLanguage()
   {
-    return this.acceptLanguage;
+    return properties.getAcceptLanguage();
   }
   
   public String getContentTypeProperty()
   {
-    return this.contentTypeProperty;
+    return properties.getContentTypeProperty();
   }
   
   public String getContentType()
   {
-    return this.contentType;
+    return properties.getContentType();
   }
   
   public String getPOSTParameters()
@@ -90,7 +111,7 @@ public class USASRequest
   
   public String getCookieProperty()
   {
-    return this.cookieProperty;
+    return properties.getCookieProperty();
   }
   
   public String getCookie()
