@@ -82,7 +82,7 @@ public String getTitle()
     StringBuffer payPlanStr = new StringBuffer();
     for (int i = 0; i < this.payPlanList.size(); i++) {
       if (i > 0) {
-    	  payPlanStr.append(";" + (String)this.payPlanList.get(i));
+    	  payPlanStr.append("," + (String)this.payPlanList.get(i));
       } else {
     	  payPlanStr.append((String)this.payPlanList.get(i));
       }
@@ -111,7 +111,7 @@ public String getTitle()
    StringBuffer seriesStr = new StringBuffer();
    for (int i = 0; i < this.seriesList.size(); i++) {
      if (i > 0) {
-   	  seriesStr.append(";" + (String)this.seriesList.get(i));
+   	  seriesStr.append("," + (String)this.seriesList.get(i));
      } else {
    	  seriesStr.append((String)this.seriesList.get(i));
      }
@@ -139,7 +139,7 @@ public String getTitle()
     StringBuffer gradesStr = new StringBuffer();
     for (int i = 0; i < this.gradeList.size(); i++) {
       if (i > 0) {
-        gradesStr.append(";" + (String)this.gradeList.get(i));
+        gradesStr.append("," + (String)this.gradeList.get(i));
       } else {
         gradesStr.append((String)this.gradeList.get(i));
       }
