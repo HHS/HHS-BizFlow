@@ -1,13 +1,9 @@
 package gov.hhs.usas.rest.report.service;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class Properties {
@@ -60,44 +56,6 @@ public class Properties {
 	@Value("${request.cookie.property}")
 	private String cookieProperty;
 
-	@Value("${package.recruitment}")
-	private String recruitmentPackage;
-	@Value("${package.appointment}")
-	private String appointmentPackage;
-	
-	
-	
-/*@Autowired
-	public Properties(@Value("${xml.data.login.template}") String xmlDataLoginTemplate, @Value("${xml.data.report.template}") String xmlDataReportTemplate, @Value("${path.logon}") String logonPath, @Value("${path.logoff}") String logoffPath,
-			@Value("${path.reportdata}") String reportDataPath, @Value("${report.id.recruitment}") String recruitmentReportID, @Value("${report.id.appointment}") String appointmentReportID, @Value("${report.name.recruitment}") String recruitmentReportName,
-			@Value("${report.name.appointment}") String appointmentReportName, @Value("${report.format}") String reportFormat, @Value("${credentials.namespace}") String nameSpace, @Value("${credentials.username}") String userName, @Value("${credentials.password}") String password,
-			@Value("${server.url}") String serverURL, @Value("${request.user.agent.property}") String userAgentProperty, @Value("${request.user.agent}") String userAgent, @Value("${request.accept.language.property}") String acceptLanguageProperty,
-			@Value("${request.accept.language}") String acceptLanguage, @Value("${request.content.type.property}") String contentTypeProperty, @Value("${request.content.type}") String contentType, @Value("${request.cookie.property}") String cookieProperty,
-			@Value("${package.recruitment}") String recruitmentPackage, @Value("${package.appointment}") String appointmentPackage) {
-		this.xmlDataLoginTemplate = xmlDataLoginTemplate;
-		this.xmlDataReportTemplate = xmlDataReportTemplate;
-		this.logonPath = logonPath;
-		this.logoffPath = logoffPath;
-		this.reportDataPath = reportDataPath;
-		this.recruitmentReportID = recruitmentReportID;
-		this.appointmentReportID = appointmentReportID;
-		this.recruitmentReportName = recruitmentReportName;
-		this.appointmentReportName = appointmentReportName;
-		this.reportFormat = reportFormat;
-		this.NameSpace = nameSpace;
-		this.UserName = userName;
-		this.Password = password;
-		this.serverURL = serverURL;
-		this.userAgentProperty = userAgentProperty;
-		this.userAgent = userAgent;
-		this.acceptLanguageProperty = acceptLanguageProperty;
-		this.acceptLanguage = acceptLanguage;
-		this.contentTypeProperty = contentTypeProperty;
-		this.contentType = contentType;
-		this.cookieProperty = cookieProperty;
-		this.recruitmentPackage = recruitmentPackage;
-		this.appointmentPackage = appointmentPackage;
-	}*/
 	public String getXmlDataLoginTemplate() {
 		return xmlDataLoginTemplate;
 	}
@@ -224,29 +182,12 @@ public class Properties {
 	public void setCookieProperty(String cookieProperty) {
 		this.cookieProperty = cookieProperty;
 	}
-	public String getRecruitmentPackage() {
-		return recruitmentPackage;
-	}
-	public void setRecruitmentPackage(String recruitmentPackage) {
-		this.recruitmentPackage = recruitmentPackage;
-	}
-	public String getAppointmentPackage() {
-		return appointmentPackage;
-	}
-	public void setAppointmentPackage(String appointmentPackage) {
-		this.appointmentPackage = appointmentPackage;
-	}
-	
-	 @Override
-	    public String toString() {
-//	        return "Test: Report Format = " + this.getReportFormat();
-	        return "Test: Server URL = " + this.getServerURL();
-	    }
 
-	 @PostConstruct
-	    public void writeConfigurationToLog() {
-	        log.info("Starting application by using configuration: {}", this);
-	    }
+
+/*	@PostConstruct
+	public void writeConfigurationToLog() {
+		log.info("Starting application by using configuration: {}", this);
+	}*/
 
 
 }
