@@ -138,7 +138,7 @@ public String getAnnouncementNumber()
     StringBuffer seriesStr = new StringBuffer();
     for (int i = 0; i < this.seriesList.size(); i++) {
       if (i > 0) {
-    	  seriesStr.append(";" + (String)this.seriesList.get(i));
+    	  seriesStr.append("," + (String)this.seriesList.get(i));
       } else {
     	  seriesStr.append((String)this.seriesList.get(i));
       }
@@ -167,7 +167,7 @@ public String getAnnouncementNumber()
     StringBuffer gradesStr = new StringBuffer();
     for (int i = 0; i < this.gradeList.size(); i++) {
       if (i > 0) {
-        gradesStr.append(";" + (String)this.gradeList.get(i));
+        gradesStr.append("," + (String)this.gradeList.get(i));
       } else {
         gradesStr.append((String)this.gradeList.get(i));
       }
