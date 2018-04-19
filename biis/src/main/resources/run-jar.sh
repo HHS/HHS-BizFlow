@@ -1,8 +1,10 @@
 #!/bin/sh
 #
 
-BASEDIR=$(dirname "$0")
+#BASEDIR=$(dirname "$0")
+BASEDIR=$(cd `dirname $0` && pwd)
 echo using BASEDIR of $BASEDIR
+cd $BASEDIR
 
 # Remove or comment out this when you edit this file.
 echo ============================
@@ -32,6 +34,5 @@ CLASSPATH=$CLASSPATH:.:$BASEDIR:$LIB_DIR/*:$CONF_DIR:$EXECJAR
 #-----------------------------
 # Run application
 #-----------------------------
-cd $BASEDIR
 $JAVA_HOME/bin/java -jar $EXECJAR $1 $2 $3 $4 $5
 #$JAVA_HOME/bin/java -classpath $CLASSPATH org.springframework.boot.loader.JarLauncher  $1 $2 $3 $4 $5
