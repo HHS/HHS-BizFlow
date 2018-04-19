@@ -1,8 +1,10 @@
 #!/bin/sh
 #
 
-BASEDIR=$(dirname "$0")/..
+#BASEDIR=$(dirname "$0")
+BASEDIR=$(cd `dirname $0`/.. && pwd)
 echo using BASEDIR of $BASEDIR
+cd $BASEDIR/bin
 
 # Remove or comment out this when you edit this file.
 echo ============================
@@ -16,7 +18,7 @@ echo ============================
 JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_76.jdk/Contents/Home
 LIB_DIR=$BASEDIR/lib
 CONF_DIR=$BASEDIR/conf
-EXECJAR=$BASEDIR/bin/biis-0.0.1-SNAPSHOT.jar
+EXECJAR=$BASEDIR/biis-0.0.1-SNAPSHOT.jar
 
 #-----------------------------
 # Build the CLASSPATH required
@@ -32,6 +34,5 @@ CLASSPATH=$CLASSPATH:.:$BASEDIR/bin:$LIB_DIR/*:$CONF_DIR
 #-----------------------------
 # Run application
 #-----------------------------
-cd $BASEDIR/bin
 #$JAVA_HOME/bin/java -jar $EXECJAR $1 $2 $3 $4 $5
 $JAVA_HOME/bin/java -classpath $CLASSPATH gov.hhs.biis.BIISInterfaceApplication  $1 $2 $3 $4 $5
