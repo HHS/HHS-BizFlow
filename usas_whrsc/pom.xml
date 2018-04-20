@@ -3,18 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hhs</groupId>
-	<artifactId>usas_whrsc</artifactId>
+	<groupId>gov.hhs</groupId>
+	<artifactId>usasrwsc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
-	<name>usas_whrsc</name>
-	<description>REST Client Application for USA Staffing Cognos
-				For dependency resolution, run clean goal first.
-				For example,
-							mvn clean
-							mvn compile 
-							mvn package
+	<name>USA Staffing Restful Web Service Client</name>
+	<description>
+		REST Client Application for USA Staffing Cognos
+		For dependency resolution, run clean goal first.
+		For example,
+			mvn clean
+			mvn compile 
+			mvn package
 	</description>
 
 	<repositories>
@@ -40,6 +41,7 @@
 		<java.version>1.7</java.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 
 	<dependencies>
@@ -105,6 +107,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<resources>

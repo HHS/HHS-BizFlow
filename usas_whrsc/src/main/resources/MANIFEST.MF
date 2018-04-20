@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: USA Staffing Restful Web Service Client
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: gov.hhs
+Spring-Boot-Version: 1.5.10.RELEASE
+Main-Class: org.springframework.boot.loader.WarLauncher
+Start-Class: gov.hhs.usas.rest.UsasWhrscApplication
+Spring-Boot-Classes: WEB-INF/classes/
+Spring-Boot-Lib: WEB-INF/lib/
+Build-Jdk: 1.7.0
+
