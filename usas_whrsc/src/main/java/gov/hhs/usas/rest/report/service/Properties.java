@@ -55,6 +55,31 @@ public class Properties {
 	private String contentType;
 	@Value("${request.cookie.property}")
 	private String cookieProperty;
+	@Value("${package.recruitment}")
+	private String recruitmentPackage;
+	@Value("${package.appointment}")
+	private String appointmentPackage;
+
+
+	@Value("${response.code.success}")
+	private String responseCodeSuccess;
+	@Value("${response.code.connection-error}")
+	private String responseCodeConnectionError;
+	@Value("${response.code.report-error}")
+	private String responseCodeReportError;
+	@Value("${response.code.parse-error}")
+	private String responseCodeParseError;
+	@Value("${response.code.file-error}")
+	private String responseCodeFileError;
+	
+	@Value("${exception.connection}")
+	private String connectionException;
+	@Value("${exception.reportdata}")
+	private String reportDataException;
+	@Value("${exception.parse}")
+	private String ParseException;
+	@Value("${exception}")
+	private String exception;
 
 	public String getXmlDataLoginTemplate() {
 		return xmlDataLoginTemplate;
@@ -182,9 +207,75 @@ public class Properties {
 	public void setCookieProperty(String cookieProperty) {
 		this.cookieProperty = cookieProperty;
 	}
+	public String getRecruitmentPackage() {
+		return recruitmentPackage;
+	}
+	public void setRecruitmentPackage(String recruitmentPackage) {
+		this.recruitmentPackage = recruitmentPackage;
+	}
+	public String getAppointmentPackage() {
+		return appointmentPackage;
+	}
+	public void setAppointmentPackage(String appointmentPackage) {
+		this.appointmentPackage = appointmentPackage;
+	}
+	public String getResponseCodeSuccess() {
+		return responseCodeSuccess;
+	}
+	public void setResponseCodeSuccess(String responseCodeSuccess) {
+		this.responseCodeSuccess = responseCodeSuccess;
+	}
+	public String getResponseCodeConnectionError() {
+		return responseCodeConnectionError;
+	}
+	public void setResponseCodeConnectionError(String responseCodeConnectionError) {
+		this.responseCodeConnectionError = responseCodeConnectionError;
+	}
+	public String getResponseCodeReportError() {
+		return responseCodeReportError;
+	}
+	public void setResponseCodeReportError(String responseCodeReportError) {
+		this.responseCodeReportError = responseCodeReportError;
+	}
+	public String getResponseCodeParseError() {
+		return responseCodeParseError;
+	}
+	public void setResponseCodeParseError(String responseCodeParseError) {
+		this.responseCodeParseError = responseCodeParseError;
+	}
+	public String getResponseCodeFileError() {
+		return responseCodeFileError;
+	}
+	public void setResponseCodeFileError(String responseCodeFileError) {
+		this.responseCodeFileError = responseCodeFileError;
+	}
+	public String getConnectionException() {
+		return connectionException;
+	}
+	public void setConnectionException(String connectionException) {
+		this.connectionException = connectionException;
+	}
+	public String getReportDataException() {
+		return reportDataException;
+	}
+	public void setReportDataException(String reportDataException) {
+		this.reportDataException = reportDataException;
+	}
+	public String getParseException() {
+		return ParseException;
+	}
+	public void setParseException(String parseException) {
+		ParseException = parseException;
+	}
+	public String getException() {
+		return exception;
+	}
+	public void setException(String exception) {
+		this.exception = exception;
+	}
 
 
-/*	@PostConstruct
+	/*	@PostConstruct
 	public void writeConfigurationToLog() {
 		log.info("Starting application by using configuration: {}", this);
 	}*/

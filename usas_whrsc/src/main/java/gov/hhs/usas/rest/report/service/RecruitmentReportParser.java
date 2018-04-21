@@ -3,6 +3,8 @@ package gov.hhs.usas.rest.report.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingDates;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingResult;
@@ -15,6 +17,7 @@ import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncement;
 import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncementResult;
 
+@Component
 public class RecruitmentReportParser
 {
 	public PositionsResult createPositionsForUSAStaffingRecruitment(List<PreRecruitment> preRecruitmentPositions)

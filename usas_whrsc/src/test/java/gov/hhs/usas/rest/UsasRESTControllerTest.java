@@ -16,13 +16,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import gov.hhs.usas.rest.UsasRESTController;
-/*@RunWith(SpringRunner.class)
-//@SpringBootTest
-@WebMvcTest(UsasRESTController.class)
-@ActiveProfiles("test")*/
+
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UsasRESTControllerTest {
-	//@Autowired
+	
     private MockMvc mockMvc;
 
 	 @Before
@@ -31,7 +28,7 @@ public class UsasRESTControllerTest {
      }
  
 
-	@Test
+/*	@Test
 	public void testGetUSAStaffingReportFromCognos() throws Exception {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
 				"/usas/report/recruitment/001234");
@@ -40,7 +37,7 @@ public class UsasRESTControllerTest {
 
 		String content = result.getResponse().getContentAsString();
 		System.out.println(content);
-	}
+	}*/
 
 	@Test
 	public void testTransformRecruitmentXML() throws Exception {
@@ -67,7 +64,7 @@ public class UsasRESTControllerTest {
 		
 	}
 
-	@Test
+/*	@Test
 	public void testGetRecruitmentData() throws Exception {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
 				"/usas/reportXML/recruitment/001234");//.accept(MediaType.TEXT_PLAIN);
@@ -87,6 +84,6 @@ public class UsasRESTControllerTest {
 
 		String content = result.getResponse().getContentAsString();
 		System.out.println(content);
-	}
+	}*/
 
 }
