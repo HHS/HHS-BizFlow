@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.rest.model.USASResponse;
-import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingDates;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingResult;
@@ -84,7 +83,10 @@ public class RecruitmentReportService extends ReportService
 	 * @return transformed XML report as USAStaffingRecruitmentResult object
 	 */
 	public USAStaffingRecruitmentResult parseReportFromUSASResponse(USASResponse usasResponse){
-		if(usasResponse.getResponseCode() != 200){
+		if(usasResponse.getResponseCode() != properties.getHttpStatusOk()){
+			if(usasResponse.getResponseCode() == properties.getHttpSuccessNoContent()){
+				return new USAStaffingRecruitmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
+			}
 			return new USAStaffingRecruitmentResult(properties.getResponseCodeConnectionError(), usasResponse.getErrorMessage());
 		}
 		this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));

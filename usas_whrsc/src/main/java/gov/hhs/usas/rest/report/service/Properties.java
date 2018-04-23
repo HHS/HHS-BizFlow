@@ -1,14 +1,10 @@
 package gov.hhs.usas.rest.report.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Properties {
-
-	private static final Logger log = LoggerFactory.getLogger(Properties.class);
 
 	@Value("${xml.data.login.template}")
 	private String xmlDataLoginTemplate;
@@ -21,6 +17,7 @@ public class Properties {
 	@Value("${path.reportdata}")
 	private String reportDataPath;
 
+	//Report Properties
 	@Value("${report.id.recruitment}")
 	private String recruitmentReportID;
 	@Value("${report.id.appointment}")
@@ -32,6 +29,7 @@ public class Properties {
 	@Value("${report.format}")
 	private String reportFormat;	
 
+	//Authentication properties
 	@Value("${credentials.namespace}")
 	private String NameSpace;
 	@Value("${credentials.username}")
@@ -55,31 +53,45 @@ public class Properties {
 	private String contentType;
 	@Value("${request.cookie.property}")
 	private String cookieProperty;
+	
+	//Package names
 	@Value("${package.recruitment}")
 	private String recruitmentPackage;
 	@Value("${package.appointment}")
 	private String appointmentPackage;
 
-
+	//Response Success Failure Message Properties
 	@Value("${response.code.success}")
 	private String responseCodeSuccess;
 	@Value("${response.code.connection-error}")
 	private String responseCodeConnectionError;
 	@Value("${response.code.report-error}")
 	private String responseCodeReportError;
+	@Value("${response.code.no-data-error}")
+	private String responseCodeNoDataError;
 	@Value("${response.code.parse-error}")
 	private String responseCodeParseError;
 	@Value("${response.code.file-error}")
 	private String responseCodeFileError;
-	
+
 	@Value("${exception.connection}")
 	private String connectionException;
 	@Value("${exception.reportdata}")
 	private String reportDataException;
+	@Value("${exception.nodata}")
+	private String noDataException;
 	@Value("${exception.parse}")
 	private String ParseException;
 	@Value("${exception}")
 	private String exception;
+
+	//HTTP Status Codes
+	@Value("${http.success.ok}")
+	private int httpStatusOk;
+	@Value("${http.success.no-content}")
+	private int httpSuccessNoContent;
+	@Value("${http.client-error.bad-request}")
+	private int httpClientErrorBadRequest;
 
 	public String getXmlDataLoginTemplate() {
 		return xmlDataLoginTemplate;
@@ -237,6 +249,12 @@ public class Properties {
 	public void setResponseCodeReportError(String responseCodeReportError) {
 		this.responseCodeReportError = responseCodeReportError;
 	}
+	public String getResponseCodeNoDataError() {
+		return responseCodeNoDataError;
+	}
+	public void setResponseCodeNoDataError(String responseCodeNoDataError) {
+		this.responseCodeNoDataError = responseCodeNoDataError;
+	}
 	public String getResponseCodeParseError() {
 		return responseCodeParseError;
 	}
@@ -261,6 +279,12 @@ public class Properties {
 	public void setReportDataException(String reportDataException) {
 		this.reportDataException = reportDataException;
 	}
+	public String getNoDataException() {
+		return noDataException;
+	}
+	public void setNoDataException(String noDataException) {
+		this.noDataException = noDataException;
+	}
 	public String getParseException() {
 		return ParseException;
 	}
@@ -272,6 +296,24 @@ public class Properties {
 	}
 	public void setException(String exception) {
 		this.exception = exception;
+	}
+	public int getHttpStatusOk() {
+		return httpStatusOk;
+	}
+	public void setHttpStatusOk(int httpStatusOk) {
+		this.httpStatusOk = httpStatusOk;
+	}
+	public int getHttpSuccessNoContent() {
+		return httpSuccessNoContent;
+	}
+	public void setHttpSuccessNoContent(int httpSuccessNoContent) {
+		this.httpSuccessNoContent = httpSuccessNoContent;
+	}
+	public int getHttpClientErrorBadRequest() {
+		return httpClientErrorBadRequest;
+	}
+	public void setHttpClientErrorBadRequest(int httpClientErrorBadRequest) {
+		this.httpClientErrorBadRequest = httpClientErrorBadRequest;
 	}
 
 

@@ -10,9 +10,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="USAStaffing_Appointment")

@@ -77,7 +77,6 @@ public class CognosRESTClient
 	 */
 	public USASResponse sendReportDataRequest(CognosReport report)
 	{
-		//boolean isConnected = sendLogonRequest();
 
 		if(sendLogonRequest().equalsIgnoreCase(properties.getResponseCodeSuccess())){
 			String vacancyReportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + report.getId();
@@ -102,7 +101,7 @@ public class CognosRESTClient
 
 				con.connect();
 
-				if (con.getResponseCode() == 200)
+				if (con.getResponseCode() == properties.getHttpStatusOk())
 				{
 					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
@@ -113,9 +112,16 @@ public class CognosRESTClient
 					}
 					in.close();
 
-					this.usasResponse.setResponseCode(con.getResponseCode());
 					this.usasResponse.setResponse(response.toString());
-					this.usasResponse.setErrorMessage("Status OK");
+					
+					//verify response if it contains 'No Data Available', send an error
+					if(response.toString().contains("No Data Available")){
+						this.usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
+						this.usasResponse.setErrorMessage(properties.getNoDataException());
+					}else{
+						this.usasResponse.setResponseCode(con.getResponseCode());						
+						this.usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
+					}
 				}
 				else
 				{
@@ -132,7 +138,7 @@ public class CognosRESTClient
 				sendLogoffRequest();
 			}
 		}else{
-			this.usasResponse.setResponseCode(400);
+			this.usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
 			this.usasResponse.setErrorMessage(properties.getConnectionException());
 		}
 		return this.usasResponse;
@@ -169,7 +175,7 @@ public class CognosRESTClient
 			con.connect();
 			con.getContent();			
 
-			if (con.getResponseCode() == 200)
+			if (con.getResponseCode() == properties.getHttpStatusOk())
 			{
 				log.info("Connection successful");
 				createCookieString(cookieJar);//store the cookies for subsequent requests
@@ -205,7 +211,6 @@ public class CognosRESTClient
 	 */
 	public void sendLogoffRequest()
 	{
-		//String logoffURL = this.usasRequest.getServerURL() + "/rds/auth/logoff";
 		String logoffURL = this.usasRequest.getServerURL() + properties.getLogoffPath();
 		this.usasRequest.setRequestMethod("GET");
 		try
@@ -222,11 +227,11 @@ public class CognosRESTClient
 		}
 		catch (MalformedURLException e)
 		{
-			log.error("Error disconnecting from USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause());
 		}
 		catch (IOException e)
 		{
-			log.error("Error disconnecting from USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause());
 		}
 	}
 

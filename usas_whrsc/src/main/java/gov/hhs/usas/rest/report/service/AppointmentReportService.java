@@ -72,7 +72,10 @@ public class AppointmentReportService extends ReportService {
 	 * @return transformed XML report as USAStaffingAppointmentResult object
 	 */
 	public USAStaffingAppointmentResult parseReportFromUSASResponse(USASResponse usasResponse){
-		if(usasResponse.getResponseCode() != 200){
+		if(usasResponse.getResponseCode() != properties.getHttpStatusOk()){
+			if(usasResponse.getResponseCode() == properties.getHttpSuccessNoContent()){
+				return new USAStaffingAppointmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
+			}
 			return new USAStaffingAppointmentResult(properties.getResponseCodeConnectionError(), usasResponse.getErrorMessage());
 		}
 		this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
