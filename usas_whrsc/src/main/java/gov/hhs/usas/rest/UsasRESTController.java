@@ -1,11 +1,8 @@
 package gov.hhs.usas.rest;
 
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +34,10 @@ public class UsasRESTController
 	private CognosRESTClient client;
 	@Autowired
 	private Properties properties;
-
-	//@Value("${report.id.recruitment}")
-	private String recruitmentReportID;
-	//@Value("${report.id.appointment}")
-	private String appointmentReportID;
-	//@Value("${report.format}")
-	private String reportFormat;
+	@Autowired
+	private AppointmentReportService appointmentService;
+	@Autowired
+	private RecruitmentReportService recruitmentService;
 
 
 	/**
@@ -60,10 +54,8 @@ public class UsasRESTController
 		log.info("Connecting to USAS - Cognos Server to get " + reportName + " report.");
 		String reportID = "";
 		if(reportName.equalsIgnoreCase("recruitment"))
-			//reportID = recruitmentReportID;
 			reportID = properties.getRecruitmentReportID();
 		else if(reportName.equalsIgnoreCase("appointment"))
-//			reportID = appointmentReportID;
 			reportID = properties.getAppointmentReportID();
 		else
 			return "Incorrect report name. Correct URL syntax: /usas/report/{reportName}/{requestNumber}";
@@ -91,11 +83,8 @@ public class UsasRESTController
 	public USAStaffingRecruitmentResult transformRecruitmentXML(@RequestParam(value = "reportPath", required = true) String reportPath)
 	{
 		USAStaffingRecruitmentResult usasRecruitment = new USAStaffingRecruitmentResult();
-		File reportXML = new File(reportPath);
-		if(reportXML.exists() && reportXML.isFile()){
 			log.info("Using XML report for Recruitment located at "+ reportPath + " for transformation.");
-			usasRecruitment = new RecruitmentReportService().parseReportFromFile(reportPath);
-		}
+			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		return usasRecruitment;
 	}
 
@@ -110,11 +99,8 @@ public class UsasRESTController
 	public USAStaffingAppointmentResult transformAppointmentXML(@RequestParam(value = "reportPath", required = true) String reportPath)
 	{
 		USAStaffingAppointmentResult usasAppointment = new USAStaffingAppointmentResult();
-		File reportXML = new File(reportPath);
-		if(reportXML.exists() && reportXML.isFile()){
 			log.info("Using XML report for Appointment located at "+ reportPath + " for transformation.");
-			usasAppointment = new AppointmentReportService().parseReportFromFile(reportPath);
-		}
+			usasAppointment = appointmentService.parseReportFromFile(reportPath);
 		return usasAppointment;
 	}
 
@@ -134,7 +120,7 @@ public class UsasRESTController
 
 		log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report.");    
 
-		USAStaffingRecruitmentResult usasRecruitment = new RecruitmentReportService().parseReportFromUSASResponse(this.client.sendReportDataRequest(recruitmentReport));
+		USAStaffingRecruitmentResult usasRecruitment = recruitmentService.parseReportFromUSASResponse(this.client.sendReportDataRequest(recruitmentReport));
 
 		return usasRecruitment;
 	}
@@ -154,7 +140,7 @@ public class UsasRESTController
 
 		log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");    
 
-		USAStaffingAppointmentResult usasAppointment = new AppointmentReportService().parseReportFromUSASResponse(this.client.sendReportDataRequest(appointmentReport));
+		USAStaffingAppointmentResult usasAppointment = appointmentService.parseReportFromUSASResponse(this.client.sendReportDataRequest(appointmentReport));
 
 		return usasAppointment;
 	}

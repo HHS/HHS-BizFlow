@@ -11,8 +11,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="USAStaffing_Appointment")
 public class USAStaffingAppointmentResult {
@@ -25,11 +23,17 @@ public class USAStaffingAppointmentResult {
 	@XmlElementWrapper(name="Vacancies")
 	@XmlElement(name="Vacancy_Announcement")
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
+	@XmlElement(name="Result_Code")
+	private String resultCode;
+	@XmlElement(name="Failure_Message")
+	private String failureMessage;
 	
 	public USAStaffingAppointmentResult() {
 		this.requestNumber = "";
 		this.vacancyCount = 0;
 		this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
+		this.resultCode = "";
+		this.failureMessage = "";
 	}
 	
 	public USAStaffingAppointmentResult(String requestNumber, int vacancyCount,
@@ -37,6 +41,24 @@ public class USAStaffingAppointmentResult {
 		this.requestNumber = requestNumber;
 		this.vacancyCount = vacancyCount;
 		this.vacancyAnnouncementList = vacancyAnnouncementList;
+		this.resultCode = "Success";
+		this.failureMessage = "";
+	}
+	
+
+	public USAStaffingAppointmentResult(String requestNumber, int vacancyCount,
+			List<VacancyAnnouncementResult> vacancyAnnouncementList, String resultCode, String failureMessage) {
+		this.requestNumber = requestNumber;
+		this.vacancyCount = vacancyCount;
+		this.vacancyAnnouncementList = vacancyAnnouncementList;
+		this.resultCode = resultCode;
+		this.failureMessage = failureMessage;
+	}
+	
+	public USAStaffingAppointmentResult(String resultCode, String failureMessage) {
+		this();
+		this.resultCode = resultCode;
+		this.failureMessage = failureMessage;
 	}
 
 	public String getRequestNumber() {
@@ -63,6 +85,22 @@ public class USAStaffingAppointmentResult {
 		this.vacancyAnnouncementList = vacancyAnnouncementList;
 	}
 	
+	public String getResultCode() {
+		return resultCode;
+	}
+
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
+	}
+
+	public String getFailureMessage() {
+		return failureMessage;
+	}
+
+	public void setFailureMessage(String failureMessage) {
+		this.failureMessage = failureMessage;
+	}
+
 	@Override
 	public String toString(){
 		return "requestNumber: " + this.getRequestNumber() + " vacancyCount: " + this.getVacancyCount()

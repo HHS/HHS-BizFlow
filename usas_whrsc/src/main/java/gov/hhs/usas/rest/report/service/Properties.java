@@ -1,18 +1,10 @@
 package gov.hhs.usas.rest.report.service;
 
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class Properties {
-
-	private static final Logger log = LoggerFactory.getLogger(Properties.class);
 
 	@Value("${xml.data.login.template}")
 	private String xmlDataLoginTemplate;
@@ -25,6 +17,7 @@ public class Properties {
 	@Value("${path.reportdata}")
 	private String reportDataPath;
 
+	//Report Properties
 	@Value("${report.id.recruitment}")
 	private String recruitmentReportID;
 	@Value("${report.id.appointment}")
@@ -36,6 +29,7 @@ public class Properties {
 	@Value("${report.format}")
 	private String reportFormat;	
 
+	//Authentication properties
 	@Value("${credentials.namespace}")
 	private String NameSpace;
 	@Value("${credentials.username}")
@@ -59,45 +53,46 @@ public class Properties {
 	private String contentType;
 	@Value("${request.cookie.property}")
 	private String cookieProperty;
-
+	
+	//Package names
 	@Value("${package.recruitment}")
 	private String recruitmentPackage;
 	@Value("${package.appointment}")
 	private String appointmentPackage;
-	
-	
-	
-/*@Autowired
-	public Properties(@Value("${xml.data.login.template}") String xmlDataLoginTemplate, @Value("${xml.data.report.template}") String xmlDataReportTemplate, @Value("${path.logon}") String logonPath, @Value("${path.logoff}") String logoffPath,
-			@Value("${path.reportdata}") String reportDataPath, @Value("${report.id.recruitment}") String recruitmentReportID, @Value("${report.id.appointment}") String appointmentReportID, @Value("${report.name.recruitment}") String recruitmentReportName,
-			@Value("${report.name.appointment}") String appointmentReportName, @Value("${report.format}") String reportFormat, @Value("${credentials.namespace}") String nameSpace, @Value("${credentials.username}") String userName, @Value("${credentials.password}") String password,
-			@Value("${server.url}") String serverURL, @Value("${request.user.agent.property}") String userAgentProperty, @Value("${request.user.agent}") String userAgent, @Value("${request.accept.language.property}") String acceptLanguageProperty,
-			@Value("${request.accept.language}") String acceptLanguage, @Value("${request.content.type.property}") String contentTypeProperty, @Value("${request.content.type}") String contentType, @Value("${request.cookie.property}") String cookieProperty,
-			@Value("${package.recruitment}") String recruitmentPackage, @Value("${package.appointment}") String appointmentPackage) {
-		this.xmlDataLoginTemplate = xmlDataLoginTemplate;
-		this.xmlDataReportTemplate = xmlDataReportTemplate;
-		this.logonPath = logonPath;
-		this.logoffPath = logoffPath;
-		this.reportDataPath = reportDataPath;
-		this.recruitmentReportID = recruitmentReportID;
-		this.appointmentReportID = appointmentReportID;
-		this.recruitmentReportName = recruitmentReportName;
-		this.appointmentReportName = appointmentReportName;
-		this.reportFormat = reportFormat;
-		this.NameSpace = nameSpace;
-		this.UserName = userName;
-		this.Password = password;
-		this.serverURL = serverURL;
-		this.userAgentProperty = userAgentProperty;
-		this.userAgent = userAgent;
-		this.acceptLanguageProperty = acceptLanguageProperty;
-		this.acceptLanguage = acceptLanguage;
-		this.contentTypeProperty = contentTypeProperty;
-		this.contentType = contentType;
-		this.cookieProperty = cookieProperty;
-		this.recruitmentPackage = recruitmentPackage;
-		this.appointmentPackage = appointmentPackage;
-	}*/
+
+	//Response Success Failure Message Properties
+	@Value("${response.code.success}")
+	private String responseCodeSuccess;
+	@Value("${response.code.connection-error}")
+	private String responseCodeConnectionError;
+	@Value("${response.code.report-error}")
+	private String responseCodeReportError;
+	@Value("${response.code.no-data-error}")
+	private String responseCodeNoDataError;
+	@Value("${response.code.parse-error}")
+	private String responseCodeParseError;
+	@Value("${response.code.file-error}")
+	private String responseCodeFileError;
+
+	@Value("${exception.connection}")
+	private String connectionException;
+	@Value("${exception.reportdata}")
+	private String reportDataException;
+	@Value("${exception.nodata}")
+	private String noDataException;
+	@Value("${exception.parse}")
+	private String ParseException;
+	@Value("${exception}")
+	private String exception;
+
+	//HTTP Status Codes
+	@Value("${http.success.ok}")
+	private int httpStatusOk;
+	@Value("${http.success.no-content}")
+	private int httpSuccessNoContent;
+	@Value("${http.client-error.bad-request}")
+	private int httpClientErrorBadRequest;
+
 	public String getXmlDataLoginTemplate() {
 		return xmlDataLoginTemplate;
 	}
@@ -236,17 +231,96 @@ public class Properties {
 	public void setAppointmentPackage(String appointmentPackage) {
 		this.appointmentPackage = appointmentPackage;
 	}
-	
-	 @Override
-	    public String toString() {
-//	        return "Test: Report Format = " + this.getReportFormat();
-	        return "Test: Server URL = " + this.getServerURL();
-	    }
+	public String getResponseCodeSuccess() {
+		return responseCodeSuccess;
+	}
+	public void setResponseCodeSuccess(String responseCodeSuccess) {
+		this.responseCodeSuccess = responseCodeSuccess;
+	}
+	public String getResponseCodeConnectionError() {
+		return responseCodeConnectionError;
+	}
+	public void setResponseCodeConnectionError(String responseCodeConnectionError) {
+		this.responseCodeConnectionError = responseCodeConnectionError;
+	}
+	public String getResponseCodeReportError() {
+		return responseCodeReportError;
+	}
+	public void setResponseCodeReportError(String responseCodeReportError) {
+		this.responseCodeReportError = responseCodeReportError;
+	}
+	public String getResponseCodeNoDataError() {
+		return responseCodeNoDataError;
+	}
+	public void setResponseCodeNoDataError(String responseCodeNoDataError) {
+		this.responseCodeNoDataError = responseCodeNoDataError;
+	}
+	public String getResponseCodeParseError() {
+		return responseCodeParseError;
+	}
+	public void setResponseCodeParseError(String responseCodeParseError) {
+		this.responseCodeParseError = responseCodeParseError;
+	}
+	public String getResponseCodeFileError() {
+		return responseCodeFileError;
+	}
+	public void setResponseCodeFileError(String responseCodeFileError) {
+		this.responseCodeFileError = responseCodeFileError;
+	}
+	public String getConnectionException() {
+		return connectionException;
+	}
+	public void setConnectionException(String connectionException) {
+		this.connectionException = connectionException;
+	}
+	public String getReportDataException() {
+		return reportDataException;
+	}
+	public void setReportDataException(String reportDataException) {
+		this.reportDataException = reportDataException;
+	}
+	public String getNoDataException() {
+		return noDataException;
+	}
+	public void setNoDataException(String noDataException) {
+		this.noDataException = noDataException;
+	}
+	public String getParseException() {
+		return ParseException;
+	}
+	public void setParseException(String parseException) {
+		ParseException = parseException;
+	}
+	public String getException() {
+		return exception;
+	}
+	public void setException(String exception) {
+		this.exception = exception;
+	}
+	public int getHttpStatusOk() {
+		return httpStatusOk;
+	}
+	public void setHttpStatusOk(int httpStatusOk) {
+		this.httpStatusOk = httpStatusOk;
+	}
+	public int getHttpSuccessNoContent() {
+		return httpSuccessNoContent;
+	}
+	public void setHttpSuccessNoContent(int httpSuccessNoContent) {
+		this.httpSuccessNoContent = httpSuccessNoContent;
+	}
+	public int getHttpClientErrorBadRequest() {
+		return httpClientErrorBadRequest;
+	}
+	public void setHttpClientErrorBadRequest(int httpClientErrorBadRequest) {
+		this.httpClientErrorBadRequest = httpClientErrorBadRequest;
+	}
 
-	 @PostConstruct
-	    public void writeConfigurationToLog() {
-	        log.info("Starting application by using configuration: {}", this);
-	    }
+
+	/*	@PostConstruct
+	public void writeConfigurationToLog() {
+		log.info("Starting application by using configuration: {}", this);
+	}*/
 
 
 }
