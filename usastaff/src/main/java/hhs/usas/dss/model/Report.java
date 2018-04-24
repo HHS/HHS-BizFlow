@@ -24,13 +24,22 @@ public class Report {
 	private static String intgType;
 	
 	//Number of Prompts
-	private static int parmNum;
+	private static Integer parmNum;
 	
 	//Number of times to pull the report
 	private static int rptIteration;
 	
 	//the number of days to pull back for each report iteration
-	private static int dateRange;
+	private static Integer dateIncrement;
+	
+	//End date value-- pulls report from current date to end date value
+	private static String endDate;
+	
+	//Stores Stored procedure for truncating report tables
+	private static String spTruncate;
+	
+	//Determines if report should be run, true or false value
+	private static boolean runReport;
 	
 	public static String getSearchPath() {
 		return searchPath;
@@ -120,11 +129,11 @@ public class Report {
 		Report.intgType = intgType;
 	}
 
-	public static int getParmNum() {
+	public static Integer getParmNum() {
 		return parmNum;
 	}
 
-	public static void setParmNum(int parmNum) {
+	public static void setParmNum(Integer parmNum) {
 		Report.parmNum = parmNum;
 	}
 	
@@ -136,17 +145,40 @@ public class Report {
 		Report.rptIteration = rptIteration;
 	}
 
-	public static int getDateRange() {
-		return dateRange;
+	public static Integer getDateIncrement() {
+		return dateIncrement;
 	}
 
-	public static void setDateRange(int dateRange) {
-		Report.dateRange = dateRange;
+	public static void setDateIncrement(Integer dateIncrement) {
+		Report.dateIncrement = dateIncrement;
+	}
+	
+	public static String getEndDate() {
+		return endDate;
+	}
+
+	public static void setEndDate(String endDate) {
+		Report.endDate = endDate;
+	}
+
+	public static String getSpTruncate() {
+		return spTruncate;
+	}
+
+	public static void setSpTruncate(String spTruncate) {
+		Report.spTruncate = spTruncate;
+	}
+
+	public static boolean isRunReport() {
+		return runReport;
+	}
+
+	public static void setRunReport(boolean runReport) {
+		Report.runReport = runReport;
 	}
 
 	public Report() {
 		super();
 	}
-	
-	
+
 }

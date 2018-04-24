@@ -1,20 +1,48 @@
 package hhs.usas.dss.model;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+@Component
+@PropertySource("classpath:report.properties")
 public class Certificate extends Report {
 	
+	@Value("${cert.search.path}") private String searchPath;
+	@Value("${cert.intg.type}") private String intgType;
+	@Value("${cert.file.name}") private String fileName;
+	@Value("${cert.parm.num}") private int parmNum;
+	@Value("${cert.svp.name}") private String svpName;
+	@Value("${cert.svp.useval}") private String svpUseval;
+	@Value("${cert.svp.display}") private String svpDisplay;
+	@Value("${cert.rvp.name}") private String rvpName;
+	@Value("${cert.rpt.iteration}") private int rptIteration; 
+	@Value("${cert.date.increment}") private int dateIncrement;
+	@Value("${cert.end.date}") private String endDate;
+	@Value("${cert.truncate}") private String spTruncate;
+	@Value("${cert.run.report}") private boolean runReport;
+
 	public Certificate() {
-		super();
-		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='Certificate Data Self Service']");
-		this.setIntgType("CERTIFICATE");
-		this.setFileName("CertificateDSS");
-		this.setParmNum(2);
-		this.setSvpName("parm_StaffingDateType");
-		this.setSvpUseval("CertificateLastUpdateDate");
-		this.setSvpDisplay("Certificate Last Update Date");
-		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-60);		
 
 	}
-
+	
+	@PostConstruct
+	public void construct() {
+		super.setSearchPath(searchPath);
+		super.setIntgType(intgType);
+		super.setFileName(fileName);
+		super.setParmNum(parmNum);
+		super.setSvpName(svpName);
+		super.setSvpUseval(svpUseval);
+		super.setSvpDisplay(svpDisplay);
+		super.setRvpName(rvpName);
+		super.setRptIteration(rptIteration);
+		super.setDateIncrement(dateIncrement);
+		super.setEndDate(endDate);
+		super.setSpTruncate(spTruncate);
+		super.setRunReport(runReport);
+	}	
+	
 }

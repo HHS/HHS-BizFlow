@@ -2,6 +2,7 @@
 
 Modules
 
+- **biis** : BIIS interface where user information and reference data is pulled from the BIIS interface into the BizFlow and HHS common database. 
 - **database** : HHS BizFlow common database script.
 - **jdbcconn** : JDBC Connection test tool.
 - **persondirectory** : Person Directory interface where user information is pulled from PSC Locator database onto BizFlow database.
@@ -76,7 +77,10 @@ For example:
 	./run.sh oracle dev.dbhost.com 1521 dbsid dev devpass
 
 
+## BIIS Interface
+This module is to pull HHS employee directory information into BizFlow user profile database table. BIIS and EHRP reference data is also imported into HHS common database and is refreshed nightly.
 
+Note: Once the user profile information is imported, BizFlow system administrator will need to manually maintain license assignment, authority group assignment, and user group assignment through BizFlow Administration menu.
 
 
 ## Person Directory Interface
@@ -121,9 +125,12 @@ In order to call DSS web service, there should be an existing report created for
 
 		ant
 
-1. Capture the generated module JAR file as well as dependent library JAR files.
+1. Capture the generated module JAR file, configuration files, and shell script to run the module.
 
-		usastaff/dist/lib/usastaffdss.jar
+		usastaff/dist/bin/run.sh
+		usastaff/dist/conf/application.properties
+		usastaff/dist/conf/log4j.properties
+		usastaff/dist/lib/usasdss-<version>.jar
 		usastaff/dist/lib/*.jar
 
 
@@ -140,14 +147,22 @@ In order to call DSS web service, there should be an existing report created for
 1. Copy the module JAR file and its dependent library JAR files.
 
 	* From (build machine):
-		* usastaff/dist/lib/*.jar
+		* usastaff/dist/*
 	* To (target environment):
 		* <server_dir>/usastaff/
 
 
 ### Usage
-The deployed module can be run on demand as a stand alone application.  For on-demand run, assuming that the module is already built by ANT script following the build instruction above, you may use ANT script with run target.
+The deployed module can be run on demand or as a stand alone application.  
 
-	ant run
+
+For UNIX environment, make the run script executable.
+
+	cd <server_dir>/usastaff/bin
+	chmod 744 run.sh
+
+For on-demand run, execute the shell script in command line.
+
+	./run.sh
 
 For regular usage in server environment, it is expected to be executed periodically by a cron job.

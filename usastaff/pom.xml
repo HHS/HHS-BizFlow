@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hhs.dss</groupId>
-	<artifactId>HHS_DSS</artifactId>
+	<groupId>gov.hhs.dss</groupId>
+	<artifactId>usasdss</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>HHS_DSS</name>
+	<name>usasdss</name>
 	<description>
 		Data Self Service for HHS.  
 		For dependency resolution, run clean goal first.
@@ -31,8 +31,10 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-<!-- 		<version>1.5.10.RELEASE</version> -->
-			<version>1.4.3.RELEASE</version>
+ 		<version>1.5.10.RELEASE</version>
+<!--		
+		<version>1.4.3.RELEASE</version>
+-->
 		<relativePath/> 
 	</parent>
 
@@ -46,30 +48,73 @@
 
 
 	<dependencies>
+		<!-- dependencies for spring boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-loader</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-batch</artifactId>
 		</dependency>		
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>	
-		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<!-- dependencies from local repository -->
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.8</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>jaxrpc</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>saaj</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.5.1</version>
 		</dependency>
 	</dependencies>
 
@@ -95,7 +140,7 @@
 						</goals>
 						<phase>clean</phase>
 						<configuration>
-							<file>${project.basedir}/lib/axis.jar</file>
+							<file>${project.basedir}/lib/axis-1.4.jar</file>
 							<groupId>proj.lib.local</groupId>
 							<artifactId>axis</artifactId>
 							<version>1.4</version>
@@ -155,10 +200,25 @@
 						</goals>
 						<phase>clean</phase>
 						<configuration>
-							<file>${project.basedir}/lib/jaxrpc.jar</file>
+							<file>${project.basedir}/lib/jaxrpc-1.1.jar</file>
 							<groupId>proj.lib.local</groupId>
 							<artifactId>jaxrpc</artifactId>
-							<version>1.0.0</version>
+							<version>1.1</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-ojdbc-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/ojdbc7-12.1.0.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>ojdbc7</artifactId>
+							<version>12.1.0</version>
 							<packaging>jar</packaging>
 							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
 						</configuration>
@@ -170,10 +230,10 @@
 						</goals>
 						<phase>clean</phase>
 						<configuration>
-							<file>${project.basedir}/lib/saaj.jar</file>
+							<file>${project.basedir}/lib/saaj-1.2.jar</file>
 							<groupId>proj.lib.local</groupId>
 							<artifactId>saaj</artifactId>
-							<version>1.0.0</version>
+							<version>1.2</version>
 							<packaging>jar</packaging>
 							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
 						</configuration>
@@ -218,6 +278,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -259,7 +322,7 @@
 				<groupId>proj.lib.local</groupId>
 				<artifactId>wsdl4j</artifactId>
 				<version>1.5.1</version>
-			</dependency>														
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

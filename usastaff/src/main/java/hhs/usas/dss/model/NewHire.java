@@ -1,16 +1,42 @@
 package hhs.usas.dss.model;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+@Component
+@PropertySource("classpath:report.properties")
 public class NewHire extends Report {
 	
+	@Value("${newHire.search.path}") private String searchPath;
+	@Value("${newHire.intg.type}") private String intgType;
+	@Value("${newHire.file.name}") private String fileName;
+	@Value("${newHire.parm.num}") private int parmNum;
+	@Value("${newHire.rvp.name}") private String rvpName;
+	@Value("${newHire.rpt.iteration}") private int rptIteration; 
+	@Value("${newHire.date.increment}") private int dateIncrement;
+	@Value("${newHire.end.date}") private String endDate;
+	@Value("${newHire.truncate}") private String spTruncate;
+	@Value("${newHire.run.report}") private boolean runReport;
+
 	public NewHire() {
-		super();
-		this.setSearchPath("/content/folder[@name='USA Staffing Packages and Folders']/package[@name='Staffing Reports']/folder[@name='Data Self Service']/report[@name='New Hire Data Self Service']");
-		this.setIntgType("NEWHIRE");
-		this.setFileName("NewHireDSS");
-		this.setParmNum(1);
-		this.setRvpName("parm_StaffingDateRange");
-		this.setRptIteration(3);
-		this.setDateRange(-60);		
+
+	}
+	
+	@PostConstruct
+	public void construct() {
+		super.setSearchPath(searchPath);
+		super.setIntgType(intgType);
+		super.setFileName(fileName);
+		super.setParmNum(parmNum);
+		super.setRvpName(rvpName);
+		super.setRptIteration(rptIteration);
+		super.setDateIncrement(dateIncrement);
+		super.setEndDate(endDate);
+		super.setSpTruncate(spTruncate);
+		super.setRunReport(runReport);
 	}
 	
 }
