@@ -1,5 +1,6 @@
 package gov.hhs.usas.rest.report.service;
 
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.rest.model.USASResponse;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating;
@@ -32,41 +31,36 @@ import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncement;
 import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncementResult;
 
-@Configuration
+@Component
 public class RecruitmentReportService extends ReportService
 {
 	private static final Logger log = LoggerFactory.getLogger(RecruitmentReportService.class);
-	
+	@Autowired
+	private Properties properties;
+	@Autowired
 	private RecruitmentReportParser parser;
 	private XMLInputFactory xif;
 	private StreamSource xml;
-	private XMLStreamReader xsr;
-//	@Value("${package.recruitment}")
-	private String PACKAGE_NAME;	
+	private XMLStreamReader xsr;	
+
 	private List<PreRecruitment> preRecruitmentPositions;
 	private List<CertificateInformation> certificates;
 	private List<ApplicantRating> applicantRatings;
 	private List<ApplicantRatingDates> applicantRatingDates;
 	private List<VacancyAnnouncement> vacancyAnnouncements;
-	
+
 	private PositionsResult positions;
 	private List<CertificateResult> certificateList;
 	private List<ApplicantRatingResult> applicantRatingList;
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	private String requestNumber;
 	private USAStaffingRecruitmentResult usasRecruitment;
-	
+
 	private Class<?> cls;
 	private Object object;
-	private Object object2;
-	
 
-	public RecruitmentReportService() {
-		super();
-		//this.PACKAGE_NAME = properties.getRecruitmentPackage();
-		//this.properties = new Properties();
-		this.PACKAGE_NAME = "gov.hhs.usas.rest.report.model.Recruitment.";
-		this.parser = new RecruitmentReportParser();
+	@PostConstruct
+	public void init(){	
 		this.preRecruitmentPositions = new ArrayList<PreRecruitment>();
 		this.certificates = new ArrayList<CertificateInformation>();
 		this.applicantRatings = new ArrayList<ApplicantRating>();
@@ -80,15 +74,7 @@ public class RecruitmentReportService extends ReportService
 		this.usasRecruitment = new USAStaffingRecruitmentResult();
 		this.cls = null;
 		this.object = new Object();
-		this.object2 = new Object();
 	}
-	
-/*	@PostConstruct
-	public void postConstruct() {
-		if(properties.getRecruitmentPackage() == null)
-			properties = new Properties();
-		this.PACKAGE_NAME = properties.getRecruitmentPackage();
-	}*/
 
 	/**
 	 * This method is used when a Report is pulled from USA Staffing Cognos
@@ -97,10 +83,16 @@ public class RecruitmentReportService extends ReportService
 	 * @return transformed XML report as USAStaffingRecruitmentResult object
 	 */
 	public USAStaffingRecruitmentResult parseReportFromUSASResponse(USASResponse usasResponse){
+		if(usasResponse.getResponseCode() != properties.getHttpStatusOk()){
+			if(usasResponse.getResponseCode() == properties.getHttpSuccessNoContent()){
+				return new USAStaffingRecruitmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
+			}
+			return new USAStaffingRecruitmentResult(properties.getResponseCodeConnectionError(), usasResponse.getErrorMessage());
+		}
 		this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
 		return parseReport();
 	}
-	
+
 	/**
 	 * This method is used when a USA Staffing Report is pre-downloaded
 	 * and save at a specific location
@@ -108,11 +100,17 @@ public class RecruitmentReportService extends ReportService
 	 * @return transformed XML report as USAStaffingRecruitmentResult object
 	 */
 	public USAStaffingRecruitmentResult parseReportFromFile(String filePath){
-		this.xml = new StreamSource(filePath);
-		return parseReport();
+		File reportXML = new File(filePath);
+
+		if(reportXML.exists() && reportXML.isFile()){
+			this.xml = new StreamSource(reportXML);
+			return parseReport();
+		}
+		return new USAStaffingRecruitmentResult(properties.getResponseCodeFileError(), "The requested file could not be found.");
+
 	}
-	
-	
+
+
 	/**
 	 * This method partially reads the XML report and unmarshalls 
 	 * the block to respective POJO. When entire XML is read, it uses 
@@ -121,10 +119,6 @@ public class RecruitmentReportService extends ReportService
 	 */
 	public USAStaffingRecruitmentResult parseReport()
 	{
-		//this.PACKAGE_NAME = properties.getRecruitmentPackage();
-		/*if(properties == null)
-			properties = new Properties();
-		this.PACKAGE_NAME = properties.getRecruitmentPackage();*/
 		try
 		{
 			this.xif = XMLInputFactory.newFactory();
@@ -144,8 +138,7 @@ public class RecruitmentReportService extends ReportService
 					if (this.xsr.isCharacters())
 					{
 						className = this.xsr.getText().trim().substring(4, this.xsr.getText().trim().length());
-						this.cls = Class.forName(PACKAGE_NAME + className);
-//						this.cls = Class.forName(this.properties.getRecruitmentPackage() + className);
+						this.cls = Class.forName(properties.getRecruitmentPackage() + className);
 					}
 				}
 				while (((!this.xsr.isStartElement()) || (!this.xsr.getLocalName().equals("row"))) && 
@@ -157,16 +150,10 @@ public class RecruitmentReportService extends ReportService
 					JAXBContext jc = JAXBContext.newInstance(new Class[] { this.cls });
 					Unmarshaller unmarshaller = jc.createUnmarshaller();
 					JAXBElement jbe = unmarshaller.unmarshal(this.xsr, this.cls);
-//					if ((this.object instanceof ApplicantRating))
-//					{
-//						this.object2 = this.cls.newInstance();
-//						this.object2 = jbe.getValue();
-//					}
-//					else
-//					{
-						this.object = this.cls.newInstance();
-						this.object = jbe.getValue();
-//					}
+
+					this.object = this.cls.newInstance();
+					this.object = jbe.getValue();
+
 					if (this.object instanceof PreRecruitment)
 					{
 						if (this.requestNumber.length() <= 0) {
@@ -177,14 +164,12 @@ public class RecruitmentReportService extends ReportService
 					if (this.object instanceof CertificateInformation) {
 						this.certificates.add((CertificateInformation)this.object);
 					}
-					/*if (((this.object instanceof ApplicantRating)) && ((this.object2 instanceof ApplicantRatingDates))) {
-						this.applicantRatingList.add(this.parser.createApplicantRatingForVacancyAnnouncement((ApplicantRating)this.object, (ApplicantRatingDates)this.object2));
-					}*/
+
 					if (this.object instanceof ApplicantRating) {
 						this.applicantRatings.add((ApplicantRating) this.object);
 					}
 					if (this.object instanceof ApplicantRatingDates) {
-					this.applicantRatingDates.add((ApplicantRatingDates) this.object);	
+						this.applicantRatingDates.add((ApplicantRatingDates) this.object);	
 					}
 					if ((this.object instanceof VacancyAnnouncement)) {
 						this.vacancyAnnouncements.add((VacancyAnnouncement)this.object);
@@ -205,116 +190,17 @@ public class RecruitmentReportService extends ReportService
 		}
 		catch (XMLStreamException e)
 		{
-			log.error(e.getMessage() + "::" + e.getCause());
+			String error = properties.getParseException() + e.getMessage() + "::" + e.getCause();
+			log.error(error, e);
+			this.usasRecruitment = new USAStaffingRecruitmentResult(properties.getResponseCodeParseError(), error);
 		}
 		catch (Exception e)
 		{
-			log.error(e.getMessage() + "::" + e.getCause());
+			String error = properties.getParseException() + e.getMessage() + "::" + e.getCause();
+			log.error(error, e);
+			this.usasRecruitment = new USAStaffingRecruitmentResult(properties.getResponseCodeParseError(), error);
 		}
 		return this.usasRecruitment;
 	}
-	/*public USAStaffingRecruitmentResult parseReport(USASResponse usasResponse)
-	{
-		try
-		{
-			this.xif = XMLInputFactory.newFactory();
-			//this.reader = new StringReader(usasResponse.getResponseXML());
-			if(usasResponse.getResponse() != null)
-				this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
-			else
-				this.xml = new StreamSource("WHRSCRecruitment2.xml");
-			this.xsr = this.xif.createXMLStreamReader(this.xml);
-			this.xsr = new RecruitmentReportService.XsiTypeReader(this.xsr);
 
-			String className = "";
-			while (this.xsr.hasNext())
-			{
-				while (((!this.xsr.isStartElement()) || (!this.xsr.getLocalName().equals("id"))) && 
-						(this.xsr.getEventType() != 8)) {
-					this.xsr.next();
-				}
-				if ((this.xsr.isStartElement()) && (this.xsr.getLocalName().equals("id")))
-				{
-					this.xsr.next();
-					if (this.xsr.isCharacters())
-					{
-						className = this.xsr.getText().trim().substring(4, this.xsr.getText().trim().length());
-						this.cls = Class.forName(PACKAGE_NAME + className);
-					}
-				}
-				while (((!this.xsr.isStartElement()) || (!this.xsr.getLocalName().equals("row"))) && 
-						(this.xsr.getEventType() != 8)) {
-					this.xsr.next();
-				}
-				while (this.xsr.getEventType() == 1)
-				{
-					JAXBContext jc = JAXBContext.newInstance(new Class[] { this.cls });
-					Unmarshaller unmarshaller = jc.createUnmarshaller();
-					JAXBElement jbe = unmarshaller.unmarshal(this.xsr, this.cls);
-					if ((this.object instanceof gov.hhs.usas.rest.report.model.cognos.Recruitment.ApplicantRating))
-					{
-						this.object2 = this.cls.newInstance();
-						this.object2 = jbe.getValue();
-					}
-					else
-					{
-						this.object = this.cls.newInstance();
-						this.object = jbe.getValue();
-					}
-					if ((this.object instanceof PreRecruitment))
-					{
-						if (this.requestNumber.length() <= 0) {
-							this.requestNumber = ((PreRecruitment)this.object).getRequestNumber();
-						}
-						this.preRecruitmentPositions.add((PreRecruitment)this.object);
-					}
-					if ((this.object instanceof CertificateInformation)) {
-						this.certificates.add((CertificateInformation)this.object);
-					}
-					if (((this.object instanceof gov.hhs.usas.rest.report.model.cognos.Recruitment.ApplicantRating)) && ((this.object2 instanceof ApplicantRatingDates))) {
-						this.applicantRatingList.add(this.parser.createApplicantRatingForVacancyAnnouncement((gov.hhs.usas.rest.report.model.cognos.Recruitment.ApplicantRating)this.object, (ApplicantRatingDates)this.object2));
-					}
-					if ((this.object2 instanceof gov.hhs.usas.rest.report.model.cognos.Recruitment.VacancyAnnouncement)) {
-						this.vacancyAnnouncements.add((gov.hhs.usas.rest.report.model.cognos.Recruitment.VacancyAnnouncement)this.object2);
-					}
-					if ((this.object == null) || 
-
-							(this.xsr.getEventType() == 4)) {
-						this.xsr.next();
-					}
-				}
-			}
-			this.positions = this.parser.createPositionsForUSAStaffingRecruitment(this.preRecruitmentPositions);
-			this.certificateList = this.parser.createCertificateListForVacancyAnnouncement(this.certificates);
-			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingRecruitment(this.certificateList, this.applicantRatingList, this.vacancyAnnouncements);
-
-			this.usasRecruitment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList, this.positions);
-		}
-		catch (XMLStreamException e)
-		{
-			log.error(e.getMessage() + "::" + e.getCause());
-		}
-		catch (Exception e)
-		{
-			log.error(e.getMessage() + "::" + e.getCause());
-		}
-		return this.usasRecruitment;
-	}*/
-
-	/*public static void main(String[] args)
-	{
-		RecruitmentReportService test = new RecruitmentReportService();
-		USASResponse usasResponse = new USASResponse();
-		//test.parseReport(usasResponse);
-	}*/
-
-/*	private static class XsiTypeReader extends StreamReaderDelegate {
-		public XsiTypeReader(XMLStreamReader reader) {
-			super(reader);
-		}
-		@Override
-		public String getNamespaceURI() {
-			return "";
-		}
-	}*/
 }

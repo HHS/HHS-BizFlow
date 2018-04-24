@@ -17,10 +17,9 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import gov.hhs.usas.rest.model.CognosReport;
@@ -38,7 +37,7 @@ import gov.hhs.usas.rest.report.service.Properties;
 @Configuration
 public class CognosRESTClient
 {
-	private static final Logger log = LoggerFactory.getLogger(CognosRESTClient.class);
+	private static Log log = LogFactory.getLog(CognosRESTClient.class);
 	@Autowired
 	private Properties properties;
 	@Autowired
@@ -47,16 +46,6 @@ public class CognosRESTClient
 	private USASResponse usasResponse;
 	@Autowired
 	private USASCredentials credentials;
-/*//	@Value("${xml.data.login.template}")
-	private String xmlDataLoginTemplate;
-//	@Value("${xml.data.report.template}")
-	private String xmlDataReportTemplate;	
-//	@Value("${path.logon}")
-	private String logonPath;
-//	@Value("${path.logoff}")
-	private String logoffPath;
-//	@Value("${path.reportdata}")
-	private String reportDataPath;*/
 	private CookieManager manager;
 
 
@@ -88,17 +77,13 @@ public class CognosRESTClient
 	 */
 	public USASResponse sendReportDataRequest(CognosReport report)
 	{
-		boolean isConnected = sendLogonRequest();
 
-		if(isConnected){
+		if(sendLogonRequest().equalsIgnoreCase(properties.getResponseCodeSuccess())){
 			String vacancyReportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + report.getId();
-//			this.usasRequest.setPOSTParameters(this.xmlDataReportTemplate, report.getPrompt());
 			this.usasRequest.setPOSTParameters(properties.getXmlDataReportTemplate(), report.getPrompt());
 			try
 			{
 				URL url = new URL(vacancyReportURL);
-				log.info("\nPreparing 'POST' request to " + report.getName() + " Report URL : " + url);
-				log.info("Post parameters : " + this.usasRequest.getPOSTParameters());
 
 				HttpURLConnection con = (HttpURLConnection)url.openConnection();
 
@@ -116,8 +101,7 @@ public class CognosRESTClient
 
 				con.connect();
 
-				log.info("Report Data Response : " + con.getResponseCode() + "::" + con.getResponseMessage());
-				if (con.getResponseCode() == 200)
+				if (con.getResponseCode() == properties.getHttpStatusOk())
 				{
 					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
@@ -128,29 +112,35 @@ public class CognosRESTClient
 					}
 					in.close();
 
-					this.usasResponse.setResponseCode(con.getResponseCode());
 					this.usasResponse.setResponse(response.toString());
-					this.usasResponse.setErrorMessage("Status OK");
-
-					log.info("Report Data Result:: " + this.usasResponse.getResponse());
+					
+					//verify response if it contains 'No Data Available', send an error
+					if(response.toString().contains("No Data Available")){
+						this.usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
+						this.usasResponse.setErrorMessage(properties.getNoDataException());
+					}else{
+						this.usasResponse.setResponseCode(con.getResponseCode());						
+						this.usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
+					}
 				}
 				else
 				{
-					this.usasResponse.setErrorMessage("Error requesting Report Data from USAS::" + con.getResponseCode() + ":" + con.getResponseMessage() + "::" + con.getErrorStream().toString());
+					this.usasResponse.setErrorMessage(properties.getReportDataException() + con.getResponseCode() + ":" + con.getResponseMessage() + "::" + con.getErrorStream().toString());
 				}
 			}catch (MalformedURLException e){
-				this.usasResponse.setErrorMessage("Error requesting Report Data from USAS::" + e.getMessage() + "::" + e.getCause());
+				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}catch (IOException e){
-				this.usasResponse.setErrorMessage("Error requesting Report Data from USAS::" + e.getMessage() + "::" + e.getCause());
+				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}catch (Exception e){
-				this.usasResponse.setErrorMessage("Error requesting Report Data from USAS::" + e.getMessage() + "::" + e.getCause());
+				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}finally{
 				log.info(this.usasResponse.getErrorMessage());
 				sendLogoffRequest();
-			}}else{
-				this.usasResponse.setResponseCode(400);
-				this.usasResponse.setErrorMessage("Error connecting to USA Staffing. Please check the logs.");
 			}
+		}else{
+			this.usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
+			this.usasResponse.setErrorMessage(properties.getConnectionException());
+		}
 		return this.usasResponse;
 	}
 
@@ -158,14 +148,12 @@ public class CognosRESTClient
 	 * Prepares and sends remote request to login to USA Staffing Cognos server
 	 */
 	@SuppressWarnings("finally")
-	public boolean sendLogonRequest()
+	public String sendLogonRequest()
 	{
-		//String logonURL = this.usasRequest.getServerURL() + "/rds/auth/logon";
 		log.info("\nConnecting to USAS Cognos server...");
-		boolean isConnected = false;
+		String connectionResponse = "";
 		String logonURL = this.usasRequest.getServerURL() + properties.getLogonPath();
 		this.usasRequest.setRequestMethod("POST");
-//		this.usasRequest.setPOSTParameters(this.xmlDataLoginTemplate, this.credentials);
 		this.usasRequest.setPOSTParameters(properties.getXmlDataLoginTemplate(), this.credentials);
 		try
 		{			
@@ -187,38 +175,34 @@ public class CognosRESTClient
 			con.connect();
 			con.getContent();			
 
-			if (con.getResponseCode() == 200)
+			if (con.getResponseCode() == properties.getHttpStatusOk())
 			{
-				log.info("Connected");
+				log.info("Connection successful");
 				createCookieString(cookieJar);//store the cookies for subsequent requests
-				isConnected = true;
-				//TO DO - Delete
-				/*BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				StringBuffer response = new StringBuffer();
-				String inputLine;
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
-				}
-				in.close();*/
+				connectionResponse = properties.getResponseCodeSuccess();
 			}
 			else
 			{
-				log.info("Error connecting to USAS::" + con.getResponseCode() + ":" + con.getResponseMessage() + "::" + con.getErrorStream().toString());
+				log.info(properties.getConnectionException() + con.getResponseCode() + ":" + con.getResponseMessage() + "::" + con.getErrorStream().toString());
+				connectionResponse = properties.getResponseCodeConnectionError();
 			}
 		}
 		catch (MalformedURLException e)
 		{
-			log.error("Error connecting to USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error(properties.getConnectionException() + e.getMessage() + "::" + e.getCause());
+			connectionResponse = properties.getResponseCodeConnectionError();
 		}
 		catch (IOException e)
 		{
-			log.error("Error connecting to USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error(properties.getConnectionException() + e.getMessage() + "::" + e.getCause());
+			connectionResponse = properties.getResponseCodeConnectionError();
 		}
 		catch (Exception e)
 		{
-			log.error("Error connecting to USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error(properties.getConnectionException() + e.getMessage() + "::" + e.getCause());
+			connectionResponse = properties.getResponseCodeConnectionError();
 		}finally{
-			return isConnected;
+			return connectionResponse;
 		}
 	}
 
@@ -227,7 +211,6 @@ public class CognosRESTClient
 	 */
 	public void sendLogoffRequest()
 	{
-		//String logoffURL = this.usasRequest.getServerURL() + "/rds/auth/logoff";
 		String logoffURL = this.usasRequest.getServerURL() + properties.getLogoffPath();
 		this.usasRequest.setRequestMethod("GET");
 		try
@@ -244,11 +227,11 @@ public class CognosRESTClient
 		}
 		catch (MalformedURLException e)
 		{
-			log.error("Error disconnecting from USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause());
 		}
 		catch (IOException e)
 		{
-			log.error("Error disconnecting from USAS::" + e.getMessage() + "::" + e.getCause());
+			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause());
 		}
 	}
 

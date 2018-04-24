@@ -3,6 +3,8 @@ package gov.hhs.usas.rest.report.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoCert;
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoNewHire;
 import gov.hhs.usas.rest.report.model.Appointment.CertificateResult;
@@ -11,6 +13,7 @@ import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
 
+@Component
 public class AppointmentReportParser {
 
 	public List<VacancyAnnouncementResult> createVacancyAnnouncementListForUSAStaffingAppointment(

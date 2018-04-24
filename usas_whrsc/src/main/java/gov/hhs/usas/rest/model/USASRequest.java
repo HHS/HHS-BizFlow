@@ -1,7 +1,8 @@
 package gov.hhs.usas.rest.model;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.rest.report.service.Properties;
@@ -11,45 +12,37 @@ public class USASRequest
 {
 	@Autowired
 	private Properties properties;
-//  @Value("${server.url}")
   private String serverURL;
   private String requestMethod;
-//  @Value("${request.user.agent.property}")
   private String userAgentProperty;
-//  @Value("${request.user.agent}")
   private String userAgent;
-//  @Value("${request.accept.language.property}")
   private String acceptLanguageProperty;
-//  @Value("${request.accept.language}")
   private String acceptLanguage;
-//  @Value("${request.content.type.property}")
   private String contentTypeProperty;
-//  @Value("${request.content.type}")
   private String contentType;
   private String POSTParameters;
-//  @Value("${request.cookie.property}")
   private String cookieProperty;
   private String cookie;
   
+  @PostConstruct
+	public void init(){	
+	  this.serverURL = properties.getServerURL();
+		this.requestMethod = "";
+		this.userAgentProperty = properties.getUserAgentProperty();
+		this.userAgent = properties.getUserAgent();
+		this.acceptLanguageProperty = properties.getAcceptLanguageProperty();
+		this.acceptLanguage = properties.getAcceptLanguage();
+		this.contentTypeProperty = properties.getContentTypeProperty();
+		this.contentType = properties.getContentType();
+		this.POSTParameters = "";
+		this.cookieProperty = properties.getCookieProperty();
+		this.cookie = "";
+	}
   
-  
-/*  public USASRequest() {
-	this.serverURL = properties.getServerURL();
-	this.requestMethod = "";
-	this.userAgentProperty = properties.getUserAgentProperty();
-	this.userAgent = properties.getUserAgent();
-	this.acceptLanguageProperty = properties.getAcceptLanguageProperty();
-	this.acceptLanguage = properties.getAcceptLanguage();
-	this.contentTypeProperty = properties.getContentTypeProperty();
-	this.contentType = properties.getContentType();
-	this.POSTParameters = "";
-	this.cookieProperty = properties.getCookieProperty();
-	this.cookie = "";
-}*/
 
 public String getServerURL()
   {
-    return properties.getServerURL();
+    return this.serverURL;
   }
   
   public String getRequestMethod()
@@ -64,32 +57,32 @@ public String getServerURL()
   
   public String getUserAgentProperty()
   {
-    return properties.getUserAgentProperty();
+    return this.userAgentProperty;
   }
   
   public String getUserAgent()
   {
-    return properties.getUserAgent();
+    return this.userAgent;
   }
   
   public String getAcceptLanguageProperty()
   {
-    return properties.getAcceptLanguageProperty();
+    return this.acceptLanguageProperty;
   }
   
   public String getAcceptLanguage()
   {
-    return properties.getAcceptLanguage();
+    return this.acceptLanguage;
   }
   
   public String getContentTypeProperty()
   {
-    return properties.getContentTypeProperty();
+    return this.contentTypeProperty;
   }
   
   public String getContentType()
   {
-    return properties.getContentType();
+    return this.contentType;
   }
   
   public String getPOSTParameters()
@@ -111,7 +104,7 @@ public String getServerURL()
   
   public String getCookieProperty()
   {
-    return properties.getCookieProperty();
+    return this.cookieProperty;
   }
   
   public String getCookie()

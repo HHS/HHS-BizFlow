@@ -57,6 +57,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader</artifactId>
 		</dependency>
+		<!--Adding dependency below for creating WAR while using maven -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -72,6 +83,7 @@
 				repository for build. This should be executed by calling clean goal. It is 
 				to avoid error by dependency checking done before running goals in plugin 
 				in normal validate cycle. mvn clean -->
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
@@ -109,6 +121,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -132,6 +145,7 @@
 		</resources>
 	</build>
 
+	<!--
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -146,6 +160,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	-->
 
 
 </project>
