@@ -115,7 +115,7 @@ public class CognosRESTClient
 					this.usasResponse.setResponse(response.toString());
 					
 					//verify response if it contains 'No Data Available', send an error
-					if(response.toString().contains("No Data Available")){
+					if(response.toString().equalsIgnoreCase("No Data Available")){
 						this.usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
 						this.usasResponse.setErrorMessage(properties.getNoDataException());
 					}else{
