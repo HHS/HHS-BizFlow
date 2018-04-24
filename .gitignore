@@ -1,6 +1,0 @@
-*.class
-*.log
-**/build/**
-**/dist/**
-**/target/**
-usastaff/repo/**
