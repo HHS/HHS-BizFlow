@@ -125,7 +125,7 @@ public class CognosRESTClient
 				}
 				else
 				{
-					this.usasResponse.setErrorMessage(properties.getReportDataException() + con.getResponseCode() + ":" + con.getResponseMessage() + "::" + con.getErrorStream().toString());
+					this.usasResponse.setErrorMessage(properties.getReportDataException() + con.getResponseCode() + ":" + con.getResponseMessage());
 				}
 			}catch (MalformedURLException e){
 				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
@@ -183,7 +183,7 @@ public class CognosRESTClient
 			}
 			else
 			{
-				log.info(properties.getConnectionException() + con.getResponseCode() + ":" + con.getResponseMessage() + "::" + con.getErrorStream().toString());
+				log.info(properties.getConnectionException() + con.getResponseCode() + ":" + con.getResponseMessage());
 				connectionResponse = properties.getResponseCodeConnectionError();
 			}
 		}
