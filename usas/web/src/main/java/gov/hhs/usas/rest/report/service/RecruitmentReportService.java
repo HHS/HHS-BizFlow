@@ -119,6 +119,7 @@ public class RecruitmentReportService extends ReportService
 	 */
 	public USAStaffingRecruitmentResult parseReport()
 	{
+		init();
 		try
 		{
 			this.xif = XMLInputFactory.newFactory();
@@ -162,16 +163,28 @@ public class RecruitmentReportService extends ReportService
 						this.preRecruitmentPositions.add((PreRecruitment)this.object);
 					}
 					if (this.object instanceof CertificateInformation) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((CertificateInformation)this.object).getRequestNumber();
+						}
 						this.certificates.add((CertificateInformation)this.object);
 					}
 
 					if (this.object instanceof ApplicantRating) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((ApplicantRating)this.object).getRequestNumber();
+						}
 						this.applicantRatings.add((ApplicantRating) this.object);
 					}
 					if (this.object instanceof ApplicantRatingDates) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((ApplicantRatingDates)this.object).getRequestNumber();
+						}
 						this.applicantRatingDates.add((ApplicantRatingDates) this.object);	
 					}
 					if ((this.object instanceof VacancyAnnouncement)) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((VacancyAnnouncement)this.object).getRequestNumber();
+						}
 						this.vacancyAnnouncements.add((VacancyAnnouncement)this.object);
 					}
 					if ((this.object == null) || 
@@ -187,6 +200,11 @@ public class RecruitmentReportService extends ReportService
 			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingRecruitment(this.certificateList, this.applicantRatingList, this.vacancyAnnouncements);
 
 			this.usasRecruitment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList, this.positions);
+			//If there is no data for vacancy, add an error message
+			if(this.usasRecruitment.getVacancyCount() == 0){
+				this.usasRecruitment.setResultCode(properties.getResponseCodeNoDataError());
+				this.usasRecruitment.setFailureMessage(properties.getNoDataException());
+			}
 		}
 		catch (XMLStreamException e)
 		{

@@ -3,7 +3,9 @@ package gov.hhs.usas.rest.report.service;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
@@ -22,7 +24,9 @@ import org.springframework.stereotype.Component;
 import gov.hhs.usas.rest.model.USASResponse;
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoCert;
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoNewHire;
+import gov.hhs.usas.rest.report.model.Appointment.DutyStationResult;
 import gov.hhs.usas.rest.report.model.Appointment.Orientation;
+import gov.hhs.usas.rest.report.model.Appointment.PayPlan;
 import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
@@ -42,9 +46,11 @@ public class AppointmentReportService extends ReportService {
 	private List<ApptInfoCert> apptInfoCertList;
 	private List<ApptInfoNewHire> apptInfoNewHireList;
 	private List<Orientation> orientationList;
+	private List<PayPlan> payPlanList;
 	private List<Position> positionList;	
 	
 	private String requestNumber;
+	private Map<String, ArrayList<DutyStationResult>> dutyStationMap;
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	private USAStaffingAppointmentResult usasAppointment;
 	
@@ -56,9 +62,12 @@ public class AppointmentReportService extends ReportService {
 			this.apptInfoCertList = new ArrayList<ApptInfoCert>();
 			this.apptInfoNewHireList = new ArrayList<ApptInfoNewHire>();
 			this.orientationList = new ArrayList<Orientation>();
+			this.payPlanList = new ArrayList<PayPlan>();
 			this.positionList = new ArrayList<Position>();
-			this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
+			
 			this.requestNumber = "";
+			this.dutyStationMap = new HashMap<String, ArrayList<DutyStationResult>>();
+			this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
 			this.usasAppointment = new USAStaffingAppointmentResult();
 			this.cls = null;
 			this.object = new Object();
@@ -108,6 +117,7 @@ public class AppointmentReportService extends ReportService {
 	 */
 	private USAStaffingAppointmentResult parseReport()
 	{
+		init();
 		try
 		{
 			this.xif = XMLInputFactory.newFactory();
@@ -151,12 +161,27 @@ public class AppointmentReportService extends ReportService {
 						this.apptInfoCertList.add((ApptInfoCert)this.object);
 					}
 					if ((this.object instanceof ApptInfoNewHire)) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((ApptInfoNewHire)this.object).getRequestNumber();
+						}
 						this.apptInfoNewHireList.add((ApptInfoNewHire)this.object);
 					}
 					if ((this.object instanceof Orientation)) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((Orientation)this.object).getRequestNumber();
+						}
 						this.orientationList.add((Orientation)this.object);
 					}
+					if ((this.object instanceof PayPlan)) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((PayPlan)this.object).getRequestNumber();
+						}
+						this.payPlanList.add((PayPlan)this.object);
+					}
 					if ((this.object instanceof Position)) {
+						if (this.requestNumber.length() <= 0) {
+							this.requestNumber = ((Position)this.object).getRequestNumber();
+						}
 						this.positionList.add((Position)this.object);
 					}
 					
@@ -167,9 +192,17 @@ public class AppointmentReportService extends ReportService {
 					}
 				}
 			}
-			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingAppointment(this.apptInfoCertList, this.apptInfoNewHireList, this.orientationList, this.positionList);
+			this.positionList = this.parser.addPayPlan(this.payPlanList, this.positionList);
+			this.dutyStationMap = this.parser.createDutyStationListForCertificate(this.positionList);
+			
+			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingAppointment(this.apptInfoCertList, this.apptInfoNewHireList, this.orientationList, this.positionList, this.dutyStationMap);
 
 			this.usasAppointment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList);
+			//If there is no data for vacancy, add an error message
+			if(this.usasAppointment.getVacancyCount() == 0){
+				this.usasAppointment.setResultCode(properties.getResponseCodeNoDataError());
+				this.usasAppointment.setFailureMessage(properties.getNoDataException());
+			}
 		}
 		catch (XMLStreamException e)
 		{

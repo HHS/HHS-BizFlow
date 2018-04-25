@@ -129,6 +129,11 @@ public class VacancyAnnouncement
   
   public String getAnnouncementType()
   {
+	  //In case there are multiple values for
+	  //announcement type and it contains DE as
+	  //one of those, use DE
+	  if(this.announcementType.contains("DE"))
+		  this.announcementType = "DE";
     return this.announcementType;
   }
   

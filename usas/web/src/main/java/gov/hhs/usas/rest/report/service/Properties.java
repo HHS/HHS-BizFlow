@@ -81,7 +81,7 @@ public class Properties {
 	@Value("${exception.nodata}")
 	private String noDataException;
 	@Value("${exception.parse}")
-	private String ParseException;
+	private String parseException;
 	@Value("${exception}")
 	private String exception;
 
@@ -92,6 +92,20 @@ public class Properties {
 	private int httpSuccessNoContent;
 	@Value("${http.client-error.bad-request}")
 	private int httpClientErrorBadRequest;
+	
+	//Program mode - test or production
+	@Value("${mode.test}")
+	private String testMode;
+	@Value("${mode.production}")
+	private String productionMode;
+	@Value("${program.mode}")
+	private String programMode;
+	
+	//Default location for pre-downloaded report data files
+	@Value("${location.recruitment}")
+	private String recruitmentFileLocation;
+	@Value("${location.appointment}")
+	private String appointmentFileLocation;
 
 	public String getXmlDataLoginTemplate() {
 		return xmlDataLoginTemplate;
@@ -286,10 +300,10 @@ public class Properties {
 		this.noDataException = noDataException;
 	}
 	public String getParseException() {
-		return ParseException;
+		return parseException;
 	}
 	public void setParseException(String parseException) {
-		ParseException = parseException;
+		parseException = parseException;
 	}
 	public String getException() {
 		return exception;
@@ -314,6 +328,36 @@ public class Properties {
 	}
 	public void setHttpClientErrorBadRequest(int httpClientErrorBadRequest) {
 		this.httpClientErrorBadRequest = httpClientErrorBadRequest;
+	}
+	public String getTestMode() {
+		return testMode;
+	}
+	public void setTestMode(String testMode) {
+		this.testMode = testMode;
+	}
+	public String getProductionMode() {
+		return productionMode;
+	}
+	public void setProductionMode(String productionMode) {
+		this.productionMode = productionMode;
+	}
+	public String getProgramMode() {
+		return programMode;
+	}
+	public void setProgramMode(String programMode) {
+		this.programMode = programMode;
+	}
+	public String getRecruitmentFileLocation() {
+		return recruitmentFileLocation;
+	}
+	public void setRecruitmentFileLocation(String recruitmentFileLocation) {
+		this.recruitmentFileLocation = recruitmentFileLocation;
+	}
+	public String getAppointmentFileLocation() {
+		return appointmentFileLocation;
+	}
+	public void setAppointmentFileLocation(String appointmentFileLocation) {
+		this.appointmentFileLocation = appointmentFileLocation;
 	}
 
 
