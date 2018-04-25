@@ -3,7 +3,9 @@ package gov.hhs.usas.rest.report.service;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
@@ -28,7 +30,6 @@ import gov.hhs.usas.rest.report.model.Appointment.PayPlan;
 import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
-import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingResult;
 
 @Component
 public class AppointmentReportService extends ReportService {
@@ -49,7 +50,7 @@ public class AppointmentReportService extends ReportService {
 	private List<Position> positionList;	
 	
 	private String requestNumber;
-	private List<DutyStationResult> dutyStationList;
+	private Map<String, ArrayList<DutyStationResult>> dutyStationMap;
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	private USAStaffingAppointmentResult usasAppointment;
 	
@@ -65,7 +66,7 @@ public class AppointmentReportService extends ReportService {
 			this.positionList = new ArrayList<Position>();
 			
 			this.requestNumber = "";
-			this.dutyStationList = new ArrayList<DutyStationResult>();
+			this.dutyStationMap = new HashMap<String, ArrayList<DutyStationResult>>();
 			this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
 			this.usasAppointment = new USAStaffingAppointmentResult();
 			this.cls = null;
@@ -192,9 +193,9 @@ public class AppointmentReportService extends ReportService {
 				}
 			}
 			this.positionList = this.parser.addPayPlan(this.payPlanList, this.positionList);
-			this.dutyStationList = this.parser.createDutyStationListForCertificate(this.positionList);
+			this.dutyStationMap = this.parser.createDutyStationListForCertificate(this.positionList);
 			
-			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingAppointment(this.apptInfoCertList, this.apptInfoNewHireList, this.orientationList, this.positionList, this.dutyStationList);
+			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingAppointment(this.apptInfoCertList, this.apptInfoNewHireList, this.orientationList, this.positionList, this.dutyStationMap);
 
 			this.usasAppointment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList);
 			//If there is no data for vacancy, add an error message

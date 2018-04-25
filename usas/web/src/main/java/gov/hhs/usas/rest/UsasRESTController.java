@@ -160,7 +160,7 @@ public class UsasRESTController
 		CognosReport appointmentReport = new CognosReport(properties.getAppointmentReportName(), properties.getAppointmentReportID(), properties.getReportFormat(), appointmentPrompt);
 
 		log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");    
-		log.info("");
+		
 		USAStaffingAppointmentResult usasAppointment = appointmentService.parseReportFromUSASResponse(this.client.sendReportDataRequest(appointmentReport));
 
 		return usasAppointment;

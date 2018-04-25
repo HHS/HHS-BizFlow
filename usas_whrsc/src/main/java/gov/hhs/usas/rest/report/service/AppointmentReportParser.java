@@ -1,7 +1,9 @@
 package gov.hhs.usas.rest.report.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -14,9 +16,6 @@ import gov.hhs.usas.rest.report.model.Appointment.PayPlan;
 import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
-import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating;
-import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingDates;
-import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingResult;
 
 @Component
 public class AppointmentReportParser {
@@ -47,8 +46,9 @@ public class AppointmentReportParser {
 	}
 
 
-	public List<DutyStationResult> createDutyStationListForCertificate(List<Position> positionList) {
-		List<DutyStationResult> dutyStationResultList = new ArrayList<DutyStationResult>();
+	public Map<String, ArrayList<DutyStationResult>> createDutyStationListForCertificate(List<Position> positionList) {
+		Map<String, ArrayList<DutyStationResult>> dutyStationMap = new HashMap<String, ArrayList<DutyStationResult>>();
+		ArrayList<DutyStationResult> newDutyStationResultList;
 		DutyStationResult newDutyStationResult;
 
 		List<String> uniqueVacancyIdentificationNumbers = new ArrayList<String>();
@@ -59,24 +59,24 @@ public class AppointmentReportParser {
 		}
 
 		for(String vacancyIdentificationNumber : uniqueVacancyIdentificationNumbers){
-			newDutyStationResult = new DutyStationResult();
+			newDutyStationResultList = new ArrayList<DutyStationResult>();
 			for(Position position : positionList){
+				newDutyStationResult = new DutyStationResult();
 				if(position.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
-					newDutyStationResult.setVacancyIdentificationNumber(vacancyIdentificationNumber);
 					newDutyStationResult.setDutyStationCode(position.getDutyStationCode());
-					newDutyStationResult.setDutyStationName(position.getDutyStation());
+					newDutyStationResult.setDutyStationName(position.getDutyStation());					
 				}
+				newDutyStationResultList.add(newDutyStationResult);
 			}
-
-			dutyStationResultList.add(newDutyStationResult);
+			dutyStationMap.put(vacancyIdentificationNumber, newDutyStationResultList);
 		}
 
-		return dutyStationResultList;
+		return dutyStationMap;
 	}
 
 	public List<VacancyAnnouncementResult> createVacancyAnnouncementListForUSAStaffingAppointment(
 			List<ApptInfoCert> apptInfoCertList, List<ApptInfoNewHire> apptInfoNewHireList,
-			List<Orientation> orientationList, List<Position> positionList, List<DutyStationResult> dutyStationList) {
+			List<Orientation> orientationList, List<Position> positionList, Map<String, ArrayList<DutyStationResult>> dutyStationMap) {
 
 		List<VacancyAnnouncementResult> vacancyAnnouncementList = new ArrayList<>();
 		VacancyAnnouncementResult newVacancyAnnouncement;
@@ -114,12 +114,10 @@ public class AppointmentReportParser {
 			}
 
 			for(ApptInfoNewHire apptInfoNewHire: apptInfoNewHireList){
-
 				if(apptInfoNewHire.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
 					newVacancyAnnouncement.setJobCode(apptInfoNewHire.getJobCode());
 					newVacancyAnnouncement.setOf306AssignedInOnboardingManager(apptInfoNewHire.getOf306AssignedInOnboardingManager());
 					newVacancyAnnouncement.setEod(apptInfoNewHire.getEod());
-
 				}
 			}
 
@@ -138,24 +136,13 @@ public class AppointmentReportParser {
 					newCertificate.setSeries(position.getSeries());
 					newCertificate.setGrade(position.getGrade());
 					newCertificate.setFullPerformanceLevel(position.getFullPerformanceLevel());
-					/*newCertificate.setDutyStation(position.getDutyStation());
-					newCertificate.setDutyStationCode(position.getDutyStationCode());*/
-				}
-			}
-			
-			for(DutyStationResult dutyStationResult: dutyStationList){
-				if(dutyStationResult.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
-					
-					/*newCertificate.setDutyStation(position.getDutyStation());
-					newCertificate.setDutyStationCode(position.getDutyStationCode());*/
 				}
 			}
 
+			newCertificate.setDutyStationList(dutyStationMap.get(vacancyIdentificationNumber));
 			newVacancyAnnouncement.setCertificate(newCertificate);
 			vacancyAnnouncementList.add(newVacancyAnnouncement);
-
 		}
-
 		return vacancyAnnouncementList;
 	}
 
