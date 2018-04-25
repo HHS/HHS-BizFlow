@@ -8,17 +8,21 @@ import org.springframework.stereotype.Component;
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoCert;
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoNewHire;
 import gov.hhs.usas.rest.report.model.Appointment.CertificateResult;
+import gov.hhs.usas.rest.report.model.Appointment.DutyStationResult;
 import gov.hhs.usas.rest.report.model.Appointment.Orientation;
 import gov.hhs.usas.rest.report.model.Appointment.PayPlan;
 import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
+import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating;
+import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingDates;
+import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingResult;
 
 @Component
 public class AppointmentReportParser {
-	
+
 	public List<Position> addPayPlan(List<PayPlan> payPlanList, List<Position> positionList) {
-		
+
 		List<String> uniqueVacancyIdentificationNumbers = new ArrayList<>();
 		for (Position position : positionList)
 		{
@@ -26,7 +30,7 @@ public class AppointmentReportParser {
 				uniqueVacancyIdentificationNumbers.add(position.getVacancyIdentificationNumber());
 			}
 		}
-		
+
 		for(String vacancyIdentificationNumber : uniqueVacancyIdentificationNumbers){
 			for (Position position : positionList){
 				if(position.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
@@ -36,15 +40,43 @@ public class AppointmentReportParser {
 						}
 					}
 				}
-				
+
 			}
 		}
 		return positionList;
 	}
 
+
+	public List<DutyStationResult> createDutyStationListForCertificate(List<Position> positionList) {
+		List<DutyStationResult> dutyStationResultList = new ArrayList<DutyStationResult>();
+		DutyStationResult newDutyStationResult;
+
+		List<String> uniqueVacancyIdentificationNumbers = new ArrayList<String>();
+		for(Position position : positionList){
+			if (!uniqueVacancyIdentificationNumbers.contains(position.getVacancyIdentificationNumber())) {
+				uniqueVacancyIdentificationNumbers.add(position.getVacancyIdentificationNumber());
+			}
+		}
+
+		for(String vacancyIdentificationNumber : uniqueVacancyIdentificationNumbers){
+			newDutyStationResult = new DutyStationResult();
+			for(Position position : positionList){
+				if(position.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
+					newDutyStationResult.setVacancyIdentificationNumber(vacancyIdentificationNumber);
+					newDutyStationResult.setDutyStationCode(position.getDutyStationCode());
+					newDutyStationResult.setDutyStationName(position.getDutyStation());
+				}
+			}
+
+			dutyStationResultList.add(newDutyStationResult);
+		}
+
+		return dutyStationResultList;
+	}
+
 	public List<VacancyAnnouncementResult> createVacancyAnnouncementListForUSAStaffingAppointment(
 			List<ApptInfoCert> apptInfoCertList, List<ApptInfoNewHire> apptInfoNewHireList,
-			List<Orientation> orientationList, List<Position> positionList) {
+			List<Orientation> orientationList, List<Position> positionList, List<DutyStationResult> dutyStationList) {
 
 		List<VacancyAnnouncementResult> vacancyAnnouncementList = new ArrayList<>();
 		VacancyAnnouncementResult newVacancyAnnouncement;
@@ -106,8 +138,16 @@ public class AppointmentReportParser {
 					newCertificate.setSeries(position.getSeries());
 					newCertificate.setGrade(position.getGrade());
 					newCertificate.setFullPerformanceLevel(position.getFullPerformanceLevel());
-					newCertificate.setDutyStation(position.getDutyStation());
-					newCertificate.setDutyStationCode(position.getDutyStationCode());
+					/*newCertificate.setDutyStation(position.getDutyStation());
+					newCertificate.setDutyStationCode(position.getDutyStationCode());*/
+				}
+			}
+			
+			for(DutyStationResult dutyStationResult: dutyStationList){
+				if(dutyStationResult.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
+					
+					/*newCertificate.setDutyStation(position.getDutyStation());
+					newCertificate.setDutyStationCode(position.getDutyStationCode());*/
 				}
 			}
 
@@ -123,8 +163,9 @@ public class AppointmentReportParser {
 			List<VacancyAnnouncementResult> vacancyAnnouncementList) {
 		USAStaffingAppointmentResult usasAppointment = new USAStaffingAppointmentResult(requestNumber, vacancyAnnouncementList.size(), vacancyAnnouncementList);
 
-	    return usasAppointment;
+		return usasAppointment;
 	}
+
 
 
 

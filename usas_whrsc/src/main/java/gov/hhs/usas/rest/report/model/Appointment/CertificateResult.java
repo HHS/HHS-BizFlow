@@ -1,9 +1,15 @@
 package gov.hhs.usas.rest.report.model.Appointment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
+
+import gov.hhs.usas.rest.report.model.Recruitment.VacancyAnnouncementResult;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name="CertificateResult", propOrder={})
@@ -23,10 +29,13 @@ public class CertificateResult {
 	private String grade;
 	@XmlElement(name="Full_Performance_Level")
 	private String fullPerformanceLevel;
-	@XmlElement(name="Duty_Station")
+	/*@XmlElement(name="Duty_Station")
 	private String dutyStation;
 	@XmlElement(name="Duty_Station_Code")
-	private String dutyStationCode;
+	private String dutyStationCode;*/
+	@XmlElementWrapper(name="Duty_Stations")
+	@XmlElement(name="Duty_Station")
+	private List<DutyStationResult> dutyStationList;
 	@XmlElement(name="Date_Certificate_Sent_To_SO")
 	private String dateCertificateSentToSO;
 	@XmlElement(name="Date_Hiring_Decision_Received_In_HR")
@@ -48,8 +57,7 @@ public class CertificateResult {
 		this.series = "";
 		this.grade = "";
 		this.fullPerformanceLevel = "";
-		this.dutyStation = "";
-		this.dutyStationCode = "";
+		this.dutyStationList = new ArrayList<DutyStationResult>();
 		this.dateCertificateSentToSO = "";
 		this.dateHiringDecisionReceivedInHR = "";
 		this.dateOfTentativeJobOffer = "";
@@ -57,9 +65,9 @@ public class CertificateResult {
 		this.appointeesEmailAddressForOrientationContact = "";
 		this.dateOfficialOfferSent = "";
 	}
-	
+
 	public CertificateResult(String certificateNumber, String certificateType, String positionTitle, String payPlan,
-			String series, String grade, String fullPerformanceLevel, String dutyStation, String dutyStationCode,
+			String series, String grade, String fullPerformanceLevel, List<DutyStationResult> dutyStationList,
 			String dateCertificateSentToSO, String dateHiringDecisionReceivedInHR, String dateOfTentativeJobOffer,
 			String dateOfOfficialJobOffer, String appointeesEmailAddressForOrientationContact,
 			String dateOfficialOfferSent) {
@@ -70,8 +78,7 @@ public class CertificateResult {
 		this.series = series;
 		this.grade = grade;
 		this.fullPerformanceLevel = fullPerformanceLevel;
-		this.dutyStation = dutyStation;
-		this.dutyStationCode = dutyStationCode;
+		this.dutyStationList = dutyStationList;
 		this.dateCertificateSentToSO = dateCertificateSentToSO;
 		this.dateHiringDecisionReceivedInHR = dateHiringDecisionReceivedInHR;
 		this.dateOfTentativeJobOffer = dateOfTentativeJobOffer;
@@ -79,6 +86,8 @@ public class CertificateResult {
 		this.appointeesEmailAddressForOrientationContact = appointeesEmailAddressForOrientationContact;
 		this.dateOfficialOfferSent = dateOfficialOfferSent;
 	}
+
+
 
 	public String getCertificateNumber() {
 		return certificateNumber;
@@ -136,6 +145,14 @@ public class CertificateResult {
 		this.fullPerformanceLevel = fullPerformanceLevel;
 	}
 
+	public List<DutyStationResult> getDutyStationList() {
+		return dutyStationList;
+	}
+
+	public void setDutyStationList(List<DutyStationResult> dutyStationList) {
+		this.dutyStationList = dutyStationList;
+	}
+/*
 	public String getDutyStation() {
 		return dutyStation;
 	}
@@ -150,7 +167,7 @@ public class CertificateResult {
 
 	public void setDutyStationCode(String dutyStationCode) {
 		this.dutyStationCode = dutyStationCode;
-	}
+	}*/
 
 	public String getDateCertificateSentToSO() {
 		return dateCertificateSentToSO;
@@ -204,7 +221,7 @@ public class CertificateResult {
 	public String toString(){
 		return "certificateNumber: " + this.getCertificateNumber() + " certificateType: " + this.getCertificateType() + " positionTitle: " + this.getPositionTitle()
 				+ " payPlan: " + this.getPayPlan() + " series: " + this.getSeries() + " grade: " + this.getGrade() + " fullPerformanceLevel: " + this.getFullPerformanceLevel()
-				+ " dutyStation: " + this.getDutyStation() + " dutyStationCode: " + this.getDutyStationCode()
+				+ " dutyStations: " + this.getDutyStationList()
 				+ " dateCertificateSentToSO: " + this.getDateCertificateSentToSO() + " dateHiringDecisionReceivedInHR: " + this.getDateHiringDecisionReceivedInHR()
 				+ " dateOfTentativeJobOffer: " + this.getDateOfTentativeJobOffer() + " dateOfOfficialJobOffer: " + this.getDateOfOfficialJobOffer()
 				+ " appointeesEmailAddressForOrientationContact: " + this.getAppointeesEmailAddressForOrientationContact()
