@@ -9,12 +9,38 @@ import gov.hhs.usas.rest.report.model.Appointment.ApptInfoCert;
 import gov.hhs.usas.rest.report.model.Appointment.ApptInfoNewHire;
 import gov.hhs.usas.rest.report.model.Appointment.CertificateResult;
 import gov.hhs.usas.rest.report.model.Appointment.Orientation;
+import gov.hhs.usas.rest.report.model.Appointment.PayPlan;
 import gov.hhs.usas.rest.report.model.Appointment.Position;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
 
 @Component
 public class AppointmentReportParser {
+	
+	public List<Position> addPayPlan(List<PayPlan> payPlanList, List<Position> positionList) {
+		
+		List<String> uniqueVacancyIdentificationNumbers = new ArrayList<>();
+		for (Position position : positionList)
+		{
+			if (!uniqueVacancyIdentificationNumbers.contains(position.getVacancyIdentificationNumber())) {
+				uniqueVacancyIdentificationNumbers.add(position.getVacancyIdentificationNumber());
+			}
+		}
+		
+		for(String vacancyIdentificationNumber : uniqueVacancyIdentificationNumbers){
+			for (Position position : positionList){
+				if(position.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
+					for (PayPlan payPlan : payPlanList){
+						if(payPlan.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
+							position.setPayPlan(payPlan.getPayPlan());
+						}
+					}
+				}
+				
+			}
+		}
+		return positionList;
+	}
 
 	public List<VacancyAnnouncementResult> createVacancyAnnouncementListForUSAStaffingAppointment(
 			List<ApptInfoCert> apptInfoCertList, List<ApptInfoNewHire> apptInfoNewHireList,
@@ -27,8 +53,8 @@ public class AppointmentReportParser {
 		List<String> uniqueVacancyIdentificationNumbers = new ArrayList<>();
 		for (ApptInfoCert apptInfoCert : apptInfoCertList)
 		{
-			if (!uniqueVacancyIdentificationNumbers.contains(apptInfoCert.getAnnouncementNumber())) {
-				uniqueVacancyIdentificationNumbers.add(apptInfoCert.getAnnouncementNumber());
+			if (!uniqueVacancyIdentificationNumbers.contains(apptInfoCert.getVacancyIdentificationNumber())) {
+				uniqueVacancyIdentificationNumbers.add(apptInfoCert.getVacancyIdentificationNumber());
 			}
 		}
 
@@ -38,7 +64,7 @@ public class AppointmentReportParser {
 
 			for(ApptInfoCert apptInfoCert: apptInfoCertList){
 
-				if(apptInfoCert.getAnnouncementNumber().equals(vacancyIdentificationNumber)){
+				if(apptInfoCert.getVacancyIdentificationNumber().equals(vacancyIdentificationNumber)){
 					newVacancyAnnouncement.setVacancyIdentificationNumber(vacancyIdentificationNumber);
 					newVacancyAnnouncement.setVacancyAnnouncementNumber(apptInfoCert.getAnnouncementNumber());
 					newVacancyAnnouncement.setSupervisoryStatus(apptInfoCert.getSupervisoryPosition());
@@ -99,5 +125,7 @@ public class AppointmentReportParser {
 
 	    return usasAppointment;
 	}
+
+
 
 }
