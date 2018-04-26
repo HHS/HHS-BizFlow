@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="USAStaffingRestClient" default="package" basedir=".">
+
+	<property file="usasrwsc.properties" />
+
+	<property name="proj.jdk.home" value="${jdk.home.1.7}" />
+	<property name="proj.jdk.bin" value="${jdk.home.1.7}/bin" />
+	<property name="proj.jdk.classpath" value="jdk.classpath.1.7" />
+
+	<property name="target.jvm" value="1.7" />
+	<property name="target.name" value="usasrwsc" />
+	<property name="target.version" value="0.0.1-SNAPSHOT" />
+	<property name="spring.boot.version" value="1.5.10.RELEASE" />
+	<property name="proj.root.dir" value="${basedir}" />
+	<property name="src.dir" value="${proj.root.dir}/src" />
+	<property name="src.main.java.dir" value="${src.dir}/main/java" />
+	<property name="src.main.res.dir" value="${src.dir}/main/resources" />
+	<property name="src.test.java.dir" value="${src.dir}/test/java" />
+	<property name="src.test.res.dir" value="${src.dir}/test/resources" />
+	<property name="build.dir" value="${proj.root.dir}/build" />
+	<property name="classes.dir" value="${build.dir}/main/classes" />
+	<property name="modjar.dir" value="${build.dir}/modjar" />
+	<property name="bootwar.dir" value="${build.dir}/bootwar" />
+	<property name="classes.test.dir" value="${build.dir}/test/classes" />
+	<property name="bin.dir" value="${proj.root.dir}/bin" />
+	<property name="lib.dir" value="${proj.root.dir}/lib" />
+	<property name="dist.dir" value="${proj.root.dir}/dist" />
+	<property name="manifest" value="MANIFEST.MF"/>
+
+
+
+	<path id="jdk.classpath.1.7">
+		<fileset dir="${jdk.home.1.7}">
+			<include name="lib/**/*.jar" />
+			<include name="jre/lib/**/*.jar" />
+		</fileset>
+	</path>
+
+	<patternset id="module.dependncy.lib">
+		<include name="aopalliance-repackaged-2.5.0-b32.jar" />
+		<include name="asm-all-repackaged-2.5.0-b32.jar" />
+		<include name="class-model-2.5.0-b32.jar" />
+		<include name="classmate-1.3.4.jar" />
+		<include name="config-types-2.5.0-b32.jar" />
+		<include name="hibernate-validator-5.3.6.Final.jar" />
+		<include name="hk2-2.5.0-b32.jar" />
+		<include name="hk2-api-2.5.0-b32.jar" />
+		<include name="hk2-config-2.5.0-b32.jar" />
+		<include name="hk2-core-2.5.0-b32.jar" />
+		<include name="hk2-locator-2.5.0-b32.jar" />
+		<include name="hk2-runlevel-2.5.0-b32.jar" />
+		<include name="hk2-utils-2.5.0-b32.jar" />
+		<include name="jackson-annotations-2.8.0.jar" />
+		<include name="jackson-core-2.8.10.jar" />
+		<include name="jackson-databind-2.8.10.jar" />
+		<include name="jackson-jaxrs-base-2.8.10.jar" />
+		<include name="jackson-jaxrs-json-provider-2.8.10.jar" />
+		<include name="jackson-module-jaxb-annotations-2.8.10.jar" />
+		<include name="javassist-3.21.0-GA.jar" />
+		<include name="javax.annotation-api-1.2.jar" />
+		<include name="javax.inject-2.5.0-b32.jar" />
+		<include name="javax.ws.rs-api-2.0.1.jar" />
+		<include name="jboss-logging-3.3.1.Final.jar" />
+		<include name="jcl-over-slf4j-1.7.25.jar" />
+		<include name="jersey-bean-validation-2.25.1.jar" />
+		<include name="jersey-client-2.25.1.jar" />
+		<include name="jersey-common-2.25.1.jar" />
+		<include name="jersey-container-servlet-2.25.1.jar" />
+		<include name="jersey-container-servlet-core-2.25.1.jar" />
+		<include name="jersey-entity-filtering-2.25.1.jar" />
+		<include name="jersey-guava-2.25.1.jar" />
+		<include name="jersey-media-jaxb-2.25.1.jar" />
+		<include name="jersey-media-json-jackson-2.25.1.jar" />
+		<include name="jersey-server-2.25.1.jar" />
+		<include name="jersey-spring3-2.25.1.jar" />
+		<include name="jul-to-slf4j-1.7.25.jar" />
+		<include name="log4j-1.2.17.jar" />
+		<include name="log4j-over-slf4j-1.7.25.jar" />
+		<include name="logback-classic-1.1.11.jar" />
+		<include name="logback-core-1.1.11.jar" />
+		<include name="osgi-resource-locator-1.0.1.jar" />
+		<include name="slf4j-api-1.7.25.jar" />
+		<include name="snakeyaml-1.17.jar" />
+		<include name="spring-aop-4.3.14.RELEASE.jar" />
+		<include name="spring-beans-4.3.14.RELEASE.jar" />
+		<include name="spring-boot-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-autoconfigure-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-loader-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-starter-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-starter-jersey-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-starter-logging-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-starter-tomcat-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-starter-validation-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-starter-web-1.5.10.RELEASE.jar" />
+		<include name="spring-bridge-2.5.0-b32.jar" />
+		<include name="spring-context-4.3.14.RELEASE.jar" />
+		<include name="spring-core-4.3.14.RELEASE.jar" />
+		<include name="spring-expression-4.3.14.RELEASE.jar" />
+		<include name="spring-web-4.3.14.RELEASE.jar" />
+		<include name="spring-webmvc-4.3.14.RELEASE.jar" />
+		<include name="tomcat-annotations-api-8.5.27.jar" />
+		<include name="tomcat-embed-core-8.5.27.jar" />
+		<include name="tomcat-embed-el-8.5.27.jar" />
+		<include name="tomcat-embed-websocket-8.5.27.jar" />
+		<include name="validation-api-1.1.0.Final.jar" />
+	</patternset>
+
+	<patternset id="test.dependncy.lib">
+		<include name="accessors-smart-1.1.jar" />
+		<include name="android-json-0.0.20131108.vaadin1.jar" />
+		<include name="asm-5.0.3.jar" />
+		<include name="assertj-core-2.6.0.jar" />
+		<include name="hamcrest-core-1.3.jar" />
+		<include name="hamcrest-library-1.3.jar" />
+		<include name="json-path-2.2.0.jar" />
+		<include name="json-smart-2.2.1.jar" />
+		<include name="jsonassert-1.4.0.jar" />
+		<include name="junit-4.12.jar" />
+		<include name="mockito-core-1.10.19.jar" />
+		<include name="objenesis-2.1.jar" />
+		<include name="spring-boot-starter-test-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-test-1.5.10.RELEASE.jar" />
+		<include name="spring-boot-test-autoconfigure-1.5.10.RELEASE.jar" />
+		<include name="spring-test-4.3.14.RELEASE.jar" />
+	</patternset>
+
+	<path id="classpath">
+		<!-- 
+		<path refid="${proj.jdk.classpath}" />
+		-->
+		<fileset dir="${lib.dir}">
+			<patternset refid="module.dependncy.lib"/>
+		</fileset>
+		<fileset dir="${lib.dir}">
+			<patternset refid="test.dependncy.lib"/>
+		</fileset>
+	</path>
+	
+	<path id="run.classpath">
+		<pathelement location="${dist.dir}/lib"/>
+		<fileset dir="${lib.dir}">
+			<patternset refid="module.dependncy.lib"/>
+		</fileset>
+	</path>
+
+
+
+
+	<target name="init">
+		<tstamp>
+			<format property="curtime" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<echo message="Start time          = ${curtime}" />
+		<echo message="proj.root.dir       = ${proj.root.dir}" />
+		<echo message="src.dir             = ${src.dir}" />
+		<echo message="src.main.java.dir   = ${src.main.java.dir}" />
+		<echo message="src.main.res.dir    = ${src.main.res.dir}" />
+		<echo message="build.dir           = ${build.dir}" />
+		<echo message="classes.dir         = ${classes.dir}" />
+		<echo message="bin.dir             = ${bin.dir}" />
+		<echo message="lib.dir             = ${lib.dir}" />
+		<echo message="dist.dir            = ${dist.dir}" />
+	</target>
+
+
+	<target name="clean"
+			depends="init"
+			description="cleans build artifacts for fresh start">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+
+	<target name="compile"
+			depends="init"
+			description="compiles java source files">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<javac destdir="${classes.dir}"
+				fork="true" 
+				executable="${proj.jdk.bin}/javac"
+				debug="true" nowarn="false"
+				source="${target.jvm}" target="${target.jvm}"
+				deprecation="true" optimize="true" encoding="utf-8">
+			<classpath refid="classpath" />
+			<src path="${src.main.java.dir}" />
+		</javac>
+	</target>
+
+
+	<target name="compile.test"
+			depends="compile"
+			description="compiles java source files for test">
+		<mkdir dir="${classes.test.dir}" />
+		<javac destdir="${classes.test.dir}"
+				fork="true" 
+				executable="${proj.jdk.bin}/javac"
+				debug="true" nowarn="false"
+				source="${target.jvm}" target="${target.jvm}"
+				deprecation="true" optimize="true" encoding="utf-8">
+			<classpath>
+				<path refid="classpath" />
+				<pathelement location="${classes.dir}" />
+			</classpath>
+			<src path="${src.test.java.dir}" />
+		</javac>
+	</target>
+
+
+	<target name="package"
+			depends="compile"
+			description="creates war file from rest client class files">
+		<echo message="Packaging ${target.name}.jar file." />
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${bootwar.dir}" />
+
+		<jar destfile="${modjar.dir}/${target.name}-${target.version}.jar" 
+				basedir="${classes.dir}" 
+				includes="**/*.class" 
+				compress="true"
+		/>
+		
+		<war destfile="${dist.dir}/${target.name}-${target.version}.war" 
+				basedir="${bootwar.dir}" 
+				includes="**/*" 
+				compress="false"
+				needxmlfile="false"
+				manifest="${src.main.res.dir}/MANIFEST.MF"
+		>
+			<classes dir="${src.main.res.dir}">
+				<include name="application.properties" />
+				<include name="log4j.properties" />
+			</classes>
+			<lib dir="${lib.dir}">
+				<patternset refid="module.dependncy.lib"/>
+			</lib>
+			<lib dir="${modjar.dir}">
+				<include name="*.jar" />
+			</lib>
+		</war>
+	</target>
+
+
+	<target name="package.boot"
+			depends="compile"
+			description="creates war file from rest client class files in spring boot format">
+		<echo message="Packaging ${target.name}.jar file." />
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${bootwar.dir}" />
+
+		<unjar src="${lib.dir}/spring-boot-loader-${spring.boot.version}.jar"
+				dest="${bootwar.dir}"
+		/>
+		
+		<war destfile="${dist.dir}/${target.name}-${target.version}.war" 
+				basedir="${bootwar.dir}" 
+				includes="**/*" 
+				compress="false"
+				needxmlfile="false"
+				manifest="${src.main.res.dir}/MANIFEST.MF"
+		>
+			<classes dir="${classes.dir}">
+				<include name="**/*.class" />
+			</classes>
+			<classes dir="${src.main.res.dir}">
+				<include name="application.properties" />
+				<include name="log4j.properties" />
+			</classes>
+			<lib dir="${lib.dir}">
+				<patternset refid="module.dependncy.lib"/>
+			</lib>
+		</war>
+	</target>
+
+
+</project>
