@@ -81,7 +81,9 @@ public class Properties {
 	@Value("${exception.nodata}")
 	private String noDataException;
 	@Value("${exception.parse}")
-	private String parseException;
+	private String parseException;	
+	@Value("${exception.nofile}")
+	private String noFileException;
 	@Value("${exception}")
 	private String exception;
 
@@ -303,7 +305,13 @@ public class Properties {
 		return parseException;
 	}
 	public void setParseException(String parseException) {
-		parseException = parseException;
+		this.parseException = parseException;
+	}
+	public String getNoFileException() {
+		return noFileException;
+	}
+	public void setNoFileException(String noFileException) {
+		this.noFileException = noFileException;
 	}
 	public String getException() {
 		return exception;
