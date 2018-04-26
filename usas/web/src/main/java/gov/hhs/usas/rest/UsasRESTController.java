@@ -197,7 +197,7 @@ public class UsasRESTController
 		USAStaffingRecruitmentResult usasRecruitment = new USAStaffingRecruitmentResult();
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
-			String reportPath = properties.getRecruitmentFileLocation() + "\\" + requestNumber + ".xml";
+			String reportPath = properties.getRecruitmentFileLocation() + requestNumber + ".xml";
 			log.info("Using XML report for Recruitment located at "+ reportPath + " for transformation.");
 			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		}else{
