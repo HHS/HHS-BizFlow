@@ -1,5 +1,6 @@
 package gov.hhs.usas.rest;
 
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +167,7 @@ public class UsasRESTController
 		USAStaffingAppointmentResult usasAppointment = new USAStaffingAppointmentResult();
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
-			String reportPath = properties.getAppointmentFileLocation() + "\\" + requestNumber + ".xml";
+			String reportPath = properties.getAppointmentFileLocation() + File.separator + requestNumber + ".xml";
 			log.info("Using XML report for Appointment located at "+ reportPath + " for transformation.");
 			usasAppointment = appointmentService.parseReportFromFile(reportPath);
 		}else{
@@ -197,7 +198,9 @@ public class UsasRESTController
 		USAStaffingRecruitmentResult usasRecruitment = new USAStaffingRecruitmentResult();
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
-			String reportPath = properties.getRecruitmentFileLocation() + requestNumber + ".xml";
+
+			String reportPath = properties.getRecruitmentFileLocation() + File.separator + requestNumber + ".xml";
+
 			log.info("Using XML report for Recruitment located at "+ reportPath + " for transformation.");
 			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		}else{
