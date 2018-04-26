@@ -22,12 +22,18 @@ public class Properties {
 	private String recruitmentReportID;
 	@Value("${report.id.appointment}")
 	private String appointmentReportID;
+	/*@Value("${report.id.applicant-roster}")
+	private String applicantRosterReportID;
+	@Value("${report.id.applicant-notification}")
+	private String appointmentReportID;*/
 	@Value("${report.name.recruitment}")
 	private String recruitmentReportName;
 	@Value("${report.name.appointment}")
 	private String appointmentReportName;
-	@Value("${report.format}")
-	private String reportFormat;	
+	@Value("${report.format.dataset}")
+	private String reportFormatDataSet;	
+	@Value("${report.format.html}")
+	private String reportFormatHTML;
 
 	//Authentication properties
 	@Value("${credentials.namespace}")
@@ -163,11 +169,17 @@ public class Properties {
 	public void setAppointmentReportName(String appointmentReportName) {
 		this.appointmentReportName = appointmentReportName;
 	}
-	public String getReportFormat() {
-		return reportFormat;
+	public String getReportFormatDataSet() {
+		return reportFormatDataSet;
 	}
-	public void setReportFormat(String reportFormat) {
-		this.reportFormat = reportFormat;
+	public void setReportFormatDataSet(String reportFormat) {
+		this.reportFormatDataSet = reportFormat;
+	}
+	public String getReportFormatHTML() {
+		return reportFormatHTML;
+	}
+	public void setReportFormatHTML(String reportFormatHTML) {
+		this.reportFormatHTML = reportFormatHTML;
 	}
 	public String getNameSpace() {
 		return NameSpace;
