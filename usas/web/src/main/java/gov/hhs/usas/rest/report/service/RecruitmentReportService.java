@@ -3,7 +3,9 @@ package gov.hhs.usas.rest.report.service;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
@@ -50,7 +52,7 @@ public class RecruitmentReportService extends ReportService
 	private List<VacancyAnnouncement> vacancyAnnouncements;
 
 	private PositionsResult positions;
-	private List<CertificateResult> certificateList;
+	private Map<String, ArrayList<CertificateResult>> certificateMap;
 	private List<ApplicantRatingResult> applicantRatingList;
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	private String requestNumber;
@@ -66,8 +68,9 @@ public class RecruitmentReportService extends ReportService
 		this.applicantRatings = new ArrayList<ApplicantRating>();
 		this.applicantRatingDates = new ArrayList<ApplicantRatingDates>();
 		this.vacancyAnnouncements = new ArrayList<VacancyAnnouncement>();
+		
 		this.positions = new PositionsResult();
-		this.certificateList = new ArrayList<CertificateResult>();
+		this.certificateMap = new HashMap<String, ArrayList<CertificateResult>>();
 		this.applicantRatingList = new ArrayList<ApplicantRatingResult>();
 		this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
 		this.requestNumber = "";
@@ -106,7 +109,7 @@ public class RecruitmentReportService extends ReportService
 			this.xml = new StreamSource(reportXML);
 			return parseReport();
 		}
-		return new USAStaffingRecruitmentResult(properties.getResponseCodeFileError(), "The requested file could not be found.");
+		return new USAStaffingRecruitmentResult(properties.getResponseCodeFileError(), properties.getNoFileException());
 
 	}
 
@@ -195,9 +198,9 @@ public class RecruitmentReportService extends ReportService
 				}
 			}
 			this.positions = this.parser.createPositionsForUSAStaffingRecruitment(this.preRecruitmentPositions);
-			this.certificateList = this.parser.createCertificateListForVacancyAnnouncement(this.certificates);
+			this.certificateMap = this.parser.createCertificateListForVacancyAnnouncement(this.certificates);
 			this.applicantRatingList = this.parser.createApplicantRatingForVacancyAnnouncement(this.applicantRatings, this.applicantRatingDates);
-			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingRecruitment(this.certificateList, this.applicantRatingList, this.vacancyAnnouncements);
+			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingRecruitment(this.certificateMap, this.applicantRatingList, this.vacancyAnnouncements);
 
 			this.usasRecruitment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList, this.positions);
 			//If there is no data for vacancy, add an error message
