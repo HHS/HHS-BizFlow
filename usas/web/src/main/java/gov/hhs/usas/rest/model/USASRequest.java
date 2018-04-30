@@ -12,21 +12,21 @@ public class USASRequest
 {
 	@Autowired
 	private Properties properties;
-  private String serverURL;
-  private String requestMethod;
-  private String userAgentProperty;
-  private String userAgent;
-  private String acceptLanguageProperty;
-  private String acceptLanguage;
-  private String contentTypeProperty;
-  private String contentType;
-  private String POSTParameters;
-  private String cookieProperty;
-  private String cookie;
-  
-  @PostConstruct
+	private String serverURL;
+	private String requestMethod;
+	private String userAgentProperty;
+	private String userAgent;
+	private String acceptLanguageProperty;
+	private String acceptLanguage;
+	private String contentTypeProperty;
+	private String contentType;
+	private String POSTParameters;
+	private String cookieProperty;
+	private String cookie;
+
+	@PostConstruct
 	public void init(){	
-	  this.serverURL = properties.getServerURL();
+		this.serverURL = properties.getServerURL();
 		this.requestMethod = "";
 		this.userAgentProperty = properties.getUserAgentProperty();
 		this.userAgent = properties.getUserAgent();
@@ -38,82 +38,82 @@ public class USASRequest
 		this.cookieProperty = properties.getCookieProperty();
 		this.cookie = "";
 	}
-  
 
-public String getServerURL()
-  {
-    return this.serverURL;
-  }
-  
-  public String getRequestMethod()
-  {
-    return this.requestMethod;
-  }
-  
-  public void setRequestMethod(String requestMethod)
-  {
-    this.requestMethod = requestMethod;
-  }
-  
-  public String getUserAgentProperty()
-  {
-    return this.userAgentProperty;
-  }
-  
-  public String getUserAgent()
-  {
-    return this.userAgent;
-  }
-  
-  public String getAcceptLanguageProperty()
-  {
-    return this.acceptLanguageProperty;
-  }
-  
-  public String getAcceptLanguage()
-  {
-    return this.acceptLanguage;
-  }
-  
-  public String getContentTypeProperty()
-  {
-    return this.contentTypeProperty;
-  }
-  
-  public String getContentType()
-  {
-    return this.contentType;
-  }
-  
-  public String getPOSTParameters()
-  {
-    return this.POSTParameters;
-  }
-  
-  public void setPOSTParameters(String xmlDataTemplate, USASCredentials credentials)
-  {
-    String xmlData = xmlDataTemplate.replace("NAMESPACE_PLACEHOLDER", credentials.getNameSpace()).replace("USERNAME_PLACEHOLDER", credentials.getUserName()).replace("PASSWORD_PLACEHOLDER", credentials.getPassword());
-    this.POSTParameters = ("xmlData=" + xmlData);
-  }
-  
-  public void setPOSTParameters(String xmlDataTemplate, Prompt reportPrompt)
-  {
-    String xmlData = xmlDataTemplate.replace("PROMPT_ID", reportPrompt.getId()).replace("USE_VALUE", reportPrompt.getUseValue()).replace("DISPLAY_VALUE", reportPrompt.getDisplayValue());
-    this.POSTParameters = ("fmt=dataset&xmlData=" + xmlData);
-  }
-  
-  public String getCookieProperty()
-  {
-    return this.cookieProperty;
-  }
-  
-  public String getCookie()
-  {
-    return this.cookie;
-  }
-  
-  public void setCookie(String cookie)
-  {
-    this.cookie = cookie;
-  }
+
+	public String getServerURL()
+	{
+		return this.serverURL;
+	}
+
+	public String getRequestMethod()
+	{
+		return this.requestMethod;
+	}
+
+	public void setRequestMethod(String requestMethod)
+	{
+		this.requestMethod = requestMethod;
+	}
+
+	public String getUserAgentProperty()
+	{
+		return this.userAgentProperty;
+	}
+
+	public String getUserAgent()
+	{
+		return this.userAgent;
+	}
+
+	public String getAcceptLanguageProperty()
+	{
+		return this.acceptLanguageProperty;
+	}
+
+	public String getAcceptLanguage()
+	{
+		return this.acceptLanguage;
+	}
+
+	public String getContentTypeProperty()
+	{
+		return this.contentTypeProperty;
+	}
+
+	public String getContentType()
+	{
+		return this.contentType;
+	}
+
+	public String getPOSTParameters()
+	{
+		return this.POSTParameters;
+	}
+
+	public void setPOSTParameters(String xmlDataTemplate, USASCredentials credentials)
+	{
+		String xmlData = xmlDataTemplate.replace("NAMESPACE_PLACEHOLDER", credentials.getNameSpace()).replace("USERNAME_PLACEHOLDER", credentials.getUserName()).replace("PASSWORD_PLACEHOLDER", credentials.getPassword());
+		this.POSTParameters = (properties.getXmlDataProperty() + "=" + xmlData);
+	}
+
+	public void setPOSTParameters(CognosReport report)
+	{
+		String xmlData = properties.getXmlDataReportTemplate().replace("PROMPT_ID", report.getPrompt().getId()).replace("USE_VALUE", report.getPrompt().getUseValue()).replace("DISPLAY_VALUE", report.getPrompt().getDisplayValue());
+		this.POSTParameters = (properties.getReportFormatProperty() + "=" + report.getFormat() + "&" + properties.getXmlDataProperty() + "=" + xmlData);
+	}
+
+	public String getCookieProperty()
+	{
+		return this.cookieProperty;
+	}
+
+	public String getCookie()
+	{
+		return this.cookie;
+	}
+
+	public void setCookie(String cookie)
+	{
+		this.cookie = cookie;
+	}
 }
