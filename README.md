@@ -6,6 +6,7 @@ Modules
 - **database** : HHS BizFlow common database script.
 - **jdbcconn** : JDBC Connection test tool.
 - **persondirectory** : Person Directory interface where user information is pulled from PSC Locator database onto BizFlow database.
+- **usas** : USA Staffing interface has two parts - web and batch. 
 - **usastaff** : USA Staffing interface where report data from USA Staffing site onto HHS common database. 
 
 
