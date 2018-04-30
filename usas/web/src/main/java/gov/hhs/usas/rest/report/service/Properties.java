@@ -122,6 +122,10 @@ public class Properties {
 	private String recruitmentFileLocation;
 	@Value("${location.appointment}")
 	private String appointmentFileLocation;
+	@Value("${location.applicant-notification}")
+	private String applicantNotificationFileLocation;
+	@Value("${location.applicant-roster}")
+	private String applicantRosterFileLocation;
 
 	public String getXmlDataProperty() {
 		return xmlDataProperty;
@@ -422,6 +426,18 @@ public class Properties {
 	}
 	public void setAppointmentFileLocation(String appointmentFileLocation) {
 		this.appointmentFileLocation = appointmentFileLocation;
+	}
+	public String getApplicantNotificationFileLocation() {
+		return applicantNotificationFileLocation;
+	}
+	public void setApplicantNotificationFileLocation(String applicantNotificationFileLocation) {
+		this.applicantNotificationFileLocation = applicantNotificationFileLocation;
+	}
+	public String getApplicantRosterFileLocation() {
+		return applicantRosterFileLocation;
+	}
+	public void setApplicantRosterFileLocation(String applicantRosterFileLocation) {
+		this.applicantRosterFileLocation = applicantRosterFileLocation;
 	}
 
 

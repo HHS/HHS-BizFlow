@@ -1,6 +1,9 @@
 package gov.hhs.usas.rest;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +95,7 @@ public class UsasRESTController
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
 			String reportPath = properties.getAppointmentFileLocation() + File.separator + requestNumber + ".xml";
-			log.info("Using XML report for Appointment located at "+ reportPath + " for transformation.");
+			log.info("Using XML report for Appointment "+ reportPath + " for transformation.");
 			usasAppointment = appointmentService.parseReportFromFile(reportPath);
 		}else{
 			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");    
@@ -122,10 +125,8 @@ public class UsasRESTController
 		USAStaffingRecruitmentResult usasRecruitment = new USAStaffingRecruitmentResult();
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
-
 			String reportPath = properties.getRecruitmentFileLocation() + File.separator + requestNumber + ".xml";
-
-			log.info("Using XML report for Recruitment located at "+ reportPath + " for transformation.");
+			log.info("Using XML report for Recruitment "+ reportPath + " for transformation.");
 			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		}else{
 			log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report.");    
@@ -134,7 +135,7 @@ public class UsasRESTController
 
 		return usasRecruitment;
 	}
-	
+
 	/**
 	 * This method connects to the USA Staffing Cognos Server to
 	 * pull the Applicant Roster Report for specific Vacancy Number 
@@ -148,12 +149,37 @@ public class UsasRESTController
 		Prompt applicantRosterPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
 		CognosReport applicantRosterReport = new CognosReport(properties.getApplicantRosterReportName(), properties.getApplicantRosterReportID(), properties.getReportFormatHTML(), applicantRosterPrompt);
 
-		log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report.");    
-		String applicantRosterReportResult = this.client.sendReportDataRequest(applicantRosterReport).getResponse();
+		String applicantRosterReportResult = "";
+		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
+			String report = properties.getApplicantRosterFileLocation() + File.separator + vacancyNumber + ".html";
+			File htmlFile = new File(report);
+			if(htmlFile.exists() && htmlFile.isFile()){
+				log.info("Pulling HTML report for " + properties.getApplicantRosterReportName() + " " + report + ".");
 
+				StringBuilder contentBuilder = new StringBuilder();
+				try {
+					BufferedReader in = new BufferedReader(new FileReader(report));
+					String str;
+					while ((str = in.readLine()) != null) {
+						contentBuilder.append(str);
+					}
+					in.close();
+				} catch (IOException e) {
+					log.error(e.getMessage());
+				}
+				applicantRosterReportResult = contentBuilder.toString();
+			}else{
+				applicantRosterReportResult = properties.getNoFileException() + "File: " + report;
+			}
+		}else{
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report.");    
+			applicantRosterReportResult = this.client.sendReportDataRequest(applicantRosterReport).getResponse();
+		}
+		
+		
 		return applicantRosterReportResult;
 	}
-	
+
 	/**
 	 * This method connects to the USA Staffing Cognos Server to
 	 * pull the Applicant Roster Report for specific Vacancy Number 
@@ -166,9 +192,33 @@ public class UsasRESTController
 	{
 		Prompt applicantNotificationPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
 		CognosReport applicantNotificationReport = new CognosReport(properties.getApplicantNotificationReportName(), properties.getApplicantNotificationReportID(), properties.getReportFormatHTML(), applicantNotificationPrompt);
+		String applicantNotificationReportResult = "";
+		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
+			String report = properties.getApplicantNotificationFileLocation() + File.separator + vacancyNumber + ".html";
+			File htmlFile = new File(report);
+			if(htmlFile.exists() && htmlFile.isFile()){
+				log.info("Pulling HTML report for " + properties.getApplicantNotificationReportName() + " " + report + ".");
 
-		log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report.");    
-		String applicantNotificationReportResult = this.client.sendReportDataRequest(applicantNotificationReport).getResponse();
+				StringBuilder contentBuilder = new StringBuilder();
+				try {
+					BufferedReader in = new BufferedReader(new FileReader(report));
+					String str;
+					while ((str = in.readLine()) != null) {
+						contentBuilder.append(str);
+					}
+					in.close();
+				} catch (IOException e) {
+					log.error(e.getMessage());
+				}
+				applicantNotificationReportResult = contentBuilder.toString();
+			}else{
+				applicantNotificationReportResult = properties.getNoFileException() + "File: " + report;
+			}
+		}else{
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report.");    
+			applicantNotificationReportResult = this.client.sendReportDataRequest(applicantNotificationReport).getResponse();
+		}
+
 
 		return applicantNotificationReportResult;
 	}
