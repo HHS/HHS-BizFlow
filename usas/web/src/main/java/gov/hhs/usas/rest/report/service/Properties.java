@@ -5,7 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Properties {
-
+	
+	@Value("${xml.data.property}")
+	private String xmlDataProperty;
 	@Value("${xml.data.login.template}")
 	private String xmlDataLoginTemplate;
 	@Value("${xml.data.report.template}")
@@ -22,14 +24,20 @@ public class Properties {
 	private String recruitmentReportID;
 	@Value("${report.id.appointment}")
 	private String appointmentReportID;
-	/*@Value("${report.id.applicant-roster}")
+	@Value("${report.id.applicant-roster}")
 	private String applicantRosterReportID;
 	@Value("${report.id.applicant-notification}")
-	private String appointmentReportID;*/
+	private String applicantNotificationReportID;
 	@Value("${report.name.recruitment}")
 	private String recruitmentReportName;
 	@Value("${report.name.appointment}")
 	private String appointmentReportName;
+	@Value("${report.name.applicant-roster}")
+	private String applicantRosterReportName;
+	@Value("${report.name.applicant-notification}")
+	private String applicantNotificationReportName;
+	@Value("${report.format.property}")
+	private String reportFormatProperty;	
 	@Value("${report.format.dataset}")
 	private String reportFormatDataSet;	
 	@Value("${report.format.html}")
@@ -115,6 +123,12 @@ public class Properties {
 	@Value("${location.appointment}")
 	private String appointmentFileLocation;
 
+	public String getXmlDataProperty() {
+		return xmlDataProperty;
+	}
+	public void setXmlDataProperty(String xmlDataProperty) {
+		this.xmlDataProperty = xmlDataProperty;
+	}
 	public String getXmlDataLoginTemplate() {
 		return xmlDataLoginTemplate;
 	}
@@ -157,6 +171,18 @@ public class Properties {
 	public void setAppointmentReportID(String appointmentReportID) {
 		this.appointmentReportID = appointmentReportID;
 	}
+	public String getApplicantRosterReportID() {
+		return applicantRosterReportID;
+	}
+	public void setApplicantRosterReportID(String applicantRosterReportID) {
+		this.applicantRosterReportID = applicantRosterReportID;
+	}
+	public String getApplicantNotificationReportID() {
+		return applicantNotificationReportID;
+	}
+	public void setApplicantNotificationReportID(String applicantNotificationReportID) {
+		this.applicantNotificationReportID = applicantNotificationReportID;
+	}
 	public String getRecruitmentReportName() {
 		return recruitmentReportName;
 	}
@@ -168,6 +194,24 @@ public class Properties {
 	}
 	public void setAppointmentReportName(String appointmentReportName) {
 		this.appointmentReportName = appointmentReportName;
+	}
+	public String getApplicantRosterReportName() {
+		return applicantRosterReportName;
+	}
+	public void setApplicantRosterReportName(String applicantRosterReportName) {
+		this.applicantRosterReportName = applicantRosterReportName;
+	}
+	public String getApplicantNotificationReportName() {
+		return applicantNotificationReportName;
+	}
+	public void setApplicantNotificationReportName(String applicantNotificationReportName) {
+		this.applicantNotificationReportName = applicantNotificationReportName;
+	}
+	public String getReportFormatProperty() {
+		return reportFormatProperty;
+	}
+	public void setReportFormatProperty(String reportFormatProperty) {
+		this.reportFormatProperty = reportFormatProperty;
 	}
 	public String getReportFormatDataSet() {
 		return reportFormatDataSet;
