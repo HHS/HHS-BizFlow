@@ -16,7 +16,7 @@ public class PositionsResult
   private String numberOfPositionsToBeAdvertised;
   @XmlElement(name="Clearance_Level_Required_For_Position")
   private String clearanceLevelRequiredForPosition;
-  @XmlElement(name="Position")
+  @XmlElement(name="record")
   private List<PositionResult> positionList;
   
   public PositionsResult()
