@@ -20,8 +20,9 @@ public class USAStaffingAppointmentResult {
 	private String requestNumber;
 	@XmlAttribute(name="VacancyCount")
 	private int vacancyCount;
-	@XmlElementWrapper(name="Vacancies")
-	@XmlElement(name="Vacancy_Announcement")
+//	@XmlElementWrapper(name="Vacancy")
+//	@XmlElement(name="Vacancy_Announcement")
+	@XmlElement(name="Vacancy")
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	@XmlElement(name="Result_Code")
 	private String resultCode;

@@ -40,12 +40,14 @@ public class VacancyAnnouncementResult
   @XmlElement(name="Date_Announcement_Cancelled")
   private String dateAnnouncementCancelled;
   @XmlElementWrapper(name="Positions")
-  @XmlElement(name="Position")
+//  @XmlElement(name="Position")
+  @XmlElement(name="record")
   private List<PositionResult> positionList;
   @XmlElement(name="Applicants")
   private ApplicantRatingResult applicants;
   @XmlElementWrapper(name="Certificates")
-  @XmlElement(name="Certificate")
+//  @XmlElement(name="Certificate")
+  @XmlElement(name="record")
   private List<CertificateResult> certificateList;
   
   public VacancyAnnouncementResult()
