@@ -1,7 +1,9 @@
 package gov.hhs.usas.rest.report.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -52,9 +54,11 @@ public class RecruitmentReportParser
 		return positions;
 	}
 
-	public List<CertificateResult> createCertificateListForVacancyAnnouncement(List<CertificateInformation> certificateInfoList)
+	public Map<String, ArrayList<CertificateResult>> createCertificateListForVacancyAnnouncement(List<CertificateInformation> certificateInfoList)
 	{
-		List<CertificateResult> certificateList = new ArrayList<CertificateResult>();
+		Map<String, ArrayList<CertificateResult>> certificateMap = new HashMap<String, ArrayList<CertificateResult>>();
+
+		ArrayList<CertificateResult> newCertificateList;
 
 		List<String> uniqueVacancyIdentificationNumbers = new ArrayList<String>();
 		for(CertificateInformation certInfo : certificateInfoList){
@@ -64,6 +68,8 @@ public class RecruitmentReportParser
 		}
 
 		for(String vacancyIdentificationNumber : uniqueVacancyIdentificationNumbers){
+			newCertificateList = new ArrayList<CertificateResult>();//for each vin, there can be a list of certificates
+			//find list of unique certificate numbers
 			List<String> uniqueCertificateNumbers = new ArrayList<String>();
 			for (CertificateInformation certInfo : certificateInfoList) {
 				if (vacancyIdentificationNumber.equals(certInfo.getVacancyIdentificationNumber()) && !uniqueCertificateNumbers.contains(certInfo.getCertificateNumber())) {
@@ -75,7 +81,7 @@ public class RecruitmentReportParser
 				CertificateResult newCertificate = new CertificateResult();
 				for (CertificateInformation certInfo : certificateInfoList)
 				{
-					if(vacancyIdentificationNumber.equals(certInfo.getVacancyIdentificationNumber())){
+					if(vacancyIdentificationNumber.equals(certInfo.getVacancyIdentificationNumber()) && certInfo.getCertificateNumber().equals(certificateNumber)){
 						newCertificate.setActionTaken(certInfo.getActionTaken());
 						newCertificate.setAnnouncementNumber(certInfo.getAnnouncementNumber());
 						newCertificate.setCertificateNumber(certInfo.getCertificateNumber());
@@ -88,17 +94,15 @@ public class RecruitmentReportParser
 						newCertificate.setPositionTitle(certInfo.getPositionTitle());
 						newCertificate.setSelectionMade(certInfo.getSelectionMade());
 						newCertificate.addSeries(certInfo.getSeries());
-						if (certInfo.getCertificateNumber().equals(certificateNumber))
-						{
-							newCertificate.addGrade(certInfo.getGrade());
-							newCertificate.addDutyLocation(certInfo.getDutyLocation());
-						}
+						newCertificate.addGrade(certInfo.getGrade());
+						newCertificate.addDutyLocation(certInfo.getDutyLocation());
 					}
 				}
-				certificateList.add(newCertificate);
+				newCertificateList.add(newCertificate);
 			}
+			certificateMap.put(vacancyIdentificationNumber, newCertificateList);
 		}
-		return certificateList;
+		return certificateMap;
 	}
 
 	public List<ApplicantRatingResult> createApplicantRatingForVacancyAnnouncement(List<ApplicantRating> applicantRatingList, List<ApplicantRatingDates> applicantRatingDatesList)
@@ -136,7 +140,7 @@ public class RecruitmentReportParser
 		return applicantRatingResultList;
 	}
 
-	public List<VacancyAnnouncementResult> createVacancyAnnouncementListForUSAStaffingRecruitment(List<CertificateResult> certificates, List<ApplicantRatingResult> applicantRatings, List<VacancyAnnouncement> vacancyAnnouncements)
+	public List<VacancyAnnouncementResult> createVacancyAnnouncementListForUSAStaffingRecruitment(Map<String, ArrayList<CertificateResult>> certificateMap, List<ApplicantRatingResult> applicantRatings, List<VacancyAnnouncement> vacancyAnnouncements)
 	{
 		List<VacancyAnnouncementResult> vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
 		VacancyAnnouncementResult newVacancyAnnouncement;
@@ -193,11 +197,8 @@ public class RecruitmentReportParser
 					newVacancyAnnouncement.setApplicants(applicantRating);
 				}
 			}
-			for (CertificateResult certificate : certificates) {
-				if (certificate.getAnnouncementNumber().equals(vacancyAnnouncementNumber) && certificate.getAnnouncementNumber().equals(newVacancyAnnouncement.getVacancyAnnouncementNumber())) {
-					newVacancyAnnouncement.addCertificate(certificate);
-				}
-			}
+
+			newVacancyAnnouncement.setCertificateList(certificateMap.get(newVacancyAnnouncement.getVacancyIdentificationNumber()));
 			vacancyAnnouncementList.add(newVacancyAnnouncement);
 		}
 		return vacancyAnnouncementList;
