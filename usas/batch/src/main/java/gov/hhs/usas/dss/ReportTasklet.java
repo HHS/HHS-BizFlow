@@ -12,6 +12,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.dss.ReportGeneration;
@@ -26,6 +27,9 @@ public class ReportTasklet extends Report implements Tasklet {
 
 	@Autowired
 	private DataSource targetDataSource;
+	
+	@Value("${save.report.file}")
+	private boolean saveReportFile;
 	
 	@SuppressWarnings("finally")
 	@Override
@@ -42,7 +46,7 @@ public class ReportTasklet extends Report implements Tasklet {
 				start = System.currentTimeMillis();
 				
 				currentDate = new Date();
-				
+
 				if (Util.isNull(this.getEndDate())) {
 					//If there is no specified end date range then use the default report iteration
 					rptIteration = this.getRptIteration();
@@ -71,7 +75,9 @@ public class ReportTasklet extends Report implements Tasklet {
 					reportXml = ReportGeneration.generateReport(this);
 					
 					if(!Util.isNull(reportXml)) {
-						ReportGeneration.saveReportFile(this, reportXml);
+						if (saveReportFile) {
+							ReportGeneration.saveReportFile(this, reportXml);
+						}
 						ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
 					}else {
 						log.info("The report " + this.getFileName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
