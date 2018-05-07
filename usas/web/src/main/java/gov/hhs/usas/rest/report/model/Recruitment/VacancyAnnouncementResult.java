@@ -242,6 +242,7 @@ public int getVacancyPositionCount()
   public void setPositionList(List<PositionResult> positionList)
   {
     this.positionList = positionList;
+    this.setVacancyPositionCount(this.positionList.size());
   }
   
   public void addPosition(PositionResult newPosition)
@@ -271,6 +272,7 @@ public int getVacancyPositionCount()
   public void setCertificateList(List<CertificateResult> certificate)
   {
     this.certificateList = certificate;
+    this.setVacancyCertificateCount(this.certificateList.size());
   }
   
   public void addCertificate(CertificateResult newCertificate)
