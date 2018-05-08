@@ -34,7 +34,7 @@ import gov.hhs.usas.dss.model.Request;
 import gov.hhs.usas.dss.model.Review;
 import gov.hhs.usas.dss.model.Task;
 import gov.hhs.usas.dss.model.TimeToOffer;
-import gov.hhs.usas.dss.model.TimeToRecruit;
+import gov.hhs.usas.dss.model.TimeToStaff;
 import gov.hhs.usas.dss.model.Vacancy;
 
 
@@ -98,11 +98,11 @@ public class BatchConfiguration {
 	private TimeToOffer time2Offer;
 	
 	@Autowired
-	private TimeToRecruit time2Recruit;
+	private TimeToStaff time2Staff;
 	
 	@Autowired
 	private Vacancy vacancy;
-	
+	 
 	/*
 	 * Job - importDSSReports
 	 */
@@ -118,10 +118,9 @@ public class BatchConfiguration {
     	final Flow taskFlow = new FlowBuilder<Flow>("taskFlow").from(stepBuilderFactory.get("executeTaskReportStep").tasklet(taskTasklet()).listener(stepListener).build()).end();
     	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
     	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
-    	final Flow recruitFlow = new FlowBuilder<Flow>("recruitFlow").from(stepBuilderFactory.get("executeRecruitReportStep").tasklet(recruitTasklet()).listener(stepListener).build()).end();
+    	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get("executeStaffReportStep").tasklet(staffTasklet()).listener(stepListener).build()).end();
     	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get("executeIHSVacancyReportStep").tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
-    	
-    	
+
 		interfaceName = " USA Staffing Interface";
 		return jobBuilderFactory.get("importDSSReports")
 				.incrementer(new RunIdIncrementer())
@@ -136,12 +135,12 @@ public class BatchConfiguration {
 				.to(taskFlow).on("*")
 				.to(vacFlow).on("*")
 				.to(offerFlow).on("*")
-				.to(recruitFlow).on("*")
+				.to(staffFlow).on("*")
 				.to(ihsVacancyFlow)
 				.end()
 				.build();		
 	}
-
+	
 	//Announcement Tasklet
 	@Bean
 	@StepScope
@@ -214,11 +213,11 @@ public class BatchConfiguration {
 		return new ReportTasklet();
 	}	
 		
-	//Recruit Tasklet
+	//Staff Tasklet
 	@Bean
 	@StepScope
-	public Tasklet recruitTasklet() {
-		time2Recruit.construct();
+	public Tasklet staffTasklet() {
+		time2Staff.construct();
 		return new ReportTasklet();
 	}
 	
