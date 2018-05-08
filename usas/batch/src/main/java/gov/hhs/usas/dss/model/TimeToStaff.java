@@ -8,20 +8,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 @PropertySource("classpath:report.properties")
-public class TimeToRecruit extends Report {
+public class TimeToStaff extends Report {
 	
-	@Value("${recruit.search.path}") private String searchPath;
-	@Value("${recruit.intg.type}") private String intgType;
-	@Value("${recruit.file.name}") private String fileName;
-	@Value("${recruit.parm.num}") private int parmNum;
-	@Value("${recruit.rvp.name}") private String rvpName;
-	@Value("${recruit.rpt.iteration}") private int rptIteration; 
-	@Value("${recruit.date.increment}") private int dateIncrement;
-	@Value("${recruit.end.date}") private String endDate;
-	@Value("${recruit.truncate}") private String spTruncate;
-	@Value("${recruit.run.report}") private boolean runReport;
+	@Value("${staff.search.path}") private String searchPath;
+	@Value("${staff.intg.type}") private String intgType;
+	@Value("${staff.file.name}") private String fileName;
+	@Value("${staff.parm.num}") private int parmNum;
+	@Value("${staff.rvp.name}") private String rvpName;
+	@Value("${staff.rpt.iteration}") private int rptIteration; 
+	@Value("${staff.date.increment}") private int dateIncrement;
+	@Value("${staff.end.date}") private String endDate;
+	@Value("${staff.truncate}") private String spTruncate;
+	@Value("${staff.run.report}") private boolean runReport;
 
-	public TimeToRecruit() {
+	public TimeToStaff() {
 
 	}
 	
