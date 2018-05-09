@@ -190,7 +190,8 @@ public class RecruitmentReportParser
 						}
 					}
 				}
-				newVacancyAnnouncement.addPosition(newPosition);
+				if(newPosition.getTitle().trim().length()>0)//if there's no Position Title, don't add this position
+					newVacancyAnnouncement.addPosition(newPosition);
 			}
 			for (ApplicantRatingResult applicantRating : applicantRatings) {
 				if (applicantRating.getAnnouncementNumber().equals(vacancyAnnouncementNumber) && applicantRating.getAnnouncementNumber().equals(newVacancyAnnouncement.getVacancyAnnouncementNumber())) {
@@ -198,7 +199,8 @@ public class RecruitmentReportParser
 				}
 			}
 
-			newVacancyAnnouncement.setCertificateList(certificateMap.get(newVacancyAnnouncement.getVacancyIdentificationNumber()));
+			if(certificateMap.get(newVacancyAnnouncement.getVacancyIdentificationNumber()) != null)
+				newVacancyAnnouncement.setCertificateList(certificateMap.get(newVacancyAnnouncement.getVacancyIdentificationNumber()));
 			vacancyAnnouncementList.add(newVacancyAnnouncement);
 		}
 		return vacancyAnnouncementList;

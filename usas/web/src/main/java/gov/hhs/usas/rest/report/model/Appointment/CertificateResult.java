@@ -28,7 +28,8 @@ public class CertificateResult {
 	@XmlElement(name="Full_Performance_Level")
 	private String fullPerformanceLevel;
 	@XmlElementWrapper(name="Duty_Stations")
-	@XmlElement(name="Duty_Station")
+//	@XmlElement(name="Duty_Station")
+	@XmlElement(name="record")
 	private List<DutyStationResult> dutyStationList;
 	@XmlElement(name="Date_Certificate_Sent_To_SO")
 	private String dateCertificateSentToSO;

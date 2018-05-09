@@ -40,12 +40,14 @@ public class VacancyAnnouncementResult
   @XmlElement(name="Date_Announcement_Cancelled")
   private String dateAnnouncementCancelled;
   @XmlElementWrapper(name="Positions")
-  @XmlElement(name="Position")
+//  @XmlElement(name="Position")
+  @XmlElement(name="record")
   private List<PositionResult> positionList;
   @XmlElement(name="Applicants")
   private ApplicantRatingResult applicants;
   @XmlElementWrapper(name="Certificates")
-  @XmlElement(name="Certificate")
+//  @XmlElement(name="Certificate")
+  @XmlElement(name="record")
   private List<CertificateResult> certificateList;
   
   public VacancyAnnouncementResult()
@@ -240,6 +242,7 @@ public int getVacancyPositionCount()
   public void setPositionList(List<PositionResult> positionList)
   {
     this.positionList = positionList;
+    this.setVacancyPositionCount(this.positionList.size());
   }
   
   public void addPosition(PositionResult newPosition)
@@ -269,6 +272,7 @@ public int getVacancyPositionCount()
   public void setCertificateList(List<CertificateResult> certificate)
   {
     this.certificateList = certificate;
+    this.setVacancyCertificateCount(this.certificateList.size());
   }
   
   public void addCertificate(CertificateResult newCertificate)
