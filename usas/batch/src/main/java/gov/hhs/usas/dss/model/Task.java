@@ -16,7 +16,7 @@ public class Task extends Report {
 	@Value("${task.parm.num}") private int parmNum;
 	@Value("${task.rvp.name}") private String rvpName;
 	@Value("${task.rpt.iteration}") private int rptIteration; 
-	@Value("${task.date.increment}") private int dateIncrement;
+	@Value("${task.date.interval}") private int dateInterval;
 	@Value("${task.end.date}") private String endDate;
 	@Value("${task.truncate}") private String spTruncate;
 	@Value("${task.run.report}") private boolean runReport;
@@ -33,7 +33,7 @@ public class Task extends Report {
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

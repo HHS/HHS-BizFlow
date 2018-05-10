@@ -16,7 +16,7 @@ public class IHSVacancy extends Report {
 	@Value("${ihs.vac.parm.num}") private int parmNum;
 	@Value("${ihs.vac.rvp.name}") private String rvpName;
 	@Value("${ihs.vac.rpt.iteration}") private int rptIteration; 
-	@Value("${ihs.vac.date.increment}") private int dateIncrement;
+	@Value("${ihs.vac.date.interval}") private int dateInterval;
 	@Value("${ihs.vac.end.date}") private String endDate;
 	@Value("${ihs.vac.truncate}") private String spTruncate;
 	@Value("${ihs.vac.run.report}") private boolean runReport;
@@ -33,7 +33,7 @@ public class IHSVacancy extends Report {
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

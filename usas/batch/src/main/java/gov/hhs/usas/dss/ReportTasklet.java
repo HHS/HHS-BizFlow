@@ -52,7 +52,7 @@ public class ReportTasklet extends Report implements Tasklet {
 					rptIteration = this.getRptIteration();
 				}else {
 					//If there is a specified end date range then calculate the date iteration
-					rptIteration = DateRange.generateDateIteration(currentDate, this.getEndDate(), this.getDateIncrement());
+					rptIteration = DateRange.generateDateIteration(currentDate, this.getEndDate(), this.getDateInterval());
 				}
 				
 				if (!Util.isNull(this.getSpTruncate())) {
@@ -64,7 +64,7 @@ public class ReportTasklet extends Report implements Tasklet {
 					if((!(i+1< rptIteration)) && (!Util.isNull(this.getEndDate()))) {
 						DateRange.generateDateRange(currentDate, this.getEndDate());
 					}else {
-						currentDate = DateRange.generateDateRange(currentDate, this.getDateIncrement());
+						currentDate = DateRange.generateDateRange(currentDate, this.getDateInterval());
 					}
 					
 					this.setRvpStartDisplay(DateRange.getStartDisplayVal());;

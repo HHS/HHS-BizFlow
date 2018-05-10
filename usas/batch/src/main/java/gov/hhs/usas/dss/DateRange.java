@@ -59,7 +59,7 @@ public class DateRange {
 		Calendar c = Calendar.getInstance();
 		c.setTime(currentDate);
 		
-		c.add(Calendar.DATE, num);
+		c.add(Calendar.DATE, -num);
 		
 		pastDate = c.getTime();
 		
@@ -99,7 +99,7 @@ public class DateRange {
 		
 		dayDiff = ((currentDate.getTime()- endDate.getTime())/86400000);
 		
-		return (int) Math.ceil((dayDiff/Math.abs(dateIncrement)));
+		return (int) Math.ceil((dayDiff/Math.abs(-dateIncrement)));
 		
 	}
 	
