@@ -19,7 +19,7 @@ public class Announcement extends Report {
 	@Value("${ann.svp.display}") private String svpDisplay;
 	@Value("${ann.rvp.name}") private String rvpName;
 	@Value("${ann.rpt.iteration}") private int rptIteration; 
-	@Value("${ann.date.increment}") private int dateIncrement;
+	@Value("${ann.date.interval}") private int dateInterval;
 	@Value("${ann.end.date}") private String endDate;
 	@Value("${ann.truncate}") private String spTruncate;
 	@Value("${ann.run.report}") private boolean runReport;
@@ -39,7 +39,7 @@ public class Announcement extends Report {
 		super.setSvpDisplay(svpDisplay);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

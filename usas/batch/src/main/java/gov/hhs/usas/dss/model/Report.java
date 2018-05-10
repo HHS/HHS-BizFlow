@@ -30,7 +30,7 @@ public class Report {
 	private static int rptIteration;
 	
 	//the number of days to pull back for each report iteration
-	private static Integer dateIncrement;
+	private static Integer dateInterval;
 	
 	//End date value-- pulls report from current date to end date value
 	private static String endDate;
@@ -145,12 +145,12 @@ public class Report {
 		Report.rptIteration = rptIteration;
 	}
 
-	public static Integer getDateIncrement() {
-		return dateIncrement;
+	public static Integer getDateInterval() {
+		return dateInterval;
 	}
 
-	public static void setDateIncrement(Integer dateIncrement) {
-		Report.dateIncrement = dateIncrement;
+	public static void setDateInterval(Integer dateInterval) {
+		Report.dateInterval = dateInterval;
 	}
 	
 	public static String getEndDate() {

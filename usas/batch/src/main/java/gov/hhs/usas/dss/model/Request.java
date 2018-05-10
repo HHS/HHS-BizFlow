@@ -16,7 +16,7 @@ public class Request extends Report {
 	@Value("${rqst.parm.num}") private int parmNum;
 	@Value("${rqst.rvp.name}") private String rvpName;
 	@Value("${rqst.rpt.iteration}") private int rptIteration; 
-	@Value("${rqst.date.increment}") private int dateIncrement;
+	@Value("${rqst.date.interval}") private int dateInterval;
 	@Value("${rqst.end.date}") private String endDate;
 	@Value("${rqst.truncate}") private String spTruncate;
 	@Value("${rqst.run.report}") private boolean runReport;
@@ -33,7 +33,7 @@ public class Request extends Report {
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

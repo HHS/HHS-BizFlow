@@ -19,7 +19,7 @@ public class Vacancy extends Report {
 	@Value("${vac.svp.display}") private String svpDisplay;
 	@Value("${vac.rvp.name}") private String rvpName;
 	@Value("${vac.rpt.iteration}") private int rptIteration; 
-	@Value("${vac.date.increment}") private int dateIncrement;
+	@Value("${vac.date.interval}") private int dateInterval;
 	@Value("${vac.end.date}") private String endDate;
 	@Value("${vac.truncate}") private String spTruncate;
 	@Value("${vac.run.report}") private boolean runReport;
@@ -39,7 +39,7 @@ public class Vacancy extends Report {
 		super.setSvpDisplay(svpDisplay);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

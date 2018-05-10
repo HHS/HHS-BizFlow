@@ -16,7 +16,7 @@ public class TimeToStaff extends Report {
 	@Value("${staff.parm.num}") private int parmNum;
 	@Value("${staff.rvp.name}") private String rvpName;
 	@Value("${staff.rpt.iteration}") private int rptIteration; 
-	@Value("${staff.date.increment}") private int dateIncrement;
+	@Value("${staff.date.interval}") private int dateInterval;
 	@Value("${staff.end.date}") private String endDate;
 	@Value("${staff.truncate}") private String spTruncate;
 	@Value("${staff.run.report}") private boolean runReport;
@@ -33,7 +33,7 @@ public class TimeToStaff extends Report {
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

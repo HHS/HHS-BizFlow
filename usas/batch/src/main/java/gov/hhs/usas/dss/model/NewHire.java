@@ -16,7 +16,7 @@ public class NewHire extends Report {
 	@Value("${newHire.parm.num}") private int parmNum;
 	@Value("${newHire.rvp.name}") private String rvpName;
 	@Value("${newHire.rpt.iteration}") private int rptIteration; 
-	@Value("${newHire.date.increment}") private int dateIncrement;
+	@Value("${newHire.date.interval}") private int dateInterval;
 	@Value("${newHire.end.date}") private String endDate;
 	@Value("${newHire.truncate}") private String spTruncate;
 	@Value("${newHire.run.report}") private boolean runReport;
@@ -33,7 +33,7 @@ public class NewHire extends Report {
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);
