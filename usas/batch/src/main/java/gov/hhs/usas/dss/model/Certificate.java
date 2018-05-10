@@ -19,7 +19,7 @@ public class Certificate extends Report {
 	@Value("${cert.svp.display}") private String svpDisplay;
 	@Value("${cert.rvp.name}") private String rvpName;
 	@Value("${cert.rpt.iteration}") private int rptIteration; 
-	@Value("${cert.date.increment}") private int dateIncrement;
+	@Value("${cert.date.interval}") private int dateInterval;
 	@Value("${cert.end.date}") private String endDate;
 	@Value("${cert.truncate}") private String spTruncate;
 	@Value("${cert.run.report}") private boolean runReport;
@@ -39,7 +39,7 @@ public class Certificate extends Report {
 		super.setSvpDisplay(svpDisplay);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

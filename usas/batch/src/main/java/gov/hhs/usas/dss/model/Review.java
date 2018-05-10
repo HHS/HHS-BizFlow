@@ -16,7 +16,7 @@ public class Review extends Report {
 	@Value("${rvw.parm.num}") private int parmNum;
 	@Value("${rvw.rvp.name}") private String rvpName;
 	@Value("${rvw.rpt.iteration}") private int rptIteration; 
-	@Value("${rvw.date.increment}") private int dateIncrement;
+	@Value("${rvw.date.interval}") private int dateInterval;
 	@Value("${rvw.end.date}") private String endDate;
 	@Value("${rvw.truncate}") private String spTruncate;
 	@Value("${rvw.run.report}") private boolean runReport;
@@ -33,7 +33,7 @@ public class Review extends Report {
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);

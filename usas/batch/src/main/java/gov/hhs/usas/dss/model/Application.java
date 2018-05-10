@@ -19,7 +19,7 @@ public class Application extends Report {
 	@Value("${app.svp.display}") private String svpDisplay;
 	@Value("${app.rvp.name}") private String rvpName;
 	@Value("${app.rpt.iteration}") private int rptIteration; 
-	@Value("${app.date.increment}") private int dateIncrement;
+	@Value("${app.date.interval}") private int dateInterval;
 	@Value("${app.end.date}") private String endDate;
 	@Value("${app.truncate}") private String spTruncate;
 	@Value("${app.run.report}") private boolean runReport;
@@ -39,7 +39,7 @@ public class Application extends Report {
 		super.setSvpDisplay(svpDisplay);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
-		super.setDateIncrement(dateIncrement);
+		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
 		super.setRunReport(runReport);
