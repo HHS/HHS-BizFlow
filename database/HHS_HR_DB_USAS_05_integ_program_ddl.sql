@@ -2202,6 +2202,10 @@ BEGIN
 			, ANNOUNCEMENT_NUMBER
 			, VACANCY_TYPE
 			, VACANCY_STATUS
+			, JOB_TITLE
+			, PAY_PLAN
+			, SERIES
+			, GRADE
 			, OPEN_DATE
 			, CLOSE_DATE
 			, ANNOUNCEMENT_TYPE
@@ -2221,6 +2225,10 @@ BEGIN
 			, X.ANNOUNCEMENT_NUMBER
 			, X.VACANCY_TYPE
 			, X.VACANCY_STATUS
+			, X.JOB_TITLE
+			, X.PAY_PLAN
+			, X.SERIES
+			, X.GRADE
 			, TO_DATE(SUBSTR(X.OPEN_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS OPEN_DATE
 			, TO_DATE(SUBSTR(X.CLOSE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CLOSE_DATE
 			, X.ANNOUNCEMENT_TYPE
@@ -2243,6 +2251,10 @@ BEGIN
 					, ANNOUNCEMENT_NUMBER         VARCHAR2(56)      PATH 'Announcement__Number'
 					, VACANCY_TYPE                VARCHAR2(1002)    PATH 'Vacancy__Type'
 					, VACANCY_STATUS              VARCHAR2(1002)    PATH 'Vacancy__Status'
+					, JOB_TITLE                 VARCHAR2(202)     PATH 'Vacancy__USAJOBS__Job__Title'
+					, PAY_PLAN                  VARCHAR2(102)     PATH 'Vacancy__Pay__Plan'
+					, SERIES                    VARCHAR2(22)      PATH 'Vacancy__Series'
+					, GRADE                     VARCHAR2(6)       PATH 'Vacancy__Grade'
 					, OPEN_DATE_STR               VARCHAR2(50)      PATH 'Announcement__Open__Date'
 					, CLOSE_DATE_STR              VARCHAR2(50)      PATH 'Announcement__Close__Date'
 					, ANNOUNCEMENT_TYPE           VARCHAR2(24)      PATH 'Announcement__Type'
