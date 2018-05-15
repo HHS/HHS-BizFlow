@@ -2209,7 +2209,6 @@ BEGIN
 			, OPEN_DATE
 			, CLOSE_DATE
 			, ANNOUNCEMENT_TYPE
-			, LOCATION
 			, ANNOUNCEMENT_CTRL_NUMBER
 			, ANNOUNCEMENT_STATUS
 			, IS_RELEASED
@@ -2232,7 +2231,6 @@ BEGIN
 			, TO_DATE(SUBSTR(X.OPEN_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS OPEN_DATE
 			, TO_DATE(SUBSTR(X.CLOSE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CLOSE_DATE
 			, X.ANNOUNCEMENT_TYPE
-			, X.LOCATION
 			, X.ANNOUNCEMENT_CTRL_NUMBER
 			, X.ANNOUNCEMENT_STATUS
 			, X.IS_RELEASED
@@ -2258,7 +2256,6 @@ BEGIN
 					, OPEN_DATE_STR               VARCHAR2(50)      PATH 'Announcement__Open__Date'
 					, CLOSE_DATE_STR              VARCHAR2(50)      PATH 'Announcement__Close__Date'
 					, ANNOUNCEMENT_TYPE           VARCHAR2(24)      PATH 'Announcement__Type'
-					, LOCATION                    VARCHAR2(334)     PATH 'Location'
 					, ANNOUNCEMENT_CTRL_NUMBER    NUMBER(10)        PATH 'Announcement__Control__Number'
 					, ANNOUNCEMENT_STATUS         VARCHAR2(1002)    PATH 'Announcement__Status'
 					, IS_RELEASED                 VARCHAR2(8)       PATH 'Announcement__Is__Released'
@@ -2266,6 +2263,31 @@ BEGIN
 					, LAST_UPDATE_DATE_STR        VARCHAR2(50)      PATH 'Announcement__Last__Update__Date_x002fTime'
 					, REQUEST_CANCEL_DATE_STR     VARCHAR2(50)      PATH 'Request__Cancellation__Date'
 					, REQUEST_CANCEL_REASON       VARCHAR2(2050)    PATH 'Request__Cancellation__Reason'
+			) X
+		WHERE IDX.ID = I_ID;
+		
+		--------------------------------
+		-- DSS_IHS_VAC_ANN_LOCATION table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_IHS_VAC_ANN_LOCATION table');
+		INSERT INTO DSS_IHS_VAC_ANN_LOCATION
+			(REQUEST_NUMBER
+			, VIN
+			, ANNOUNCEMENT_NUMBER
+			, LOCATION)
+		SELECT
+			X.REQUEST_NUMBER
+			, X.VIN
+			, X.ANNOUNCEMENT_NUMBER
+			, X.LOCATION
+		FROM INTG_DATA_DTL IDX
+			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnLocation"]'
+				PASSING IDX.FIELD_DATA
+				COLUMNS
+					REQUEST_NUMBER                VARCHAR2(202)     PATH 'Request__Number'
+					, VIN                         NUMBER(10)        PATH 'Vacancy__Identification__Number'
+					, ANNOUNCEMENT_NUMBER         VARCHAR2(56)      PATH 'Announcement__Number'
+					, LOCATION                    VARCHAR2(334)    PATH 'Location'
 			) X
 		WHERE IDX.ID = I_ID;
 
@@ -2280,7 +2302,9 @@ BEGIN
 			, REVIEW_STATUS
 			, REVIEW_JOA_DATE
 			, REVIEW_JOA_SENT_DATE
-			, REVIEW_JOA_RETURN_DATE)
+			, REVIEW_JOA_RETURN_DATE
+			, IS_ANNOUNCEMENT_TEXT
+			, IS_CERTIFICATE_REVIEW)
 		SELECT
 			X.REQUEST_NUMBER
 			, X.VIN
@@ -2289,6 +2313,8 @@ BEGIN
 			, TO_DATE(SUBSTR(X.REVIEW_JOA_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REVIEW_JOA_DATE
 			, TO_DATE(SUBSTR(X.REVIEW_JOA_SENT_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REVIEW_JOA_SENT_DATE
 			, TO_DATE(SUBSTR(X.REVIEW_JOA_RETURN_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REVIEW_JOA_RETURN_DATE
+			, X.IS_ANNOUNCEMENT_TEXT
+			, X.IS_CERTIFICATE_REVIEW
 		FROM INTG_DATA_DTL IDX
 			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_AnnReviewInfo"]'
 				PASSING IDX.FIELD_DATA
@@ -2300,6 +2326,8 @@ BEGIN
 					, REVIEW_JOA_DATE_STR         VARCHAR2(50)      PATH 'Review__Draft__JOA__Date'
 					, REVIEW_JOA_SENT_DATE_STR    VARCHAR2(50)      PATH 'Review__Draft__JOA__Sent__Date'
 					, REVIEW_JOA_RETURN_DATE_STR  VARCHAR2(50)      PATH 'Review__Draft__JOA__Returned__Date'
+					, IS_ANNOUNCEMENT_TEXT        VARCHAR2(8)       PATH 'Announcement__Review__Is__Announcement__Text'
+					, IS_CERTIFICATE_REVIEW       VARCHAR2(8)       PATH 'Announcement__Review__Is__Certificate__Review'
 			) X
 		WHERE IDX.ID = I_ID;
 
