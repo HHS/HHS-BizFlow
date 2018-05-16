@@ -175,7 +175,10 @@ public class RecruitmentReportParser
 						newVacancyAnnouncement.setDateAnnouncementOpened(vacancyAnnouncement.getDateAnnouncementOpened());
 						newVacancyAnnouncement.setDateAnnouncementPosted(vacancyAnnouncement.getDateAnnouncementPosted());
 						newVacancyAnnouncement.setInterdisciplinaryPosition(vacancyAnnouncement.getInterdisciplinaryPosition());
-						newVacancyAnnouncement.setNumberOfPositionsAdvertised(vacancyAnnouncement.getNumberOfPositionsAdvertised());
+						if(vacancyAnnouncement.getNumberOfPositionsAdvertised().trim().length() == 0)//if the value is blank, add a dash (-)
+							newVacancyAnnouncement.setNumberOfPositionsAdvertised("-");
+						else
+							newVacancyAnnouncement.setNumberOfPositionsAdvertised(vacancyAnnouncement.getNumberOfPositionsAdvertised());
 						newVacancyAnnouncement.setVacancyAnnouncementNumber(vacancyAnnouncement.getVacancyAnnouncementNumber());
 						newVacancyAnnouncement.setVacancyIdentificationNumber(vacancyAnnouncement.getVacancyIdentificationNumber());
 
