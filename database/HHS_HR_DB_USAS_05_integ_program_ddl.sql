@@ -2425,10 +2425,8 @@ BEGIN
 		--DBMS_OUTPUT.PUT_LINE('    DSS_IHS_VAC_NEW_HIRE table');
 		INSERT INTO DSS_IHS_VAC_NEW_HIRE
 			(REQUEST_NUMBER
-			, VIN
 			, NEW_HIRE_NUMBER
 			, NEW_HIRE_STATUS
-			, VACANCY_STATUS
 			, NEW_HIRE_NAME
 			, POSITION_TITLE
 			, DUTY_LOCATION
@@ -2442,10 +2440,8 @@ BEGIN
 			, ARRVL_VERIF_CMPL_DATE)
 		SELECT
 			X.REQUEST_NUMBER
-			, X.VIN
 			, X.NEW_HIRE_NUMBER
 			, X.NEW_HIRE_STATUS
-			, X.VACANCY_STATUS
 			, X.NEW_HIRE_NAME
 			, X.POSITION_TITLE
 			, X.DUTY_LOCATION
@@ -2462,10 +2458,8 @@ BEGIN
 				PASSING IDX.FIELD_DATA
 				COLUMNS
 					REQUEST_NUMBER                    VARCHAR2(202)     PATH 'Request__Number'
-					, VIN                             NUMBER(10)        PATH 'Vacancy__Identification__Number'
 					, NEW_HIRE_NUMBER                 VARCHAR2(22)      PATH 'New__Hire__Number'
 					, NEW_HIRE_STATUS                 VARCHAR2(1002)    PATH 'New__Hire__Status'
-					, VACANCY_STATUS                  VARCHAR2(1002)    PATH 'New__Hire__Vacancy__Status'
 					, NEW_HIRE_NAME                   VARCHAR2(2050)    PATH 'New__Hire__Name'
 					, POSITION_TITLE                  VARCHAR2(2050)    PATH 'Position__Title'
 					, DUTY_LOCATION                   VARCHAR2(2050)    PATH 'Duty__Location'
