@@ -67,6 +67,7 @@ public class BatchConfiguration {
 		return jobBuilderFactory.get("BiisInterfaceJob")
 				.incrementer(new RunIdIncrementer())
 				.listener(jobCompletionlistener)
+				.preventRestart()
 				.start(importEmployeeDataStep()).on("*")
 				.to(importBiisRefDataStep()).on("*")
 				.to(importEHRPRefDataStep())
