@@ -130,7 +130,7 @@ Note: Once the user profile information is imported, BizFlow system administrato
 
 		mkdir -p <server_dir>/biis/
 
-1. Copy the module JAR file and its dependent library JAR files.
+1. Copy the module JAR file, configuration files, and shell script files.
 
 	* From (build machine):
 		* biis/dist/*
@@ -228,7 +228,7 @@ This is a batch job module as opposed to web application.  Therefore, it should 
 
 		mkdir -p <server_dir>/usas/
 
-1. Copy the module JAR file and its dependent library JAR files.
+1. Copy the module JAR file, configuration files, and shell script files.
 
 	* From (build machine):
 		* usas/batch/dist/*
