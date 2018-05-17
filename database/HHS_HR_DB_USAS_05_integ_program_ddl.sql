@@ -2431,6 +2431,9 @@ BEGIN
 			, POSITION_TITLE
 			, DUTY_LOCATION
 			, PAYPLAN_SERIES_GRADE
+			, PAY_PLAN
+			, SERIES
+			, GRADE
 			, SEND_TENT_OFFR_CMPL_DATE
 			, SEND_OFCL_OFFR_CMPL_DATE
 			, EFFECTIVE_DATE
@@ -2446,6 +2449,9 @@ BEGIN
 			, X.POSITION_TITLE
 			, X.DUTY_LOCATION
 			, X.PAYPLAN_SERIES_GRADE
+			, X.PAY_PLAN
+			, X.SERIES
+			, X.GRADE
 			, TO_DATE(SUBSTR(X.SEND_TENT_OFFR_CMPL_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS SEND_TENT_OFFR_CMPL_DATE
 			, TO_DATE(SUBSTR(X.SEND_OFCL_OFFR_CMPL_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS SEND_OFCL_OFFR_CMPL_DATE
 			, TO_DATE(SUBSTR(X.EFFECTIVE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS EFFECTIVE_DATE
@@ -2464,6 +2470,9 @@ BEGIN
 					, POSITION_TITLE                  VARCHAR2(2050)    PATH 'Position__Title'
 					, DUTY_LOCATION                   VARCHAR2(2050)    PATH 'Duty__Location'
 					, PAYPLAN_SERIES_GRADE            VARCHAR2(1000)    PATH 'Pay__Plan_x002dSeries_x002dGrade'
+					, PAY_PLAN                        VARCHAR2(102)     PATH 'New__Hire__Pay__Plan'
+					, SERIES                          VARCHAR2(22)      PATH 'New__Hire__Series'
+					, GRADE                           VARCHAR2(6)       PATH 'New__Hire__Grade'
 					, SEND_TENT_OFFR_CMPL_DATE_STR    VARCHAR2(50)      PATH 'Send__Tentative__Offer__Complete__Date'
 					, SEND_OFCL_OFFR_CMPL_DATE_STR    VARCHAR2(50)      PATH 'Send__Official__Offer__Complete__Date'
 					, EFFECTIVE_DATE_STR              VARCHAR2(50)      PATH 'Effective__Date'
