@@ -978,6 +978,28 @@ IS
 
 	TBL_JO_APPR_COMM TYP_JO_APPR_COMM;
 
+--------------------------------------------------------
+--CURSOR: CUR_OPR_DEFN
+--DESCRIPTION: Fetches records from the EHRP
+-- PSOPRDEFN
+--------------------------------------------------------
+CURSOR CUR_OPR_DEFN
+IS
+	SELECT
+		OPRID
+		, VERSION
+		, OPRDEFNDESC
+		, EMPLID
+		, EMAILID
+		, OPRCLASS
+		, ROWSECCLASS
+	FROM EHRP.PSOPRDEFN@BIIS_DBLINK;
+
+	TYPE TYP_OPR_DEFN IS TABLE OF CUR_OPR_DEFN%ROWTYPE
+		INDEX BY PLS_INTEGER;
+
+	TBL_OPR_DEFN TYP_OPR_DEFN;
+
 --======================================================
 -- - - -- - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1495,6 +1517,34 @@ EXCEPTION
 		SINGLE_LOGGER();
 END INSERT_EHRP_PS_HE_JO_APPR_COMM;
 
+-------------------------------------------------------------
+--PROCEDURE: INSERT_EHRP_PS_OPR_DEFN
+--DESCRIPTION : Inserts new records into
+-- PS_OPR_DEFN table
+-------------------------------------------------------------
+PROCEDURE INSERT_EHRP_PS_OPR_DEFN
+AS
+BEGIN
+	EXECUTE IMMEDIATE 'TRUNCATE TABLE PS_OPR_DEFN';
+	OPEN CUR_OPR_DEFN;
+	LOOP
+		FETCH CUR_OPR_DEFN
+		BULK COLLECT INTO TBL_OPR_DEFN
+		LIMIT GCV_LIMIT;
+		
+		FORALL i IN  TBL_OPR_DEFN.FIRST..TBL_OPR_DEFN.LAST SAVE EXCEPTIONS
+			INSERT INTO PS_OPR_DEFN VALUES TBL_OPR_DEFN(i);
+		COMMIT;
+			
+		EXIT WHEN CUR_OPR_DEFN%NOTFOUND;
+	END LOOP;
+	CLOSE CUR_OPR_DEFN;
+	--CATCH EXCEPTIONS
+EXCEPTION
+	WHEN OTHERS THEN
+		SINGLE_LOGGER();
+END INSERT_EHRP_PS_OPR_DEFN;
+
 ----------------------------------------------------------------
 --PROCEDURE: FN_IMPORT_EHRP_REF_DATA
 --DESCRIPTION : Entry point for this package,calls individual 
@@ -1522,6 +1572,7 @@ BEGIN
 	INSERT_EHRP_PS_GVT_RQSN_POSN();
 	INSERT_EHRP_PS_HE_GVT_RQSN_PRT();
 	INSERT_EHRP_PS_HE_JO_APPR_COMM();
+	INSERT_EHRP_PS_OPR_DEFN();
 RETURN ERROR_LOG();
 END FN_IMPORT_EHRP_REF_DATA;
 
