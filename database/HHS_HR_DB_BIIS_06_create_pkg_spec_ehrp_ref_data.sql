@@ -112,6 +112,13 @@ PROCEDURE INSERT_EHRP_PS_HE_GVT_RQSN_PRT;
 -------------------------------------------------------------
 PROCEDURE INSERT_EHRP_PS_HE_JO_APPR_COMM;
 
+-------------------------------------------------------------
+--PROCEDURE: INSERT_EHRP_PS_OPR_DEFN
+--DESCRIPTION : Inserts new records into
+-- PS_OPR_DEFN table
+-------------------------------------------------------------
+PROCEDURE INSERT_EHRP_PS_OPR_DEFN;
+
 --------------------------------------------------------
 --PROCEDURE: FN_IMPORT_REF_DATA
 --DESCRIPTION: FN_IMPORT_REF_DATA will be called by spring batch, which will call individual procedures in the package.
