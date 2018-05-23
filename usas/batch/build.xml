@@ -130,6 +130,7 @@
 				<include name="report.properties" />
 			</fileset>
 		</copy>
+		<!-- In separate directory deployment approach, logback.xml is placed in ../conf execution directory. -->
 		<replace file="${dist.dir}/conf/application.properties">
 			<replacefilter>
 				<replacetoken>logging.config=logback.xml</replacetoken>
