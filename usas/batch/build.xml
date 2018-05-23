@@ -125,6 +125,7 @@
 		<copy todir="${dist.dir}/conf">
 			<fileset dir="${src.main.res.dir}">
 				<include name="application.properties" />
+				<include name="logback.xml" />
 				<include name="log4j.properties" />
 				<include name="report.properties" />
 			</fileset>
@@ -152,6 +153,7 @@
 		<copy todir="${dist.dir}">
 			<fileset dir="${src.main.res.dir}">
 				<include name="application.properties" />
+				<include name="logback.xml" />
 				<include name="log4j.properties" />
 				<include name="report.properties" />
 			</fileset>
