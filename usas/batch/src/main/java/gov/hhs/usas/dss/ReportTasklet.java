@@ -1,5 +1,6 @@
 package gov.hhs.usas.dss;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.sql.DataSource;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import gov.hhs.usas.dss.ReportGeneration;
 import gov.hhs.usas.dss.DateRange;
 import gov.hhs.usas.dss.model.Report;
+import gov.hhs.usas.dss.Util;
 
 
 @Component
@@ -36,16 +38,22 @@ public class ReportTasklet extends Report implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
 		String reportXml;
+		Date sysDate;
 		Date currentDate;
+		Calendar c;
 		int rptIteration;
 		long start;
 		long time;
-				
+		
 		try {			
 			if (this.isRunReport()) {
 				start = System.currentTimeMillis();
 				
-				currentDate = new Date();
+				sysDate = new Date();
+				c = Calendar.getInstance();
+				c.setTime(sysDate);
+				c.add(Calendar.DATE, 1);
+				currentDate = c.getTime();
 
 				if (Util.isNull(this.getEndDate())) {
 					//If there is no specified end date range then use the default report iteration
