@@ -125,10 +125,28 @@
 		<copy todir="${dist.dir}/conf">
 			<fileset dir="${src.main.res.dir}">
 				<include name="application.properties" />
+				<include name="logback.xml" />
 				<include name="log4j.properties" />
 				<include name="report.properties" />
 			</fileset>
 		</copy>
+		<!-- In separate directory deployment approach, logback.xml is placed in ../conf execution directory. -->
+		<replace file="${dist.dir}/conf/application.properties">
+			<replacefilter>
+				<replacetoken>logging.config=logback.xml</replacetoken>
+				<replacevalue>logging.config=../conf/logback.xml</replacevalue>
+			</replacefilter>
+		</replace>
+		<!-- In separate directory deployment approach, logback.xml is searched in classpath,
+			and the log directory is created from the current execution directory (i.e. bin).  
+			In such case, the log directory is created as bin/logs.  
+			Therefore, add parent directory in from of log path. -->
+		<replace file="${dist.dir}/conf/logback.xml">
+			<replacefilter>
+				<replacetoken><![CDATA[name="LOG_PATH" value="logs"]]></replacetoken>
+				<replacevalue><![CDATA[name="LOG_PATH" value="../logs"]]></replacevalue>
+			</replacefilter>
+		</replace>
 
 		<copy todir="${dist.dir}/lib">
 			<fileset dir="${lib.dir}">
@@ -152,6 +170,7 @@
 		<copy todir="${dist.dir}">
 			<fileset dir="${src.main.res.dir}">
 				<include name="application.properties" />
+				<include name="logback.xml" />
 				<include name="log4j.properties" />
 				<include name="report.properties" />
 			</fileset>
