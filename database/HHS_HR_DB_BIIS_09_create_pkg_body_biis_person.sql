@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY HHS_HR.BIIS_PERSON AS 
+CREATE OR REPLACE PACKAGE BODY HHS_HR.BIIS_PERSON AS
 
 --======================================================
 --  - - -   - - - - - - - - - - - - - - - - - - - - - - 
@@ -298,10 +298,6 @@ BEGIN
 								WHEN I_TBL_MEM(i).LOGINID IS NOT NULL THEN I_TBL_MEM(i).LOGINID
 								ELSE LOGINID
 							END,
-				STATE =     CASE
-								WHEN I_TBL_MEM(i).STATE IS NOT NULL THEN I_TBL_MEM(i).STATE
-								ELSE STATE
-							END,
 				SHORTNAME = CASE
 								WHEN I_TBL_MEM(i).SHORTNAME IS NOT NULL THEN I_TBL_MEM(i).SHORTNAME
 								ELSE SHORTNAME
@@ -579,7 +575,6 @@ BEGIN
 
 END;
 
-
 --------------------------------------------------------
 --PROCEDURE: SP_PROCESS_MEMBER
 --DESCRIPTION:
@@ -627,7 +622,7 @@ BEGIN
 			V_LOGINID_CACHE(I_TBL_USERS(j).LOGINID).MEMBERID           := I_TBL_USERS(j).MEMBERID;
 			V_LOGINID_CACHE(I_TBL_USERS(j).LOGINID).MEMINFO_REC_IND    := I_TBL_USERS(j).MEMINFO_REC_IND;
 
-			--Check if there is an active member record that is not on the staging table
+			/*--Check if there is an active member record that is not on the staging table
 			--The record needs to be made inactive on the member table
 			IF I_TBL_USERS(j).ACTV_STG_REC_IND = GCV_NO 
 			AND I_TBL_USERS(j).STATE = GCV_ACTIVE_STATE 
@@ -636,95 +631,98 @@ BEGIN
 				--Adds records into a collection
 				V_TBL_UPDT_MEM(V_TBL_UPDT_MEM.COUNT)   := V_REC_MEM;
 				V_TBL_HST(V_TBL_HST.COUNT)             := V_REC_HST;
-			END IF;
+			END IF; */
 		END LOOP;
 	END IF;
 	--Loop through staging table
 	FOR i IN I_TBL_STG.FIRST..I_TBL_STG.LAST LOOP
-		IF (I_TBL_STG(i).DEPTNAME = GCV_CMS AND GV_CMS_DEPTID IS NOT NULL)
-		OR (I_TBL_STG(i).DEPTNAME = GCV_CDC AND GV_CDC_DEPTID IS NOT NULL)
-		OR (I_TBL_STG(i).DEPTNAME = GCV_IHS AND GV_IHS_DEPTID IS NOT NULL)
-		OR (I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA) AND GV_WHRSC_DEPTID IS NOT NULL) THEN
-			IF I_TBL_STG(i).EXCLUDE_RECORD = GCV_NO THEN
-				--Use the HHSID to check if a member record already exists for an employee
-				IF V_TBL_USR_CACHE.COUNT > 0
-				AND V_TBL_USR_CACHE.EXISTS(I_TBL_STG(i).HHSID) THEN
-					IF NOT V_TBL_UPDT_CACHE.EXISTS(I_TBL_STG(i).HHSID) THEN
-						--Create collections to update member
-						SP_CHECK_MEMBER(I_TBL_STG(i), V_TBL_USR_CACHE(I_TBL_STG(i).HHSID), V_TBL_UPDT_MEM, V_TBL_HST);
-						
-						--Add collection to update cache to prevent overwriting updates with older records
-						V_TBL_UPDT_CACHE(I_TBL_STG(i).HHSID).HHSID := I_TBL_STG(i).HHSID;
-					END IF;
+		IF I_TBL_STG(i).EXCLUDE_RECORD = GCV_NO THEN
+			--Use the HHSID to check if a member record already exists for an employee
+			IF V_TBL_USR_CACHE.COUNT > 0
+			AND V_TBL_USR_CACHE.EXISTS(I_TBL_STG(i).HHSID)
+			AND ((I_TBL_STG(i).DEPTNAME = GCV_CMS AND GV_CMS_DEPTID IS NOT NULL)
+			OR (I_TBL_STG(i).DEPTNAME = GCV_CDC AND GV_CDC_DEPTID IS NOT NULL)
+			OR (I_TBL_STG(i).DEPTNAME = GCV_IHS AND GV_IHS_DEPTID IS NOT NULL)
+			OR (I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA) AND GV_WHRSC_DEPTID IS NOT NULL)) THEN
+				IF NOT V_TBL_UPDT_CACHE.EXISTS(I_TBL_STG(i).HHSID) THEN
+					--Create collections to update member
+					SP_CHECK_MEMBER(I_TBL_STG(i), V_TBL_USR_CACHE(I_TBL_STG(i).HHSID), V_TBL_UPDT_MEM, V_TBL_HST);
 					
-				--Member record exists without a HHSID. Add the HHSID to the MEMBERINFO table
-				ELSIF V_LOGINID_CACHE.EXISTS(I_TBL_STG(i).EMAIL) 
-				AND NOT V_TBL_USR_CACHE.EXISTS(I_TBL_STG(i).HHSID) THEN
-				
-					SP_ADD_HHSID(I_TBL_STG(i), V_LOGINID_CACHE(I_TBL_STG(i).EMAIL), V_TBL_INS_INFO, V_TBL_UPDT_INFO);
-				
-				--Member record does not exist for an active employee; A new record will be inserted into the MEMBER table
-				ELSIF NOT V_TBL_INS_CACHE.EXISTS(I_TBL_STG(i).HHSID) THEN
-				
-					-- Generate ID for new user
-					BIZFLOW.SP_GET_ID(GCV_SVRID, 'MemberID', 1, V_NEWID);
-					V_MEMBERID  := LPAD(TO_CHAR(V_NEWID), 10, '0');
-			
-					V_MEM_IDX   := V_TBL_INS_MEM.COUNT;
-					V_INFO_IDX  := V_TBL_INS_INFO.COUNT;
-					V_HST_IDX   := V_TBL_HST.COUNT;
-					
-					--Create collection to insert a new member
-					V_TBL_INS_MEM(V_MEM_IDX).MEMBERID   := V_MEMBERID;
-					V_TBL_INS_MEM(V_MEM_IDX).TYPE       := GCV_TYPE_USER;
-					V_TBL_INS_MEM(V_MEM_IDX).STATE      := GCV_ACTIVE_STATE;
-					V_TBL_INS_MEM(V_MEM_IDX).NAME       := SUBSTR(I_TBL_STG(i).LASTNAME || ', ' || I_TBL_STG(i).FIRSTNAME || ' ' || SUBSTR(I_TBL_STG(i).MIDDLENAME, 0, 1), 1, 100);
-					V_TBL_INS_MEM(V_MEM_IDX).LOGINID    := SUBSTR(I_TBL_STG(i).EMAIL, 1, 100);
-					V_TBL_INS_MEM(V_MEM_IDX).SVRID      := GCV_SVRID;
-					V_TBL_INS_MEM(V_MEM_IDX).DEPTID     :=  CASE
-																WHEN I_TBL_STG(i).DEPTNAME = GCV_CMS
-																THEN GV_CMS_DEPTID
-																WHEN I_TBL_STG(i).DEPTNAME = GCV_CDC
-																THEN GV_CDC_DEPTID
-																WHEN I_TBL_STG(i).DEPTNAME = GCV_IHS
-																THEN GV_IHS_DEPTID
-																WHEN I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA)
-																THEN GV_WHRSC_DEPTID
-															END;
-					V_TBL_INS_MEM(V_MEM_IDX).DEPTNAME   :=  CASE
-																WHEN I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA)
-																THEN GCV_WHRSC_OU
-																ELSE I_TBL_STG(i).DEPTNAME
-															END;
-					V_TBL_INS_MEM(V_MEM_IDX).SHORTNAME  := SUBSTR(I_TBL_STG(i).LASTNAME || ', ' || I_TBL_STG(i).FIRSTNAME || ' ' || SUBSTR(I_TBL_STG(i).MIDDLENAME, 0, 1), 1, 30);
-					V_TBL_INS_MEM(V_MEM_IDX).EMAIL      := SUBSTR(I_TBL_STG(i).EMAIL, 1, 100);
-					V_TBL_INS_MEM(V_MEM_IDX).MANAGERID  := GCV_MANAGERID;
-					V_TBL_INS_MEM(V_MEM_IDX).PASSWD     :=  CASE
-																WHEN I_TBL_STG(i).DEPTNAME = GCV_CMS
-																THEN GCV_CMS_PASSWD
-																WHEN I_TBL_STG(i).DEPTNAME = GCV_CDC
-																THEN GCV_CDC_PASSWD
-																WHEN I_TBL_STG(i).DEPTNAME = GCV_IHS
-																THEN GCV_IHS_PASSWD
-																WHEN I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA)
-																THEN GCV_WHRSC_PASSWD
-															END;
-					
-					--Create collection to insert into memberinfo
-					V_TBL_INS_INFO(V_INFO_IDX).MEMBERID := V_MEMBERID;
-					V_TBL_INS_INFO(V_INFO_IDX).CUSTOMB  := I_TBL_STG(i).HHSID;
-					
-					--Create collection to insert into memberhistory
-					V_TBL_HST(V_HST_IDX).HISTORYID  := MEMBERHISTORY_SEQ.NEXTVAL;
-					V_TBL_HST(V_HST_IDX).CHANGEDATE := SYSDATE;
-					V_TBL_HST(V_HST_IDX).MEMBERID   := V_MEMBERID;
-					V_TBL_HST(V_HST_IDX).HHSID      := I_TBL_STG(i).HHSID;
-					V_TBL_HST(V_HST_IDX).OPDIV      := V_TBL_INS_MEM(V_MEM_IDX).DEPTNAME;
-					V_TBL_HST(V_HST_IDX).DMLTYPE    := GCV_INSERT;
-					
-					--Add collection to insert cache to prevent duplicate inserted entries
-					V_TBL_INS_CACHE(V_TBL_INS_INFO(V_INFO_IDX).CUSTOMB).HHSID := V_TBL_INS_INFO(V_INFO_IDX).CUSTOMB;
+					--Add collection to update cache to prevent overwriting updates with older records
+					V_TBL_UPDT_CACHE(I_TBL_STG(i).HHSID).HHSID := I_TBL_STG(i).HHSID;
 				END IF;
+				
+			--Member record exists without a HHSID. Add the HHSID to the MEMBERINFO table
+			ELSIF V_LOGINID_CACHE.EXISTS(I_TBL_STG(i).EMAIL) 
+			AND NOT V_TBL_USR_CACHE.EXISTS(I_TBL_STG(i).HHSID) THEN
+			
+				SP_ADD_HHSID(I_TBL_STG(i), V_LOGINID_CACHE(I_TBL_STG(i).EMAIL), V_TBL_INS_INFO, V_TBL_UPDT_INFO);
+			
+			--Member record does not exist for an active employee; A new record will be inserted into the MEMBER table
+			ELSIF NOT V_TBL_INS_CACHE.EXISTS(I_TBL_STG(i).HHSID) 
+			AND ((I_TBL_STG(i).DEPTNAME = GCV_CMS AND GV_CMS_DEPTID IS NOT NULL)
+			OR (I_TBL_STG(i).DEPTNAME = GCV_CDC AND GV_CDC_DEPTID IS NOT NULL)
+			OR (I_TBL_STG(i).DEPTNAME = GCV_IHS AND GV_IHS_DEPTID IS NOT NULL)
+			OR (I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA) AND GV_WHRSC_DEPTID IS NOT NULL)) THEN
+			
+				-- Generate ID for new user
+				BIZFLOW.SP_GET_ID(GCV_SVRID, 'MemberID', 1, V_NEWID);
+				V_MEMBERID  := LPAD(TO_CHAR(V_NEWID), 10, '0');
+		
+				V_MEM_IDX   := V_TBL_INS_MEM.COUNT;
+				V_INFO_IDX  := V_TBL_INS_INFO.COUNT;
+				V_HST_IDX   := V_TBL_HST.COUNT;
+				
+				--Create collection to insert a new member
+				V_TBL_INS_MEM(V_MEM_IDX).MEMBERID   := V_MEMBERID;
+				V_TBL_INS_MEM(V_MEM_IDX).TYPE       := GCV_TYPE_USER;
+				V_TBL_INS_MEM(V_MEM_IDX).STATE      := GCV_ACTIVE_STATE;
+				V_TBL_INS_MEM(V_MEM_IDX).NAME       := SUBSTR(I_TBL_STG(i).LASTNAME || ', ' || I_TBL_STG(i).FIRSTNAME || ' ' || SUBSTR(I_TBL_STG(i).MIDDLENAME, 0, 1), 1, 100);
+				V_TBL_INS_MEM(V_MEM_IDX).LOGINID    := SUBSTR(I_TBL_STG(i).EMAIL, 1, 100);
+				V_TBL_INS_MEM(V_MEM_IDX).SVRID      := GCV_SVRID;
+				V_TBL_INS_MEM(V_MEM_IDX).DEPTID     :=  CASE
+															WHEN I_TBL_STG(i).DEPTNAME = GCV_CMS
+															THEN GV_CMS_DEPTID
+															WHEN I_TBL_STG(i).DEPTNAME = GCV_CDC
+															THEN GV_CDC_DEPTID
+															WHEN I_TBL_STG(i).DEPTNAME = GCV_IHS
+															THEN GV_IHS_DEPTID
+															WHEN I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA)
+															THEN GV_WHRSC_DEPTID
+														END;
+				V_TBL_INS_MEM(V_MEM_IDX).DEPTNAME   :=  CASE
+															WHEN I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA)
+															THEN GCV_WHRSC_OU
+															ELSE I_TBL_STG(i).DEPTNAME
+														END;
+				V_TBL_INS_MEM(V_MEM_IDX).SHORTNAME  := SUBSTR(I_TBL_STG(i).LASTNAME || ', ' || I_TBL_STG(i).FIRSTNAME || ' ' || SUBSTR(I_TBL_STG(i).MIDDLENAME, 0, 1), 1, 30);
+				V_TBL_INS_MEM(V_MEM_IDX).EMAIL      := SUBSTR(I_TBL_STG(i).EMAIL, 1, 100);
+				V_TBL_INS_MEM(V_MEM_IDX).MANAGERID  := GCV_MANAGERID;
+				V_TBL_INS_MEM(V_MEM_IDX).PASSWD     :=  CASE
+															WHEN I_TBL_STG(i).DEPTNAME = GCV_CMS
+															THEN GCV_CMS_PASSWD
+															WHEN I_TBL_STG(i).DEPTNAME = GCV_CDC
+															THEN GCV_CDC_PASSWD
+															WHEN I_TBL_STG(i).DEPTNAME = GCV_IHS
+															THEN GCV_IHS_PASSWD
+															WHEN I_TBL_STG(i).DEPTNAME IN (GCV_OS,GCV_ACF,GCV_ACL,GCV_AHRQ,GCV_PSC,GCV_SAMHSA)
+															THEN GCV_WHRSC_PASSWD
+														END;
+				
+				--Create collection to insert into memberinfo
+				V_TBL_INS_INFO(V_INFO_IDX).MEMBERID := V_MEMBERID;
+				V_TBL_INS_INFO(V_INFO_IDX).CUSTOMB  := I_TBL_STG(i).HHSID;
+				
+				--Create collection to insert into memberhistory
+				V_TBL_HST(V_HST_IDX).HISTORYID  := MEMBERHISTORY_SEQ.NEXTVAL;
+				V_TBL_HST(V_HST_IDX).CHANGEDATE := SYSDATE;
+				V_TBL_HST(V_HST_IDX).MEMBERID   := V_MEMBERID;
+				V_TBL_HST(V_HST_IDX).HHSID      := I_TBL_STG(i).HHSID;
+				V_TBL_HST(V_HST_IDX).OPDIV      := V_TBL_INS_MEM(V_MEM_IDX).DEPTNAME;
+				V_TBL_HST(V_HST_IDX).DMLTYPE    := GCV_INSERT;
+				
+				--Add collection to insert cache to prevent duplicate inserted entries
+				V_TBL_INS_CACHE(V_TBL_INS_INFO(V_INFO_IDX).CUSTOMB).HHSID := V_TBL_INS_INFO(V_INFO_IDX).CUSTOMB;
 			END IF;
 		END IF;
 	END LOOP;
