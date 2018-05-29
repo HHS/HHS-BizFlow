@@ -119,6 +119,11 @@ IS
 			M.DEPTID,
 			M.STATE,
 			I.CUSTOMB AS HHSID,
+			CASE WHEN STG.ROWID IS NOT NULL
+				AND M.STATE = 'N'
+				THEN 'Y'
+				ELSE 'N'
+			END AS ACTV_STG_REC_IND,
 			CASE WHEN I.ROWID IS NOT NULL
 				THEN 'Y'
 				ELSE 'N'
@@ -212,6 +217,17 @@ PROCEDURE SP_ADD_HHSID
 	I_REC_USERS         IN CUR_USERS%ROWTYPE,
 	IO_TBL_INS_INFO     IN OUT TYP_MEMBERINFO,
 	IO_TBL_UPDT_INFO    IN OUT TYP_MEMBERINFO);
+
+--------------------------------------------------------
+--PROCEDURE: SP_INACTIVATE_MEMBER
+--DESCRIPTION: There is an existing member, but it is 
+-- no longer active on the staging table. Inactive the member
+-- record
+--------------------------------------------------------
+PROCEDURE SP_INACTIVATE_MEMBER
+	(I_REC_USERS    IN CUR_USERS%ROWTYPE,
+	O_REC_MEM       OUT BIZFLOW.MEMBER%ROWTYPE,
+	O_REC_HST       OUT MEMBERHISTORY%ROWTYPE);
 
 --------------------------------------------------------
 --PROCEDURE: SP_PROCESS_MEMBER
