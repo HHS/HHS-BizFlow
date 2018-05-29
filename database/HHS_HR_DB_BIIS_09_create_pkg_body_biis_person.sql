@@ -547,6 +547,35 @@ BEGIN
 END;
 
 --------------------------------------------------------
+--PROCEDURE: SP_INACTIVATE_MEMBER
+--DESCRIPTION: There is an existing member, but it is 
+-- no longer active on the staging table. Inactive the member
+-- record
+--------------------------------------------------------
+PROCEDURE SP_INACTIVATE_MEMBER
+	(I_REC_USERS    IN CUR_USERS%ROWTYPE,
+	O_REC_MEM       OUT BIZFLOW.MEMBER%ROWTYPE,
+	O_REC_HST       OUT MEMBERHISTORY%ROWTYPE)
+IS
+BEGIN
+
+	--Change member active status to inactive
+	O_REC_MEM.MEMBERID  := I_REC_USERS.MEMBERID;
+	O_REC_MEM.STATE     := GCV_INACTIVE_STATE;
+
+	O_REC_HST.HISTORYID     := MEMBERHISTORY_SEQ.NEXTVAL;
+	O_REC_HST.CHANGEDATE    := SYSDATE;
+	O_REC_HST.MEMBERID      := I_REC_USERS.MEMBERID;
+	O_REC_HST.HHSID         := I_REC_USERS.HHSID;
+	O_REC_HST.OPDIV         := I_REC_USERS.DEPTNAME;
+	O_REC_HST.DMLTYPE       := GCV_UPDATE;
+	O_REC_HST.FIELDCHANGED  := GCV_STATE;
+	O_REC_HST.OLDVALUE      := I_REC_USERS.STATE;
+	O_REC_HST.NEWVALUE      := O_REC_MEM.STATE;
+
+END;
+
+--------------------------------------------------------
 --PROCEDURE: SP_PROCESS_MEMBER
 --DESCRIPTION:
 --------------------------------------------------------
@@ -585,6 +614,7 @@ BEGIN
 				V_TBL_USR_CACHE(I_TBL_USERS(j).HHSID).DEPTID                := I_TBL_USERS(j).DEPTID;
 				V_TBL_USR_CACHE(I_TBL_USERS(j).HHSID).STATE                 := I_TBL_USERS(j).STATE;
 				V_TBL_USR_CACHE(I_TBL_USERS(j).HHSID).HHSID                 := I_TBL_USERS(j).HHSID;
+				V_TBL_USR_CACHE(I_TBL_USERS(j).HHSID).ACTV_STG_REC_IND      := I_TBL_USERS(j).ACTV_STG_REC_IND;
 			END IF;
 
 			--Create a cache collection, indexed on the loginid
@@ -592,6 +622,16 @@ BEGIN
 			V_LOGINID_CACHE(I_TBL_USERS(j).LOGINID).MEMBERID           := I_TBL_USERS(j).MEMBERID;
 			V_LOGINID_CACHE(I_TBL_USERS(j).LOGINID).MEMINFO_REC_IND    := I_TBL_USERS(j).MEMINFO_REC_IND;
 
+			/*--Check if there is an active member record that is not on the staging table
+			--The record needs to be made inactive on the member table
+			IF I_TBL_USERS(j).ACTV_STG_REC_IND = GCV_NO 
+			AND I_TBL_USERS(j).STATE = GCV_ACTIVE_STATE 
+			AND I_TBL_USERS(j).HHSID IS NOT NULL THEN 
+				SP_INACTIVATE_MEMBER(I_TBL_USERS(j), V_REC_MEM, V_REC_HST);
+				--Adds records into a collection
+				V_TBL_UPDT_MEM(V_TBL_UPDT_MEM.COUNT)   := V_REC_MEM;
+				V_TBL_HST(V_TBL_HST.COUNT)             := V_REC_HST;
+			END IF; */
 		END LOOP;
 	END IF;
 	--Loop through staging table
