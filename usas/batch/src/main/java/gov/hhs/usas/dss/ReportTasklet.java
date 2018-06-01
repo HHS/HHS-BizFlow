@@ -83,6 +83,7 @@ public class ReportTasklet extends Report implements Tasklet {
 					reportXml = ReportGeneration.generateReport(this);
 					
 					if(!Util.isNull(reportXml)) {
+						log.info("The report " + this.getFileName() + " retrieved data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
 						if (saveReportFile) {
 							ReportGeneration.saveReportFile(this, reportXml);
 						}
