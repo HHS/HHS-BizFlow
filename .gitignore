@@ -1,6 +1,10 @@
 *.class
 *.log
+**/.setting
+**/.project
+**/.classpath
+**/.sts4-cache/**
 **/build/**
 **/dist/**
 **/target/**
-usastaff/repo/**
+**/repo/**

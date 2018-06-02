@@ -27,7 +27,7 @@ public class JDBCConn
 			System.out.println("\t <dbms> : Database Management System, e.g. oracle, sqlserver, mysql");
 			System.out.println("\t <db_host> : Database Host (DNS name or IP address)");
 			System.out.println("\t <db_port> : Database Port Number, e.g. 1521, 1433, 3306");
-			System.out.println("\t <db_id> : Database Name.  For Oracle, SID or Service Name., e.g. oracle, sqlserver, mysql");
+			System.out.println("\t <db_id> : Database Name.  For Oracle, SID or Service Name.");
 			System.out.println("\t\t For Oracle, SID or Service Name.");
 			System.out.println("\t\t\t To specify SID, start the string with \":\", e.g. :orcl");
 			System.out.println("\t\t\t To specify Service Name, start the string with \"/\", e.g. /orcl.db.srv");
@@ -53,7 +53,7 @@ public class JDBCConn
 		}
 		else if (dbms.equals("sqlserver"))
 		{
-			jdbcDriver = "";
+			jdbcDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 		}
 		else if (dbms.equals("mysql"))
 		{
