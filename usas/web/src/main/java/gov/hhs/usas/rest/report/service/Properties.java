@@ -20,14 +20,18 @@ public class Properties {
 	private String reportDataPath;
 
 	//Report Properties
-	@Value("${report.id.recruitment}")
-	private String recruitmentReportID;
-	@Value("${report.id.appointment}")
-	private String appointmentReportID;
-	@Value("${report.id.applicant-roster}")
-	private String applicantRosterReportID;
-	@Value("${report.id.applicant-notification}")
-	private String applicantNotificationReportID;
+	@Value("${report.prompt.id}")
+	private String reportPrompt;
+	
+	@Value("${report.path.recruitment}")
+	private String recruitmentReportPath;
+	@Value("${report.path.appointment}")
+	private String appointmentReportPath;
+	@Value("${report.path.applicant-roster}")
+	private String applicantRosterReportPath;
+	@Value("${report.path.applicant-notification}")
+	private String applicantNotificationReportPath;
+	
 	@Value("${report.name.recruitment}")
 	private String recruitmentReportName;
 	@Value("${report.name.appointment}")
@@ -44,14 +48,14 @@ public class Properties {
 	private String reportFormatHTML;
 
 	//Authentication properties
-	@Value("${credentials.namespace}")
+	@Value("${cognos.namespace}")
 	private String NameSpace;
-	@Value("${credentials.username}")
+	@Value("${cognos.username}")
 	private String UserName;
-	@Value("${credentials.password}")
+	@Value("${cognos.password}")
 	private String Password;
 
-	@Value("${server.url}")
+	@Value("${cognos.url}")
 	private String serverURL;
 	@Value("${request.user.agent.property}")
 	private String userAgentProperty;
@@ -67,12 +71,6 @@ public class Properties {
 	private String contentType;
 	@Value("${request.cookie.property}")
 	private String cookieProperty;
-	
-	//Package names
-	@Value("${package.recruitment}")
-	private String recruitmentPackage;
-	@Value("${package.appointment}")
-	private String appointmentPackage;
 
 	//Response Success Failure Message Properties
 	@Value("${response.code.success}")
@@ -163,29 +161,35 @@ public class Properties {
 	public void setReportDataPath(String reportDataPath) {
 		this.reportDataPath = reportDataPath;
 	}
-	public String getRecruitmentReportID() {
-		return recruitmentReportID;
+	public String getReportPrompt() {
+		return reportPrompt;
 	}
-	public void setRecruitmentReportID(String recruitmentReportID) {
-		this.recruitmentReportID = recruitmentReportID;
+	public void setReportPrompt(String reportPrompt) {
+		this.reportPrompt = reportPrompt;
 	}
-	public String getAppointmentReportID() {
-		return appointmentReportID;
+	public String getRecruitmentReportPath() {
+		return recruitmentReportPath;
 	}
-	public void setAppointmentReportID(String appointmentReportID) {
-		this.appointmentReportID = appointmentReportID;
+	public void setRecruitmentReportPath(String recruitmentReportPath) {
+		this.recruitmentReportPath = recruitmentReportPath;
 	}
-	public String getApplicantRosterReportID() {
-		return applicantRosterReportID;
+	public String getAppointmentReportPath() {
+		return appointmentReportPath;
 	}
-	public void setApplicantRosterReportID(String applicantRosterReportID) {
-		this.applicantRosterReportID = applicantRosterReportID;
+	public void setAppointmentReportPath(String appointmentReportPath) {
+		this.appointmentReportPath = appointmentReportPath;
 	}
-	public String getApplicantNotificationReportID() {
-		return applicantNotificationReportID;
+	public String getApplicantRosterReportPath() {
+		return applicantRosterReportPath;
 	}
-	public void setApplicantNotificationReportID(String applicantNotificationReportID) {
-		this.applicantNotificationReportID = applicantNotificationReportID;
+	public void setApplicantRosterReportPath(String applicantRosterReportPath) {
+		this.applicantRosterReportPath = applicantRosterReportPath;
+	}
+	public String getApplicantNotificationReportPath() {
+		return applicantNotificationReportPath;
+	}
+	public void setApplicantNotificationReportPath(String applicantNotificationReportPath) {
+		this.applicantNotificationReportPath = applicantNotificationReportPath;
 	}
 	public String getRecruitmentReportName() {
 		return recruitmentReportName;
@@ -294,18 +298,6 @@ public class Properties {
 	}
 	public void setCookieProperty(String cookieProperty) {
 		this.cookieProperty = cookieProperty;
-	}
-	public String getRecruitmentPackage() {
-		return recruitmentPackage;
-	}
-	public void setRecruitmentPackage(String recruitmentPackage) {
-		this.recruitmentPackage = recruitmentPackage;
-	}
-	public String getAppointmentPackage() {
-		return appointmentPackage;
-	}
-	public void setAppointmentPackage(String appointmentPackage) {
-		this.appointmentPackage = appointmentPackage;
 	}
 	public String getResponseCodeSuccess() {
 		return responseCodeSuccess;
@@ -439,12 +431,4 @@ public class Properties {
 	public void setApplicantRosterFileLocation(String applicantRosterFileLocation) {
 		this.applicantRosterFileLocation = applicantRosterFileLocation;
 	}
-
-
-	/*	@PostConstruct
-	public void writeConfigurationToLog() {
-		log.info("Starting application by using configuration: {}", this);
-	}*/
-
-
 }
