@@ -126,19 +126,19 @@ public class BatchConfiguration {
 				.incrementer(new RunIdIncrementer())
 				.listener(jobListener)
 				.preventRestart()
-				.start(appFlow).on("*")
+				.start(ihsVacancyFlow).on("*")
+				.to(offerFlow).on("*")
+				.to(staffFlow).on("*")
+				.to(appFlow).on("*")
 				.to(annFlow).on("*")
-				.to(certFlow).on("*")
+				.to(certFlow).on("*")		
 				.to(newHireFlow).on("*")
 				.to(requestFlow).on("*")
 				.to(reviewFlow).on("*")
 				.to(taskFlow).on("*")
-				.to(vacFlow).on("*")
-				.to(offerFlow).on("*")
-				.to(staffFlow).on("*")
-				.to(ihsVacancyFlow)
+				.to(vacFlow)
 				.end()
-				.build();		
+				.build();			
 	}
 	
 	//Announcement Tasklet
