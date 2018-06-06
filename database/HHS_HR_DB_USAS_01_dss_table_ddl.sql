@@ -783,7 +783,7 @@ CREATE TABLE HHS_HR.DSS_TIME_TO_STAFF
     CERTIFICATE_GRADE               VARCHAR2(502),
     CERTIFICATE_LOCATION            VARCHAR2(2050),
     CERTIFICATE_ISSUE_DATE          DATE,
-    MAKE_RTRN_SEL_CMPL_DATE         DATE
+    REVIEW_RETURN_DATE              DATE
 );
 
 ----------------------------------------------
