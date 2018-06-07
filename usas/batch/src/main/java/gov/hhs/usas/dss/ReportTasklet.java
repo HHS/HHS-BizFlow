@@ -14,6 +14,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.dss.ReportGeneration;
@@ -23,6 +24,7 @@ import gov.hhs.usas.dss.Util;
 
 
 @Component
+@PropertySource("classpath:report.properties")
 public class ReportTasklet extends Report implements Tasklet {
 
 	private static final Logger log = LoggerFactory.getLogger(ReportTasklet.class);
@@ -32,6 +34,18 @@ public class ReportTasklet extends Report implements Tasklet {
 	
 	@Value("${save.report.file}")
 	private boolean saveReportFile;
+	
+	@Value("${report.error}")
+	private String rptErrorMsg;
+	
+	@Value("${report.off}")
+	private String rptOffMsg;
+	
+	@Value("${report.success}")
+	private String rptSuccessMsg;
+	
+	@Value("${report.fail}")
+	private String rptFailMsg;
 	
 	@SuppressWarnings("finally")
 	@Override
@@ -44,6 +58,8 @@ public class ReportTasklet extends Report implements Tasklet {
 		int rptIteration;
 		long start;
 		long time;
+		int errCnt = 0;
+		String errMsg;
 		
 		try {			
 			if (this.isRunReport()) {
@@ -90,15 +106,29 @@ public class ReportTasklet extends Report implements Tasklet {
 						ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
 					}else {
 						log.info("The report " + this.getFileName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+						errCnt++;
 					}
 
 				}
 				time = System.currentTimeMillis() - start;
 				log.info("Time taken for downloading " + this.getFileName() + " data: " + time + "ms");
+				
+				if (errCnt > 0) {
+					errMsg = "The report " + this.getFileName() + " did not retrieve data for " + errCnt + " report iteration(s).";
+					log.info(errMsg);
+				    contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(), errMsg));
+				    chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptErrorMsg);
+				} else {
+					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptSuccessMsg);
+				}
+			} else {
+				log.info("The report " + this.getFileName() + " is turned off.");
+				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptOffMsg);
 			}
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 			contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(),e.getMessage()));
+			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptFailMsg);
 		}finally{
 			return RepeatStatus.FINISHED;
 		}
