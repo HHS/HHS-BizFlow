@@ -3,29 +3,65 @@ package gov.hhs.usas.dss;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
+@PropertySource("classpath:report.properties")
 public class JobListener extends JobExecutionListenerSupport {
 
 	@Autowired
-	private EmailService emailService; 
+	private EmailService emailService;
 	
 	private String jobName;
 	private String exitStatus;	
-	private String exitDescription;
 	private Map<String,Object> parametersMap;
 	
 	private static final Logger log = LoggerFactory.getLogger(JobListener.class);
 	
 	@Value("${send.email.notification}")
 	private boolean sendEmailNotification;
+	
+	@Value("${ihs.vac.file.name}")
+	private String ihsVacReport;
+	
+	@Value("${offer.file.name}")
+	private String offerReport;
+	
+	@Value("${staff.file.name}")
+	private String staffReport;
+	
+	@Value("${app.file.name}")
+	private String appReport;
+	
+	@Value("${ann.file.name}")
+	private String annReport;
+	
+	@Value("${cert.file.name}")
+	private String certReport;
+	
+	@Value("${newHire.file.name}")
+	private String newHireReport;
+	
+	@Value("${rqst.file.name}")
+	private String rqstReport;
+	
+	@Value("${rvw.file.name}")
+	private String rvwReport;
+	
+	@Value("${task.file.name}")
+	private String taskReport;
+	
+	@Value("${vac.file.name}")
+	private String vacReport;
 
 	//Callback before a job executes.
 	@Override
@@ -37,15 +73,26 @@ public class JobListener extends JobExecutionListenerSupport {
 	public void afterJob(JobExecution jobExecution) {
 		this.jobName = jobExecution.getJobInstance().getJobName();
 		this.exitStatus = jobExecution.getExitStatus().getExitCode().toString().replace("exitCode=", " "); 	
-		this.exitDescription = jobExecution.getExitStatus().getExitDescription().toString().replace("exitDescription=", " ");
-		
-		this.parametersMap = new HashMap<String,Object>();
-		if(exitDescription.length()>0){
-			parametersMap.put("EXIT_DESCRIPTION", exitDescription);
-		}
 
+		this.parametersMap = new HashMap<String,Object>();
+			parametersMap.put(ihsVacReport, jobExecution.getExecutionContext().get(ihsVacReport));
+			parametersMap.put(offerReport, jobExecution.getExecutionContext().get(offerReport));
+			parametersMap.put(staffReport, jobExecution.getExecutionContext().get(staffReport));
+			parametersMap.put(appReport, jobExecution.getExecutionContext().get(appReport));
+			parametersMap.put(annReport, jobExecution.getExecutionContext().get(annReport));
+			parametersMap.put(certReport, jobExecution.getExecutionContext().get(certReport));
+			parametersMap.put(newHireReport, jobExecution.getExecutionContext().get(newHireReport));
+			parametersMap.put(rqstReport, jobExecution.getExecutionContext().get(rqstReport));
+			parametersMap.put(rvwReport, jobExecution.getExecutionContext().get(rvwReport));
+			parametersMap.put(taskReport, jobExecution.getExecutionContext().get(taskReport));
+			parametersMap.put(vacReport, jobExecution.getExecutionContext().get(vacReport));
+		
 		if (sendEmailNotification) {
-			emailService.sendEmail(jobName,exitStatus,parametersMap);
+			try {
+				emailService.sendHTMLEmail(jobName, exitStatus, parametersMap);
+			} catch (MessagingException e) {
+				log.info(e.getMessage() + "::" + e.getCause());
+			}
 		}
 	}
 }
