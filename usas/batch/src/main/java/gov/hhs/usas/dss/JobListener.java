@@ -30,37 +30,37 @@ public class JobListener extends JobExecutionListenerSupport {
 	@Value("${send.email.notification}")
 	private boolean sendEmailNotification;
 	
-	@Value("${ihs.vac.file.name}")
+	@Value("${ihs.vac.report.name}")
 	private String ihsVacReport;
 	
-	@Value("${offer.file.name}")
+	@Value("${offer.report.name}")
 	private String offerReport;
 	
-	@Value("${staff.file.name}")
+	@Value("${staff.report.name}")
 	private String staffReport;
 	
-	@Value("${app.file.name}")
+	@Value("${app.report.name}")
 	private String appReport;
 	
-	@Value("${ann.file.name}")
+	@Value("${ann.report.name}")
 	private String annReport;
 	
-	@Value("${cert.file.name}")
+	@Value("${cert.report.name}")
 	private String certReport;
 	
-	@Value("${newHire.file.name}")
+	@Value("${newHire.report.name}")
 	private String newHireReport;
 	
-	@Value("${rqst.file.name}")
+	@Value("${rqst.report.name}")
 	private String rqstReport;
 	
-	@Value("${rvw.file.name}")
+	@Value("${rvw.report.name}")
 	private String rvwReport;
 	
-	@Value("${task.file.name}")
+	@Value("${task.report.name}")
 	private String taskReport;
 	
-	@Value("${vac.file.name}")
+	@Value("${vac.report.name}")
 	private String vacReport;
 
 	//Callback before a job executes.

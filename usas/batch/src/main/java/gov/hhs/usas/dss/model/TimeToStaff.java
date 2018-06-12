@@ -13,6 +13,7 @@ public class TimeToStaff extends Report {
 	@Value("${staff.search.path}") private String searchPath;
 	@Value("${staff.intg.type}") private String intgType;
 	@Value("${staff.file.name}") private String fileName;
+	@Value("${staff.report.name}") private String reportName;
 	@Value("${staff.parm.num}") private int parmNum;
 	@Value("${staff.rvp.name}") private String rvpName;
 	@Value("${staff.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class TimeToStaff extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);

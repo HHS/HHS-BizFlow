@@ -20,6 +20,9 @@ public class Report {
 	//File Name for Saving
 	private static String fileName;
 	
+	//Report Name
+	private static String reportName;
+	
 	//Intg Type for inserting into intg_data_dtl table
 	private static String intgType;
 	
@@ -119,6 +122,14 @@ public class Report {
 
 	public static void setFileName(String fileName) {
 		Report.fileName = fileName;
+	}
+
+	public static String getReportName() {
+		return reportName;
+	}
+
+	public static void setReportName(String reportName) {
+		Report.reportName = reportName;
 	}
 
 	public static String getIntgType() {

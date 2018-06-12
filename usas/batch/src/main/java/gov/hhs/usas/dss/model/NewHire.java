@@ -13,6 +13,7 @@ public class NewHire extends Report {
 	@Value("${newHire.search.path}") private String searchPath;
 	@Value("${newHire.intg.type}") private String intgType;
 	@Value("${newHire.file.name}") private String fileName;
+	@Value("${newHire.report.name}") private String reportName;
 	@Value("${newHire.parm.num}") private int parmNum;
 	@Value("${newHire.rvp.name}") private String rvpName;
 	@Value("${newHire.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class NewHire extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
