@@ -13,6 +13,7 @@ public class Announcement extends Report {
 	@Value("${ann.search.path}") private String searchPath;
 	@Value("${ann.intg.type}") private String intgType;
 	@Value("${ann.file.name}") private String fileName;
+	@Value("${ann.report.name}") private String reportName;
 	@Value("${ann.parm.num}") private int parmNum;
 	@Value("${ann.svp.name}") private String svpName;
 	@Value("${ann.svp.useval}") private String svpUseval;
@@ -33,6 +34,7 @@ public class Announcement extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setSvpName(svpName);
 		super.setSvpUseval(svpUseval);

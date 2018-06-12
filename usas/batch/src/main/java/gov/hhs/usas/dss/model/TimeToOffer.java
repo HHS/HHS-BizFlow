@@ -13,6 +13,7 @@ public class TimeToOffer extends Report {
 	@Value("${offer.search.path}") private String searchPath;
 	@Value("${offer.intg.type}") private String intgType;
 	@Value("${offer.file.name}") private String fileName;
+	@Value("${offer.report.name}") private String reportName;
 	@Value("${offer.parm.num}") private int parmNum;
 	@Value("${offer.rvp.name}") private String rvpName;
 	@Value("${offer.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class TimeToOffer extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);

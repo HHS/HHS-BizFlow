@@ -13,6 +13,7 @@ public class Certificate extends Report {
 	@Value("${cert.search.path}") private String searchPath;
 	@Value("${cert.intg.type}") private String intgType;
 	@Value("${cert.file.name}") private String fileName;
+	@Value("${cert.report.name}") private String reportName;
 	@Value("${cert.parm.num}") private int parmNum;
 	@Value("${cert.svp.name}") private String svpName;
 	@Value("${cert.svp.useval}") private String svpUseval;
@@ -33,6 +34,7 @@ public class Certificate extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setSvpName(svpName);
 		super.setSvpUseval(svpUseval);

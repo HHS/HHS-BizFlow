@@ -13,6 +13,7 @@ public class Application extends Report {
 	@Value("${app.search.path}") private String searchPath;
 	@Value("${app.intg.type}") private String intgType;
 	@Value("${app.file.name}") private String fileName;
+	@Value("${app.report.name}") private String reportName;
 	@Value("${app.parm.num}") private int parmNum;
 	@Value("${app.svp.name}") private String svpName;
 	@Value("${app.svp.useval}") private String svpUseval;
@@ -33,6 +34,7 @@ public class Application extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setSvpName(svpName);
 		super.setSvpUseval(svpUseval);

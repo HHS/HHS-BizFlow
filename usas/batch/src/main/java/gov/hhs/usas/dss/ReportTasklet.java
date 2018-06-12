@@ -99,36 +99,36 @@ public class ReportTasklet extends Report implements Tasklet {
 					reportXml = ReportGeneration.generateReport(this);
 					
 					if(!Util.isNull(reportXml)) {
-						log.info("The report " + this.getFileName() + " retrieved data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+						log.info("The report " + this.getReportName() + " retrieved data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
 						if (saveReportFile) {
 							ReportGeneration.saveReportFile(this, reportXml);
 						}
 						ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
 					}else {
-						log.info("The report " + this.getFileName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+						log.info("The report " + this.getReportName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
 						errCnt++;
 					}
 
 				}
 				time = System.currentTimeMillis() - start;
-				log.info("Time taken for downloading " + this.getFileName() + " data: " + time + "ms");
+				log.info("Time taken for downloading " + this.getReportName() + " data: " + time + "ms");
 				
 				if (errCnt > 0) {
-					errMsg = "The report " + this.getFileName() + " did not retrieve data for " + errCnt + " report iteration(s).";
+					errMsg = "The report " + this.getReportName() + " did not retrieve data for " + errCnt + " report iteration(s).";
 					log.info(errMsg);
 				    contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(), errMsg));
-				    chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptErrorMsg);
+				    chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptErrorMsg);
 				} else {
-					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptSuccessMsg);
+					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptSuccessMsg);
 				}
 			} else {
-				log.info("The report " + this.getFileName() + " is turned off.");
-				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptOffMsg);
+				log.info("The report " + this.getReportName() + " is turned off.");
+				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptOffMsg);
 			}
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 			contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(),e.getMessage()));
-			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getFileName(), rptFailMsg);
+			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptFailMsg);
 		}finally{
 			return RepeatStatus.FINISHED;
 		}
