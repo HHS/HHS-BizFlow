@@ -13,6 +13,7 @@ public class Vacancy extends Report {
 	@Value("${vac.search.path}") private String searchPath;
 	@Value("${vac.intg.type}") private String intgType;
 	@Value("${vac.file.name}") private String fileName;
+	@Value("${vac.report.name}") private String reportName;
 	@Value("${vac.parm.num}") private int parmNum;
 	@Value("${vac.svp.name}") private String svpName;
 	@Value("${vac.svp.useval}") private String svpUseval;
@@ -33,6 +34,7 @@ public class Vacancy extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setSvpName(svpName);
 		super.setSvpUseval(svpUseval);

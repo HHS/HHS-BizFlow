@@ -13,6 +13,7 @@ public class Request extends Report {
 	@Value("${rqst.search.path}") private String searchPath;
 	@Value("${rqst.intg.type}") private String intgType;
 	@Value("${rqst.file.name}") private String fileName;
+	@Value("${rqst.report.name}") private String reportName;
 	@Value("${rqst.parm.num}") private int parmNum;
 	@Value("${rqst.rvp.name}") private String rvpName;
 	@Value("${rqst.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class Request extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);

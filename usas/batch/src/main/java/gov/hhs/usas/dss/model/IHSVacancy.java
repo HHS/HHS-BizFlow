@@ -13,6 +13,7 @@ public class IHSVacancy extends Report {
 	@Value("${ihs.vac.search.path}") private String searchPath;
 	@Value("${ihs.vac.intg.type}") private String intgType;
 	@Value("${ihs.vac.file.name}") private String fileName;
+	@Value("${ihs.vac.report.name}") private String reportName;
 	@Value("${ihs.vac.parm.num}") private int parmNum;
 	@Value("${ihs.vac.rvp.name}") private String rvpName;
 	@Value("${ihs.vac.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class IHSVacancy extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);

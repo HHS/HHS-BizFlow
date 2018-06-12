@@ -13,6 +13,7 @@ public class Task extends Report {
 	@Value("${task.search.path}") private String searchPath;
 	@Value("${task.intg.type}") private String intgType;
 	@Value("${task.file.name}") private String fileName;
+	@Value("${task.report.name}") private String reportName;
 	@Value("${task.parm.num}") private int parmNum;
 	@Value("${task.rvp.name}") private String rvpName;
 	@Value("${task.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class Task extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);

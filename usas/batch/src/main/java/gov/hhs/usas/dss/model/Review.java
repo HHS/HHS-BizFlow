@@ -13,6 +13,7 @@ public class Review extends Report {
 	@Value("${rvw.search.path}") private String searchPath;
 	@Value("${rvw.intg.type}") private String intgType;
 	@Value("${rvw.file.name}") private String fileName;
+	@Value("${rvw.report.name}") private String reportName;
 	@Value("${rvw.parm.num}") private int parmNum;
 	@Value("${rvw.rvp.name}") private String rvpName;
 	@Value("${rvw.rpt.iteration}") private int rptIteration; 
@@ -30,6 +31,7 @@ public class Review extends Report {
 		super.setSearchPath(searchPath);
 		super.setIntgType(intgType);
 		super.setFileName(fileName);
+		super.setReportName(reportName);
 		super.setParmNum(parmNum);
 		super.setRvpName(rvpName);
 		super.setRptIteration(rptIteration);
