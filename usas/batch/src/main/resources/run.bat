@@ -1,6 +1,7 @@
 @echo off
 
-set BASEDIR=%~dp0%\..
+set BASEDIR=%~dp0%
+set BASEDIR=%BASEDIR:~0,-1%\..
 echo using BASEDIR of %BASEDIR%
 cd %BASEDIR%\bin
 
