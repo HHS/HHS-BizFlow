@@ -32,4 +32,4 @@ set CLASSPATH=%CLASSPATH%;.;%BASEDIR%;%LIB_DIR%\*;%CONF_DIR%;%EXECJAR%
 :: Run application
 ::-----------------------------
 "%JAVA_HOME%\bin\java" -jar %EXECJAR% %1 %2 %3 %4 %5
-::%JAVA_HOME%\bin\java -classpath %CLASSPATH% org.springframework.boot.loader.JarLauncher  %1 %2 %3 %4 %5
+::"%JAVA_HOME%\bin\java" -classpath %CLASSPATH% org.springframework.boot.loader.JarLauncher  %1 %2 %3 %4 %5
