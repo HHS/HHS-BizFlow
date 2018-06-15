@@ -29,7 +29,8 @@ CLASSPATH=$CLASSPATH:.:$BASEDIR:$LIB_DIR/*:$CONF_DIR
 #done
 
 #debug - show classpath
-#echo $CLASSPATH
+#echo JAVA_HOME = $JAVA_HOME
+#echo CLASSPATH = $CLASSPATH
 
 #-----------------------------
 # Run application

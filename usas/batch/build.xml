@@ -118,6 +118,7 @@
 		<copy todir="${dist.dir}/bin">
 			<fileset dir="${src.main.res.dir}">
 				<include name="run.sh" />
+				<include name="run.bat" />
 			</fileset>
 		</copy>
 		<chmod file="${dist.dir}/bin/run.sh" perm="774" />
@@ -176,6 +177,7 @@
 			</fileset>
 			<fileset dir="${src.main.res.dir}">
 				<include name="run-jar.sh" />
+				<include name="run-jar.bat" />
 			</fileset>
 		</copy>
 		<chmod file="${dist.dir}/run-jar.sh" perm="774" />
