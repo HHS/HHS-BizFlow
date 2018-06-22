@@ -43,7 +43,6 @@ public class UsasRESTController
 	@Autowired
 	private RecruitmentReportService recruitmentService;
 
-
 	/**
 	 * This method connects to USA Staffing Cognos
 	 * to pull the specific report for a specific Job Request 
@@ -56,21 +55,21 @@ public class UsasRESTController
 	public String getReportFromUSASCognos(@PathVariable("reportName") String reportName, @PathVariable("requestNumber") String requestNumber)
 	{
 		log.info("Connecting to USAS - Cognos Server to get " + reportName + " report.");
-		String reportID = "";
+		String reportPath = "";
 		if(reportName.equalsIgnoreCase("recruitment"))
-			reportID = properties.getRecruitmentReportID();
+			reportPath = properties.getRecruitmentReportPath();
 		else if(reportName.equalsIgnoreCase("appointment"))
-			reportID = properties.getAppointmentReportID();
+			reportPath = properties.getAppointmentReportPath();
 		else
 			return "Incorrect report name. Correct URL syntax: /usas/report/{reportName}/{requestNumber}";
-		Prompt prompt = new Prompt("parm_RequestNumber", requestNumber, requestNumber);
+		Prompt prompt = new Prompt(properties.getReportPrompt(), requestNumber, requestNumber);
 
-		CognosReport report = new CognosReport(reportName, reportID, properties.getReportFormatDataSet(), prompt);
+		CognosReport report = new CognosReport(reportName, reportPath, properties.getReportFormatDataSet(), prompt);
 
 		String response = client.sendReportDataRequest(report).getResponse();
 		if(client.getUsasResponse().getResponseCode() != 200){
 			response = client.getUsasResponse().getErrorMessage();
-		}
+		}		
 		return response;
 	}
 
@@ -88,8 +87,8 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/appointment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public USAStaffingAppointmentResult getAppointmentFormData(@PathVariable String requestNumber)
 	{
-		Prompt appointmentPrompt = new Prompt("parm_RequestNumber", requestNumber, requestNumber);
-		CognosReport appointmentReport = new CognosReport(properties.getAppointmentReportName(), properties.getAppointmentReportID(), properties.getReportFormatDataSet(), appointmentPrompt);
+		Prompt appointmentPrompt = new Prompt(properties.getReportPrompt(), requestNumber, requestNumber);
+		CognosReport appointmentReport = new CognosReport(properties.getAppointmentReportName(), properties.getAppointmentReportPath(), properties.getReportFormatDataSet(), appointmentPrompt);
 
 		USAStaffingAppointmentResult usasAppointment = new USAStaffingAppointmentResult();
 
@@ -119,8 +118,8 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/recruitment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public USAStaffingRecruitmentResult getRecruitmentFormData(@PathVariable String requestNumber)
 	{
-		Prompt recruitmentPrompt = new Prompt("parm_RequestNumber", requestNumber, requestNumber);
-		CognosReport recruitmentReport = new CognosReport(properties.getRecruitmentReportName(), properties.getRecruitmentReportID(), properties.getReportFormatDataSet(), recruitmentPrompt);
+		Prompt recruitmentPrompt = new Prompt(properties.getReportPrompt(), requestNumber, requestNumber);
+		CognosReport recruitmentReport = new CognosReport(properties.getRecruitmentReportName(), properties.getRecruitmentReportPath(), properties.getReportFormatDataSet(), recruitmentPrompt);
 
 		USAStaffingRecruitmentResult usasRecruitment = new USAStaffingRecruitmentResult();
 
@@ -147,7 +146,7 @@ public class UsasRESTController
 	public String getApplicantRosterReport(@PathVariable String vacancyNumber)
 	{
 		Prompt applicantRosterPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
-		CognosReport applicantRosterReport = new CognosReport(properties.getApplicantRosterReportName(), properties.getApplicantRosterReportID(), properties.getReportFormatHTML(), applicantRosterPrompt);
+		CognosReport applicantRosterReport = new CognosReport(properties.getApplicantRosterReportName(), properties.getApplicantRosterReportPath(), properties.getReportFormatHTML(), applicantRosterPrompt);
 
 		String applicantRosterReportResult = "";
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
@@ -176,7 +175,6 @@ public class UsasRESTController
 			applicantRosterReportResult = this.client.sendReportDataRequest(applicantRosterReport).getResponse();
 		}
 		
-		
 		return applicantRosterReportResult;
 	}
 
@@ -191,7 +189,8 @@ public class UsasRESTController
 	public String getApplicantNotificationReport(@PathVariable String vacancyNumber)
 	{
 		Prompt applicantNotificationPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
-		CognosReport applicantNotificationReport = new CognosReport(properties.getApplicantNotificationReportName(), properties.getApplicantNotificationReportID(), properties.getReportFormatHTML(), applicantNotificationPrompt);
+		CognosReport applicantNotificationReport = new CognosReport(properties.getApplicantNotificationReportName(), properties.getApplicantNotificationReportPath(), properties.getReportFormatHTML(), applicantNotificationPrompt);
+		
 		String applicantNotificationReportResult = "";
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
 			String report = properties.getApplicantNotificationFileLocation() + File.separator + vacancyNumber + ".html";
@@ -218,8 +217,8 @@ public class UsasRESTController
 			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report.");    
 			applicantNotificationReportResult = this.client.sendReportDataRequest(applicantNotificationReport).getResponse();
 		}
-
-
+		
+		
 		return applicantNotificationReportResult;
 	}
 

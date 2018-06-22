@@ -60,6 +60,7 @@ public class RecruitmentReportService extends ReportService
 
 	private Class<?> cls;
 	private Object object;
+	private String recruitmentPackage;
 
 	@PostConstruct
 	public void init(){	
@@ -77,6 +78,7 @@ public class RecruitmentReportService extends ReportService
 		this.usasRecruitment = new USAStaffingRecruitmentResult();
 		this.cls = null;
 		this.object = new Object();
+		this.recruitmentPackage = "gov.hhs.usas.rest.report.model.Recruitment.";
 	}
 
 	/**
@@ -142,7 +144,7 @@ public class RecruitmentReportService extends ReportService
 					if (this.xsr.isCharacters())
 					{
 						className = this.xsr.getText().trim().substring(4, this.xsr.getText().trim().length());
-						this.cls = Class.forName(properties.getRecruitmentPackage() + className);
+						this.cls = Class.forName(this.getRecruitmentPackage() + className);
 					}
 				}
 				while (((!this.xsr.isStartElement()) || (!this.xsr.getLocalName().equals("row"))) && 
@@ -222,6 +224,10 @@ public class RecruitmentReportService extends ReportService
 			this.usasRecruitment = new USAStaffingRecruitmentResult(properties.getResponseCodeParseError(), error);
 		}
 		return this.usasRecruitment;
+	}
+
+	public String getRecruitmentPackage() {
+		return recruitmentPackage;
 	}
 
 }

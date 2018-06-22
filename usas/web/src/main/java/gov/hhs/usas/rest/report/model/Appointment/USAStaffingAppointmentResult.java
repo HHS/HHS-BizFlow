@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,8 +19,6 @@ public class USAStaffingAppointmentResult {
 	private String requestNumber;
 	@XmlAttribute(name="VacancyCount")
 	private int vacancyCount;
-//	@XmlElementWrapper(name="Vacancy")
-//	@XmlElement(name="Vacancy_Announcement")
 	@XmlElement(name="Vacancy")
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	@XmlElement(name="Result_Code")

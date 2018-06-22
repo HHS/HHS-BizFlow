@@ -56,6 +56,7 @@ public class AppointmentReportService extends ReportService {
 	
 	private Class<?> cls;
 	private Object object;
+	private String appointmentPackage;
 	
 	 @PostConstruct
 	  public void init(){	
@@ -71,6 +72,7 @@ public class AppointmentReportService extends ReportService {
 			this.usasAppointment = new USAStaffingAppointmentResult();
 			this.cls = null;
 			this.object = new Object();
+			this.appointmentPackage = "gov.hhs.usas.rest.report.model.Appointment.";
 	  }
 
 
@@ -137,7 +139,7 @@ public class AppointmentReportService extends ReportService {
 					if (this.xsr.isCharacters())
 					{
 						className = this.xsr.getText().trim().substring(4, this.xsr.getText().trim().length());
-						this.cls = Class.forName(properties.getAppointmentPackage() + className);
+						this.cls = Class.forName(this.getAppointmentPackage() + className);
 					}
 				}
 				while (((!this.xsr.isStartElement()) || (!this.xsr.getLocalName().equals("row"))) && 
@@ -217,6 +219,11 @@ public class AppointmentReportService extends ReportService {
 			this.usasAppointment = new USAStaffingAppointmentResult(properties.getResponseCodeParseError(), error);
 		}
 		return this.usasAppointment;
+	}
+
+
+	public String getAppointmentPackage() {
+		return appointmentPackage;
 	}
 
 }

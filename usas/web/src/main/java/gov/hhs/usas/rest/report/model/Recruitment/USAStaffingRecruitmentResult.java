@@ -22,7 +22,6 @@ public class USAStaffingRecruitmentResult
 	@XmlAttribute(name="PositionCount")
 	private int positionCount;
 	@XmlElementWrapper(name="Vacancies")
-	//@XmlElement(name="Vacancy_Announcement")
 	@XmlElement(name="record")
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	@XmlElement(name="Positions")

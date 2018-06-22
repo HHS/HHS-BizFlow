@@ -7,24 +7,24 @@ import org.springframework.stereotype.Component;
 public class CognosReport
 {
   private String name;
-  private String id;
+  private String path;
   private String format;
   @Autowired
   private Prompt prompt;
   
   public CognosReport() {
 		this.name = "";
-		this.id = "";
+		this.path = "";
 		this.format = "";
 		this.prompt = new Prompt();
 	}
-  
-  public CognosReport(String name, String id, String format, Prompt prompt) {
-	this.name = name;
-	this.id = id;
-	this.format = format;
-	this.prompt = prompt;
-}
+
+  public CognosReport(String name, String path, String format, Prompt prompt) {
+		this.name = name;
+		this.path = path;
+		this.format = format;
+		this.prompt = prompt;
+	}
 
 public String getName()
   {
@@ -36,17 +36,15 @@ public String getName()
     this.name = name;
   }
   
-  public String getId()
-  {
-    return this.id;
-  }
-  
-  public void setId(String id)
-  {
-    this.id = id;
-  }
-  
-  public String getFormat()
+  public String getPath() {
+	return path;
+}
+
+public void setPath(String path) {
+	this.path = path;
+}
+
+public String getFormat()
   {
     return this.format;
   }

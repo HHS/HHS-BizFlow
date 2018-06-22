@@ -79,12 +79,12 @@ public class CognosRESTClient
 	{
 
 		if(sendLogonRequest().equalsIgnoreCase(properties.getResponseCodeSuccess())){
-			String vacancyReportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + report.getId();
+			String reportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + report.getPath();
 			this.usasRequest.setPOSTParameters(report);
 			
 			try
 			{
-				URL url = new URL(vacancyReportURL);
+				URL url = new URL(reportURL);
 
 				HttpURLConnection con = (HttpURLConnection)url.openConnection();
 
