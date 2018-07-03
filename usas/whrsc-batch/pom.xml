@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>gov.hhs.usas.dss</groupId>
+	<artifactId>usas_whrsc_datastore_batch</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>usas_whrsc_datastore_batch</name>
+	<description>
+		Data Self Service for HHS.  
+		For dependency resolution, run clean goal first.
+		For example,
+			mvn clean
+			mvn compile 
+			mvn package
+	</description>
+
+
+	<repositories>
+		<repository>
+			<id>project.repo.local</id>
+			<name>In-project repository to configure dependent jars for build</name>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+	</repositories>
+
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+ 		<version>1.5.10.RELEASE</version>
+<!--		
+		<version>1.4.3.RELEASE</version>
+-->
+		<relativePath/> 
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.7</java.version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+	</properties>
+
+
+	<dependencies>
+		<!-- dependencies for spring boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-loader</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- dependencies from local repository -->
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.8</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>jaxrpc</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>saaj</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>proj.lib.local</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<!-- 
+			Run install-file goal to include 3rd party jars to local project repository for build.
+			This should be executed by calling clean goal.  It is to avoid error by dependency 
+			checking done before running goals in plugin in normal validate cycle.
+
+				mvn clean
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.5.2</version><!--$NO-MVN-MAN-VER$-->
+				<executions>
+					<execution>
+						<id>install-axis-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/axis-1.4.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>axis</artifactId>
+							<version>1.4</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-commons-discovery-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/commons-discovery-0.2.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>commons-discovery</artifactId>
+							<version>0.2</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-commons-logging-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/commons-logging-1.1.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>commons-logging</artifactId>
+							<version>1.1</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-log4j-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/log4j-1.2.8.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>log4j</artifactId>
+							<version>1.2.8</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-jaxrpc-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/jaxrpc-1.1.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>jaxrpc</artifactId>
+							<version>1.1</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-ojdbc-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/ojdbc7-12.1.0.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>ojdbc7</artifactId>
+							<version>12.1.0</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-saaj-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/saaj-1.2.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>saaj</artifactId>
+							<version>1.2</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install-wsdl4j-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<file>${project.basedir}/lib/wsdl4j-1.5.1.jar</file>
+							<groupId>proj.lib.local</groupId>
+							<artifactId>wsdl4j</artifactId>
+							<version>1.5.1</version>
+							<packaging>jar</packaging>
+							<localRepositoryPath>${project.basedir}/repo</localRepositoryPath>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<fork>true</fork>
+					<verbose>true</verbose>
+					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<compilerVersion>1.7</compilerVersion>
+					<executable>/Library/Java/JavaVirtualMachines/jdk1.7.0_76.jdk/Contents/Home/bin/javac</executable>
+					<source>1.7</source>
+					<target>1.7</target>
+					<compilerArgs>
+						<arg>-Xlintr</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+-->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>axis</artifactId>
+				<version>1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>commons-discovery</artifactId>
+				<version>0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.8</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>jaxrpc</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>saaj</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>proj.lib.local</groupId>
+				<artifactId>wsdl4j</artifactId>
+				<version>1.5.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
