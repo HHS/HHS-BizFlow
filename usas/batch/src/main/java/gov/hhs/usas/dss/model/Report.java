@@ -3,189 +3,189 @@ package gov.hhs.usas.dss.model;
 public class Report {
 
 	//Report Search Path
-	private static String searchPath;
+	private String searchPath;
 	
 	//Staffing Date Type Prompt
-	private static String svpName;
-	private static String svpUseval;
-	private static String svpDisplay;
+	private String svpName;
+	private String svpUseval;
+	private String svpDisplay;
 	
 	//Staffing Date Range Prompt
-	private static String rvpName;
-	private static String rvpStartUseval;
-	private static String rvpStartDisplay;
-	private static String rvpEndUseval;
-	private static String rvpEndDisplay;
+	private String rvpName;
+	private String rvpStartUseval;
+	private String rvpStartDisplay;
+	private String rvpEndUseval;
+	private String rvpEndDisplay;
 	
 	//File Name for Saving
-	private static String fileName;
+	private String fileName;
 	
 	//Report Name
-	private static String reportName;
+	private String reportName;
 	
 	//Intg Type for inserting into intg_data_dtl table
-	private static String intgType;
+	private String intgType;
 	
 	//Number of Prompts
-	private static Integer parmNum;
+	private Integer parmNum;
 	
 	//Number of times to pull the report
-	private static int rptIteration;
+	private int rptIteration;
 	
 	//the number of days to pull back for each report iteration
-	private static Integer dateInterval;
+	private Integer dateInterval;
 	
 	//End date value-- pulls report from current date to end date value
-	private static String endDate;
+	private String endDate;
 	
 	//Stores Stored procedure for truncating report tables
-	private static String spTruncate;
+	private String spTruncate;
 	
 	//Determines if report should be run, true or false value
-	private static boolean runReport;
+	private boolean runReport;
 	
-	public static String getSearchPath() {
+	public String getSearchPath() {
 		return searchPath;
 	}
 
-	public static void setSearchPath(String searchPath) {
-		Report.searchPath = searchPath;
+	public void setSearchPath(String searchPath) {
+		this.searchPath = searchPath;
 	}
 
-	public static String getSvpName() {
+	public String getSvpName() {
 		return svpName;
 	}
 
-	public static void setSvpName(String svpName) {
-		Report.svpName = svpName;
+	public void setSvpName(String svpName) {
+		this.svpName = svpName;
 	}
 
-	public static String getSvpUseval() {
+	public String getSvpUseval() {
 		return svpUseval;
 	}
 
-	public static void setSvpUseval(String svpUseval) {
-		Report.svpUseval = svpUseval;
+	public void setSvpUseval(String svpUseval) {
+		this.svpUseval = svpUseval;
 	}
 
-	public static String getSvpDisplay() {
+	public String getSvpDisplay() {
 		return svpDisplay;
 	}
 
-	public static void setSvpDisplay(String svpDisplay) {
-		Report.svpDisplay = svpDisplay;
+	public void setSvpDisplay(String svpDisplay) {
+		this.svpDisplay = svpDisplay;
 	}
 
-	public static String getRvpName() {
+	public String getRvpName() {
 		return rvpName;
 	}
 
-	public static void setRvpName(String rvpName) {
-		Report.rvpName = rvpName;
+	public void setRvpName(String rvpName) {
+		this.rvpName = rvpName;
 	}
 
-	public static String getRvpStartUseval() {
+	public String getRvpStartUseval() {
 		return rvpStartUseval;
 	}
 
-	public static void setRvpStartUseval(String rvpStartUseval) {
-		Report.rvpStartUseval = rvpStartUseval;
+	public void setRvpStartUseval(String rvpStartUseval) {
+		this.rvpStartUseval = rvpStartUseval;
 	}
 
-	public static String getRvpStartDisplay() {
+	public String getRvpStartDisplay() {
 		return rvpStartDisplay;
 	}
 
-	public static void setRvpStartDisplay(String rvpStartDisplay) {
-		Report.rvpStartDisplay = rvpStartDisplay;
+	public void setRvpStartDisplay(String rvpStartDisplay) {
+		this.rvpStartDisplay = rvpStartDisplay;
 	}
 
-	public static String getRvpEndUseval() {
+	public String getRvpEndUseval() {
 		return rvpEndUseval;
 	}
 
-	public static void setRvpEndUseval(String rvpEndUseval) {
-		Report.rvpEndUseval = rvpEndUseval;
+	public void setRvpEndUseval(String rvpEndUseval) {
+		this.rvpEndUseval = rvpEndUseval;
 	}
 
-	public static String getRvpEndDisplay() {
+	public String getRvpEndDisplay() {
 		return rvpEndDisplay;
 	}
 
-	public static void setRvpEndDisplay(String rvpEndDisplay) {
-		Report.rvpEndDisplay = rvpEndDisplay;
+	public void setRvpEndDisplay(String rvpEndDisplay) {
+		this.rvpEndDisplay = rvpEndDisplay;
 	}
 
-	public static String getFileName() {
+	public String getFileName() {
 		return fileName;
 	}
 
-	public static void setFileName(String fileName) {
-		Report.fileName = fileName;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
-	public static String getReportName() {
+	public String getReportName() {
 		return reportName;
 	}
 
-	public static void setReportName(String reportName) {
-		Report.reportName = reportName;
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
 	}
 
-	public static String getIntgType() {
+	public String getIntgType() {
 		return intgType;
 	}
 
-	public static void setIntgType(String intgType) {
-		Report.intgType = intgType;
+	public void setIntgType(String intgType) {
+		this.intgType = intgType;
 	}
 
-	public static Integer getParmNum() {
+	public Integer getParmNum() {
 		return parmNum;
 	}
 
-	public static void setParmNum(Integer parmNum) {
-		Report.parmNum = parmNum;
+	public void setParmNum(Integer parmNum) {
+		this.parmNum = parmNum;
 	}
 	
-	public static int getRptIteration() {
+	public int getRptIteration() {
 		return rptIteration;
 	}
 
-	public static void setRptIteration(int rptIteration) {
-		Report.rptIteration = rptIteration;
+	public void setRptIteration(int rptIteration) {
+		this.rptIteration = rptIteration;
 	}
 
-	public static Integer getDateInterval() {
+	public Integer getDateInterval() {
 		return dateInterval;
 	}
 
-	public static void setDateInterval(Integer dateInterval) {
-		Report.dateInterval = dateInterval;
+	public void setDateInterval(Integer dateInterval) {
+		this.dateInterval = dateInterval;
 	}
 	
-	public static String getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public static void setEndDate(String endDate) {
-		Report.endDate = endDate;
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
-	public static String getSpTruncate() {
+	public String getSpTruncate() {
 		return spTruncate;
 	}
 
-	public static void setSpTruncate(String spTruncate) {
-		Report.spTruncate = spTruncate;
+	public void setSpTruncate(String spTruncate) {
+		this.spTruncate = spTruncate;
 	}
 
-	public static boolean isRunReport() {
+	public boolean isRunReport() {
 		return runReport;
 	}
 
-	public static void setRunReport(boolean runReport) {
-		Report.runReport = runReport;
+	public void setRunReport(boolean runReport) {
+		this.runReport = runReport;
 	}
 
 	public Report() {
