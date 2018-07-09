@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -22,6 +23,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import gov.hhs.usas.dss.model.Announcement;
@@ -46,6 +49,7 @@ import gov.hhs.usas.dss.model.Vacancy;
 
 @Configuration
 @EnableBatchProcessing
+@PropertySource("classpath:report.properties")
 public class BatchConfiguration {
 		
 	@Autowired
@@ -70,38 +74,38 @@ public class BatchConfiguration {
 		return interfaceName;
 	}
 
-	@Autowired
-	private Announcement announcement;
+	@Value("${offer.step.name}")
+	private String offerStepName;
 	
-	@Autowired
-	private Application application;
+	@Value("${staff.step.name}")
+	private String staffStepName;
 	
-	@Autowired
-	private Certificate certificate;
+	@Value("${ihs.vac.step.name}")
+	private String ihsVacStepName;
 	
-	@Autowired
-	private IHSVacancy ihsVacancy;
+	@Value("${app.step.name}")
+	private String appStepName;
 	
-	@Autowired
-	private NewHire newHire;
+	@Value("${ann.step.name}")
+	private String annStepName;
 	
-	@Autowired
-	private Request request;
+	@Value("${cert.step.name}")
+	private String certStepName;
 	
-	@Autowired
-	private Review review;
+	@Value("${newHire.step.name}")
+	private String newHireStepName;
 	
-	@Autowired
-	private Task task;
+	@Value("${rqst.step.name}")
+	private String rqstStepName;
 	
-	@Autowired
-	private TimeToOffer time2Offer;
+	@Value("${rvw.step.name}")
+	private String rvwStepName;
 	
-	@Autowired
-	private TimeToStaff time2Staff;
+	@Value("${task.step.name}")
+	private String taskStepName;
 	
-	@Autowired
-	private Vacancy vacancy;
+	@Value("${vac.step.name}")
+	private String vacStepName;
 	 
 	/*
 	 * Job - importDSSReports
@@ -109,19 +113,25 @@ public class BatchConfiguration {
 	@Bean
 	public Job importDSSReports() throws Exception {
 
-    	final Flow appFlow = new FlowBuilder<Flow>("appFlow").from(stepBuilderFactory.get("executeApplicationReportStep").tasklet(appTasklet()).listener(stepListener).build()).end();
-    	final Flow annFlow = new FlowBuilder<Flow>("annFlow").from(stepBuilderFactory.get("executeAnnouncementReportStep").tasklet(annTasklet()).listener(stepListener).build()).end();
-    	final Flow certFlow = new FlowBuilder<Flow>("certFlow").from(stepBuilderFactory.get("executeCertificateReportStep").tasklet(certTasklet()).listener(stepListener).build()).end();
-    	final Flow newHireFlow = new FlowBuilder<Flow>("newHireFlow").from(stepBuilderFactory.get("executeNewHireReportStep").tasklet(newHireTasklet()).listener(stepListener).build()).end();
-    	final Flow requestFlow = new FlowBuilder<Flow>("requestFlow").from(stepBuilderFactory.get("executeRequestReportStep").tasklet(requestTasklet()).listener(stepListener).build()).end();
-    	final Flow reviewFlow = new FlowBuilder<Flow>("reviewFlow").from(stepBuilderFactory.get("executeReviewReportStep").tasklet(reviewTasklet()).listener(stepListener).build()).end();
-    	final Flow taskFlow = new FlowBuilder<Flow>("taskFlow").from(stepBuilderFactory.get("executeTaskReportStep").tasklet(taskTasklet()).listener(stepListener).build()).end();
-    	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
-    	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
-    	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get("executeStaffReportStep").tasklet(staffTasklet()).listener(stepListener).build()).end();
-    	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get("executeIHSVacancyReportStep").tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
+    	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get(offerStepName).tasklet(offerTasklet()).listener(stepListener).build()).end();
+    	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get(staffStepName).tasklet(staffTasklet()).listener(stepListener).build()).end();
+    	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get(ihsVacStepName).tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
+		final Flow appFlow = new FlowBuilder<Flow>("appFlow").from(stepBuilderFactory.get(appStepName).tasklet(appTasklet()).listener(stepListener).build()).end();
+    	final Flow annFlow = new FlowBuilder<Flow>("annFlow").from(stepBuilderFactory.get(annStepName).tasklet(annTasklet()).listener(stepListener).build()).end();
+    	final Flow certFlow = new FlowBuilder<Flow>("certFlow").from(stepBuilderFactory.get(certStepName).tasklet(certTasklet()).listener(stepListener).build()).end();
+    	final Flow newHireFlow = new FlowBuilder<Flow>("newHireFlow").from(stepBuilderFactory.get(newHireStepName).tasklet(newHireTasklet()).listener(stepListener).build()).end();
+    	final Flow requestFlow = new FlowBuilder<Flow>("requestFlow").from(stepBuilderFactory.get(rqstStepName).tasklet(requestTasklet()).listener(stepListener).build()).end();
+    	final Flow reviewFlow = new FlowBuilder<Flow>("reviewFlow").from(stepBuilderFactory.get(rvwStepName).tasklet(reviewTasklet()).listener(stepListener).build()).end();
+    	final Flow taskFlow = new FlowBuilder<Flow>("taskFlow").from(stepBuilderFactory.get(taskStepName).tasklet(taskTasklet()).listener(stepListener).build()).end();
+    	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get(vacStepName).tasklet(vacTasklet()).listener(stepListener).build()).end();
 
-		interfaceName = " USA Staffing Interface";
+    	//Parallel Report Flows
+    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, ihsVacancyFlow).build();
+    	final Flow parallelFlow2 = new FlowBuilder<Flow>("parallelFlow2").split(new SimpleAsyncTaskExecutor()).add(appFlow, annFlow, certFlow).build();
+    	final Flow parallelFlow3 = new FlowBuilder<Flow>("parallelFlow3").split(new SimpleAsyncTaskExecutor()).add(newHireFlow, requestFlow, reviewFlow).build();
+    	final Flow parallelFlow4 = new FlowBuilder<Flow>("parallelFlow4").split(new SimpleAsyncTaskExecutor()).add(taskFlow, vacFlow).build();
+    			
+/*    	interfaceName = " USA Staffing Interface";
 		return jobBuilderFactory.get("importDSSReports")
 				.incrementer(new RunIdIncrementer())
 				.listener(jobListener)
@@ -138,14 +148,26 @@ public class BatchConfiguration {
 				.to(taskFlow).on("*")
 				.to(vacFlow)
 				.end()
-				.build();			
+				.build();*/
+		
+    	interfaceName = " USA Staffing Interface";
+		return jobBuilderFactory.get("importDSSReports")
+				.incrementer(new RunIdIncrementer())
+				.listener(jobListener)
+				.preventRestart()
+				.start(parallelFlow1).on("*")
+				.to(parallelFlow2).on("*")
+				.to(parallelFlow3).on("*")
+				.to(parallelFlow4)
+				.end()
+				.build();
+		
 	}
 	
 	//Announcement Tasklet
 	@Bean
 	@StepScope
 	public Tasklet annTasklet() {
-		announcement.construct();
 		return new ReportTasklet();
 	}
     
@@ -153,7 +175,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet appTasklet() {		
-		application.construct();
 		return new ReportTasklet();
 	}	
 	
@@ -161,7 +182,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet certTasklet() {
-		certificate.construct();
 		return new ReportTasklet();
 	}
 	
@@ -169,7 +189,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet newHireTasklet() {
-		newHire.construct();
 		return new ReportTasklet();
 	}
 	
@@ -177,7 +196,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet requestTasklet() {
-		request.construct();
 		return new ReportTasklet();
 	}
 	
@@ -185,7 +203,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet reviewTasklet() {
-		review.construct();
 		return new ReportTasklet();
 	}
 	
@@ -193,7 +210,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet taskTasklet() {
-		task.construct();
 		return new ReportTasklet();
 	}
 	
@@ -201,7 +217,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet vacTasklet() {
-		vacancy.construct();
 		return new ReportTasklet();
 	}
 	
@@ -209,7 +224,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet offerTasklet() {
-		time2Offer.construct();
 		return new ReportTasklet();
 	}	
 		
@@ -217,7 +231,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet staffTasklet() {
-		time2Staff.construct();
 		return new ReportTasklet();
 	}
 	
@@ -225,7 +238,6 @@ public class BatchConfiguration {
 	@Bean
 	@StepScope
 	public Tasklet ihsVacancyTasklet() {
-		ihsVacancy.construct();
 		return new ReportTasklet();
 	}	
 	
