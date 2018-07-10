@@ -27,7 +27,7 @@ import gov.hhs.usas.dss.Util;
 
 @Component
 @PropertySource("classpath:report.properties")
-public class ReportTasklet extends Report implements Tasklet {
+public class ReportTasklet implements Tasklet {
 
 	public ReportTasklet() {
 		super();
