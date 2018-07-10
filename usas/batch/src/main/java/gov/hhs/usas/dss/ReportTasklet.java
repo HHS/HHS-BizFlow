@@ -30,7 +30,6 @@ import gov.hhs.usas.dss.Util;
 public class ReportTasklet implements Tasklet {
 
 	public ReportTasklet() {
-		super();
 
 	}
 
