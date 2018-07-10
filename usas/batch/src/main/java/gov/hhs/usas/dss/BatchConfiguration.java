@@ -43,7 +43,6 @@ import gov.hhs.usas.dss.model.Vacancy;
 
 @Configuration
 @EnableBatchProcessing
-@PropertySource("classpath:report.properties")
 public class BatchConfiguration {
 		
 	@Autowired
