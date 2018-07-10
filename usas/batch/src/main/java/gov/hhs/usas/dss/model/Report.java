@@ -189,7 +189,7 @@ public class Report {
 	}
 
 	public Report() {
-		super();
+
 	}
 
 }
