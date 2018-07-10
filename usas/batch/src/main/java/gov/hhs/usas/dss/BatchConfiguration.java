@@ -4,7 +4,6 @@ import javax.sql.DataSource;
 
 
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -17,11 +16,10 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import gov.hhs.usas.dss.model.Announcement;
@@ -29,7 +27,6 @@ import gov.hhs.usas.dss.model.Application;
 import gov.hhs.usas.dss.model.Certificate;
 import gov.hhs.usas.dss.model.IHSVacancy;
 import gov.hhs.usas.dss.model.NewHire;
-import gov.hhs.usas.dss.model.Report;
 import gov.hhs.usas.dss.model.Request;
 import gov.hhs.usas.dss.model.Review;
 import gov.hhs.usas.dss.model.Task;
@@ -46,6 +43,7 @@ import gov.hhs.usas.dss.model.Vacancy;
 
 @Configuration
 @EnableBatchProcessing
+@PropertySource("classpath:report.properties")
 public class BatchConfiguration {
 		
 	@Autowired
@@ -102,14 +100,17 @@ public class BatchConfiguration {
 	
 	@Autowired
 	private Vacancy vacancy;
-	 
+		 
 	/*
 	 * Job - importDSSReports
 	 */
 	@Bean
 	public Job importDSSReports() throws Exception {
 
-    	final Flow appFlow = new FlowBuilder<Flow>("appFlow").from(stepBuilderFactory.get("executeApplicationReportStep").tasklet(appTasklet()).listener(stepListener).build()).end();
+    	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
+    	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get("executeStaffReportStep").tasklet(staffTasklet()).listener(stepListener).build()).end();
+    	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get("executeIHSVacancyReportStep").tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
+		final Flow appFlow = new FlowBuilder<Flow>("appFlow").from(stepBuilderFactory.get("executeApplicationReportStep").tasklet(appTasklet()).listener(stepListener).build()).end();
     	final Flow annFlow = new FlowBuilder<Flow>("annFlow").from(stepBuilderFactory.get("executeAnnouncementReportStep").tasklet(annTasklet()).listener(stepListener).build()).end();
     	final Flow certFlow = new FlowBuilder<Flow>("certFlow").from(stepBuilderFactory.get("executeCertificateReportStep").tasklet(certTasklet()).listener(stepListener).build()).end();
     	final Flow newHireFlow = new FlowBuilder<Flow>("newHireFlow").from(stepBuilderFactory.get("executeNewHireReportStep").tasklet(newHireTasklet()).listener(stepListener).build()).end();
@@ -117,11 +118,14 @@ public class BatchConfiguration {
     	final Flow reviewFlow = new FlowBuilder<Flow>("reviewFlow").from(stepBuilderFactory.get("executeReviewReportStep").tasklet(reviewTasklet()).listener(stepListener).build()).end();
     	final Flow taskFlow = new FlowBuilder<Flow>("taskFlow").from(stepBuilderFactory.get("executeTaskReportStep").tasklet(taskTasklet()).listener(stepListener).build()).end();
     	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
-    	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
-    	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get("executeStaffReportStep").tasklet(staffTasklet()).listener(stepListener).build()).end();
-    	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get("executeIHSVacancyReportStep").tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
 
-		interfaceName = " USA Staffing Interface";
+    	//Parallel Report Flows
+    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, ihsVacancyFlow).build();
+    	final Flow parallelFlow2 = new FlowBuilder<Flow>("parallelFlow2").split(new SimpleAsyncTaskExecutor()).add(appFlow, annFlow, certFlow).build();
+    	final Flow parallelFlow3 = new FlowBuilder<Flow>("parallelFlow3").split(new SimpleAsyncTaskExecutor()).add(newHireFlow, requestFlow, reviewFlow).build();
+    	final Flow parallelFlow4 = new FlowBuilder<Flow>("parallelFlow4").split(new SimpleAsyncTaskExecutor()).add(taskFlow, vacFlow).build();
+    			
+/*    	interfaceName = " USA Staffing Interface";
 		return jobBuilderFactory.get("importDSSReports")
 				.incrementer(new RunIdIncrementer())
 				.listener(jobListener)
@@ -138,95 +142,119 @@ public class BatchConfiguration {
 				.to(taskFlow).on("*")
 				.to(vacFlow)
 				.end()
-				.build();			
+				.build();*/
+		
+    	interfaceName = " USA Staffing Interface";
+		return jobBuilderFactory.get("importDSSReports")
+				.incrementer(new RunIdIncrementer())
+				.listener(jobListener)
+				.preventRestart()
+				.start(parallelFlow1).on("*")
+				.to(parallelFlow2).on("*")
+				.to(parallelFlow3).on("*")
+				.to(parallelFlow4)
+				.end()
+				.build();
+		
 	}
 	
 	//Announcement Tasklet
 	@Bean
 	@StepScope
 	public Tasklet annTasklet() {
-		announcement.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(announcement);
+		return rt;
 	}
     
 	//Application Tasklet
 	@Bean
 	@StepScope
 	public Tasklet appTasklet() {		
-		application.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(application);
+		return rt;
 	}	
 	
 	//Certificate Tasklet
 	@Bean
 	@StepScope
 	public Tasklet certTasklet() {
-		certificate.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(certificate);
+		return rt;
 	}
 	
 	//New Hire Tasklet
 	@Bean
 	@StepScope
 	public Tasklet newHireTasklet() {
-		newHire.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(newHire);
+		return rt;
 	}
 	
 	//Request Tasklet
 	@Bean
 	@StepScope
 	public Tasklet requestTasklet() {
-		request.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(request);
+		return rt;
 	}
 	
 	//Review Tasklet
 	@Bean
 	@StepScope
 	public Tasklet reviewTasklet() {
-		review.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(review);
+		return rt;
 	}
 	
 	//Task Tasklet
 	@Bean
 	@StepScope
 	public Tasklet taskTasklet() {
-		task.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(task);
+		return rt;
 	}
 	
 	//Vacancy Tasklet
 	@Bean
 	@StepScope
 	public Tasklet vacTasklet() {
-		vacancy.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(vacancy);
+		return rt;
 	}
 	
 	//Offer Tasklet
 	@Bean
 	@StepScope
 	public Tasklet offerTasklet() {
-		time2Offer.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(time2Offer);
+		return rt;
 	}	
 		
 	//Staff Tasklet
 	@Bean
 	@StepScope
 	public Tasklet staffTasklet() {
-		time2Staff.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(time2Staff);
+		return rt;
 	}
 	
 	//IHS Vacancy Tasklet
 	@Bean
 	@StepScope
 	public Tasklet ihsVacancyTasklet() {
-		ihsVacancy.construct();
-		return new ReportTasklet();
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(ihsVacancy);
+		return rt;
 	}	
 	
 	@Bean
