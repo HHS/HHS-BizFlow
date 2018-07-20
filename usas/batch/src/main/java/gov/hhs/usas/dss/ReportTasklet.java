@@ -19,13 +19,19 @@ import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.dss.ReportGeneration;
 import gov.hhs.usas.dss.DateRange;
+
 import gov.hhs.usas.dss.model.Report;
+
 import gov.hhs.usas.dss.Util;
 
 
 @Component
 @PropertySource("classpath:report.properties")
-public class ReportTasklet extends Report implements Tasklet {
+public class ReportTasklet implements Tasklet {
+
+	public ReportTasklet() {
+
+	}
 
 	private static final Logger log = LoggerFactory.getLogger(ReportTasklet.class);
 
@@ -47,7 +53,13 @@ public class ReportTasklet extends Report implements Tasklet {
 	@Value("${report.fail}")
 	private String rptFailMsg;
 	
-	@SuppressWarnings("finally")
+	public Report rpt;
+	
+	public void setReport(Report rpt) {
+		this.rpt = rpt;
+	}
+	
+	@SuppressWarnings({ "finally", "resource" })
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
@@ -60,9 +72,9 @@ public class ReportTasklet extends Report implements Tasklet {
 		long time;
 		int errCnt = 0;
 		String errMsg;
-		
+					
 		try {			
-			if (this.isRunReport()) {
+			if (rpt.isRunReport()) {
 				start = System.currentTimeMillis();
 				
 				sysDate = new Date();
@@ -71,64 +83,64 @@ public class ReportTasklet extends Report implements Tasklet {
 				c.add(Calendar.DATE, 1);
 				currentDate = c.getTime();
 
-				if (Util.isNull(this.getEndDate())) {
+				if (Util.isNull(rpt.getEndDate())) {
 					//If there is no specified end date range then use the default report iteration
-					rptIteration = this.getRptIteration();
+					rptIteration = rpt.getRptIteration();
 				}else {
 					//If there is a specified end date range then calculate the date iteration
-					rptIteration = DateRange.generateDateIteration(currentDate, this.getEndDate(), this.getDateInterval());
+					rptIteration = DateRange.generateDateIteration(currentDate, rpt.getEndDate(), rpt.getDateInterval());
 				}
 				
-				if (!Util.isNull(this.getSpTruncate())) {
-					ReportGeneration.truncateReportTables(targetDataSource, this);
+				if (!Util.isNull(rpt.getSpTruncate())) {
+					ReportGeneration.truncateReportTables(targetDataSource, rpt);
 				}
 				
 				for(int i=0; i< rptIteration; i++) {
 					
-					if((!(i+1< rptIteration)) && (!Util.isNull(this.getEndDate()))) {
-						DateRange.generateDateRange(currentDate, this.getEndDate());
+					if((!(i+1< rptIteration)) && (!Util.isNull(rpt.getEndDate()))) {
+						DateRange.generateDateRange(currentDate, rpt.getEndDate());
 					}else {
-						currentDate = DateRange.generateDateRange(currentDate, this.getDateInterval());
+						currentDate = DateRange.generateDateRange(currentDate, rpt.getDateInterval());
 					}
 					
-					this.setRvpStartDisplay(DateRange.getStartDisplayVal());;
-					this.setRvpStartUseval(DateRange.getStartUseVal());
-					this.setRvpEndDisplay(DateRange.getEndDisplayVal());
-					this.setRvpEndUseval(DateRange.getEndUseVal());
+					rpt.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+					rpt.setRvpStartUseval(DateRange.getStartUseVal());
+					rpt.setRvpEndDisplay(DateRange.getEndDisplayVal());
+					rpt.setRvpEndUseval(DateRange.getEndUseVal());
 					
-					reportXml = ReportGeneration.generateReport(this);
+					reportXml = ReportGeneration.generateReport(rpt);
 					
 					if(!Util.isNull(reportXml)) {
-						log.info("The report " + this.getReportName() + " retrieved data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+						log.info("The report " + rpt.getReportName() + " retrieved data between " + rpt.getRvpStartUseval() + " and " + rpt.getRvpEndUseval());
 						if (saveReportFile) {
-							ReportGeneration.saveReportFile(this, reportXml);
+							ReportGeneration.saveReportFile(rpt, reportXml);
 						}
-						ReportGeneration.insertReporttoDB(targetDataSource, this, reportXml);
+						ReportGeneration.insertReporttoDB(targetDataSource, rpt, reportXml);
 					}else {
-						log.info("The report " + this.getReportName() + " did not retrieve data between " + this.getRvpStartUseval() + " and " + this.getRvpEndUseval());
+						log.info("The report " + rpt.getReportName() + " did not retrieve data between " + rpt.getRvpStartUseval() + " and " + rpt.getRvpEndUseval());
 						errCnt++;
 					}
 
 				}
 				time = System.currentTimeMillis() - start;
-				log.info("Time taken for downloading " + this.getReportName() + " data: " + time + "ms");
+				log.info("Time taken for downloading " + rpt.getReportName() + " data: " + time + "ms");
 				
 				if (errCnt > 0) {
-					errMsg = "The report " + this.getReportName() + " did not retrieve data for " + errCnt + " report iteration(s).";
+					errMsg = "The report " + rpt.getReportName() + " did not retrieve data for " + errCnt + " report iteration(s).";
 					log.info(errMsg);
 				    contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(), errMsg));
-				    chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptErrorMsg);
+				    chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(rpt.getReportName(), rptErrorMsg);
 				} else {
-					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptSuccessMsg);
+					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(rpt.getReportName(), rptSuccessMsg);
 				}
 			} else {
-				log.info("The report " + this.getReportName() + " is turned off.");
-				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptOffMsg);
+				log.info("The report " + rpt.getReportName() + " is turned off.");
+				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(rpt.getReportName(), rptOffMsg);
 			}
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
 			contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(),e.getMessage()));
-			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(this.getReportName(), rptFailMsg);
+			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(rpt.getReportName(), rptFailMsg);
 		}finally{
 			return RepeatStatus.FINISHED;
 		}
