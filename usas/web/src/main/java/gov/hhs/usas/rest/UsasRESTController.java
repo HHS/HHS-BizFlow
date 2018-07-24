@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.hhs.usas.rest.model.CognosReport;
 import gov.hhs.usas.rest.model.Prompt;
+import gov.hhs.usas.rest.model.USASResponse;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 import gov.hhs.usas.rest.report.service.AppointmentReportService;
@@ -66,7 +68,7 @@ public class UsasRESTController
 
 		CognosReport report = new CognosReport(reportName, reportPath, properties.getReportFormatDataSet(), prompt);
 
-		String response = client.sendReportDataRequest(report).getResponse();
+		String response = client.processReportDataRequest(report).getResponse();
 		if(client.getUsasResponse().getResponseCode() != 200){
 			response = client.getUsasResponse().getErrorMessage();
 		}		
@@ -97,10 +99,9 @@ public class UsasRESTController
 			log.info("Using XML report for Appointment "+ reportPath + " for transformation.");
 			usasAppointment = appointmentService.parseReportFromFile(reportPath);
 		}else{
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");    
-			usasAppointment = appointmentService.parseReportFromUSASResponse(this.client.sendReportDataRequest(appointmentReport));
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");
+			usasAppointment = appointmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(appointmentReport), requestNumber);
 		}
-
 		return usasAppointment;
 	}
 
@@ -129,7 +130,7 @@ public class UsasRESTController
 			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		}else{
 			log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report.");    
-			usasRecruitment = recruitmentService.parseReportFromUSASResponse(this.client.sendReportDataRequest(recruitmentReport));
+			usasRecruitment = recruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(recruitmentReport), requestNumber);
 		}
 
 		return usasRecruitment;
@@ -172,9 +173,9 @@ public class UsasRESTController
 			}
 		}else{
 			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report.");    
-			applicantRosterReportResult = this.client.sendReportDataRequest(applicantRosterReport).getResponse();
+			applicantRosterReportResult = this.client.processReportDataRequest(applicantRosterReport).getResponse();
 		}
-		
+
 		return applicantRosterReportResult;
 	}
 
@@ -190,7 +191,7 @@ public class UsasRESTController
 	{
 		Prompt applicantNotificationPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
 		CognosReport applicantNotificationReport = new CognosReport(properties.getApplicantNotificationReportName(), properties.getApplicantNotificationReportPath(), properties.getReportFormatHTML(), applicantNotificationPrompt);
-		
+
 		String applicantNotificationReportResult = "";
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){
 			String report = properties.getApplicantNotificationFileLocation() + File.separator + vacancyNumber + ".html";
@@ -215,10 +216,10 @@ public class UsasRESTController
 			}
 		}else{
 			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report.");    
-			applicantNotificationReportResult = this.client.sendReportDataRequest(applicantNotificationReport).getResponse();
+			applicantNotificationReportResult = this.client.processReportDataRequest(applicantNotificationReport).getResponse();
 		}
-		
-		
+
+
 		return applicantNotificationReportResult;
 	}
 
