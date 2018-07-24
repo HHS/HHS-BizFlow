@@ -42,11 +42,12 @@ public class CognosRESTClient
 	private Properties properties;
 	@Autowired
 	private USASRequest usasRequest;
-	@Autowired
+	//@Autowired
 	private USASResponse usasResponse;
 	@Autowired
 	private USASCredentials credentials;
 	private CookieManager manager;
+
 
 
 	public CognosRESTClient(){
@@ -69,39 +70,20 @@ public class CognosRESTClient
 		}
 	}
 
+
 	/**
 	 * Logs into the USA Staffing Cognos server, requests report data
 	 * for specific report and then logs off.
 	 * @param report
 	 * @return USASResponse
 	 */
-	public USASResponse sendReportDataRequest(CognosReport report)
+	public USASResponse processReportDataRequest(CognosReport report)
 	{
-
 		if(sendLogonRequest().equalsIgnoreCase(properties.getResponseCodeSuccess())){
-			String reportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + report.getPath();
-			this.usasRequest.setPOSTParameters(report);
-			
-			try
-			{
-				URL url = new URL(reportURL);
-
-				HttpURLConnection con = (HttpURLConnection)url.openConnection();
-
-				con.setRequestMethod(this.usasRequest.getRequestMethod());
-				con.setRequestProperty(this.usasRequest.getUserAgentProperty(), this.usasRequest.getUserAgent());
-				con.setRequestProperty(this.usasRequest.getAcceptLanguageProperty(), this.usasRequest.getAcceptLanguage());
-				con.setRequestProperty(this.usasRequest.getContentTypeProperty(), this.usasRequest.getContentType());
-				con.setRequestProperty(this.usasRequest.getCookieProperty(), this.usasRequest.getCookie());
-
-				con.setDoOutput(true);
-				OutputStream os = con.getOutputStream();
-				os.write(this.usasRequest.getPOSTParameters().getBytes());
-				os.flush();
-				os.close();
-
-				con.connect();
-
+			//Call sendReportDatarequest() method
+			try{
+				HttpURLConnection con = sendReportDataRequest(report);
+				
 				if (con.getResponseCode() == properties.getHttpStatusOk())
 				{
 					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -113,36 +95,71 @@ public class CognosRESTClient
 					}
 					in.close();
 
-					this.usasResponse.setResponse(response.toString());
-					
-					//verify response if it contains 'No Data Available', send an error
-					if(response.toString().equalsIgnoreCase("No Data Available")){
-						this.usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
-						this.usasResponse.setErrorMessage(properties.getNoDataException());
-					}else{
-						this.usasResponse.setResponseCode(con.getResponseCode());						
-						this.usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
-					}
+					//Check is the response contains the requested 'request number'
+					String searchRequestNumber = "<Request__Number>" + report.getPrompt().getDisplayValue() +"</Request__Number>";
+					if (response.toString().contains(searchRequestNumber)){
+						usasResponse = new USASResponse();
+						usasResponse.setResponse(response.toString());
+						usasResponse.setResponseCode(con.getResponseCode());						
+						usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
+					}//verify response if it contains 'No Data Available', send an error
+					else if(response.toString().equalsIgnoreCase("No Data Available")){
+						usasResponse = new USASResponse();
+						usasResponse.setResponse("No Data Available");
+						usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
+						usasResponse.setErrorMessage(properties.getNoDataException());
+					}else{//send request again
+						con = sendReportDataRequest(report);
+					}					
 				}
 				else
 				{
-					this.usasResponse.setErrorMessage(properties.getReportDataException() + con.getResponseCode() + ":" + con.getResponseMessage());
+					usasResponse = new USASResponse();
+					usasResponse.setResponseCode(con.getResponseCode());
+					usasResponse.setErrorMessage(properties.getReportDataException() + con.getResponseCode() + ":" + con.getResponseMessage());
 				}
-			}catch (MalformedURLException e){
-				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
-			}catch (IOException e){
-				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}catch (Exception e){
-				this.usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
+				usasResponse = new USASResponse();
+				usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
+				usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}finally{
-				log.info(this.usasResponse.getErrorMessage());
+				log.info(usasResponse.getErrorMessage());
 				sendLogoffRequest();
 			}
 		}else{
-			this.usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
-			this.usasResponse.setErrorMessage(properties.getConnectionException());
+			usasResponse = new USASResponse();
+			usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
+			usasResponse.setErrorMessage(properties.getConnectionException());
 		}
-		return this.usasResponse;
+		return usasResponse;
+	}
+
+	private HttpURLConnection sendReportDataRequest(CognosReport cognosReport) throws Exception
+	{
+		HttpURLConnection con = null;		
+
+		String reportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + cognosReport.getPath();
+		this.usasRequest.setPOSTParameters(cognosReport);			
+
+		URL url = new URL(reportURL);
+
+		con = (HttpURLConnection)url.openConnection();
+
+		con.setRequestMethod(this.usasRequest.getRequestMethod());
+		con.setRequestProperty(this.usasRequest.getUserAgentProperty(), this.usasRequest.getUserAgent());
+		con.setRequestProperty(this.usasRequest.getAcceptLanguageProperty(), this.usasRequest.getAcceptLanguage());
+		con.setRequestProperty(this.usasRequest.getContentTypeProperty(), this.usasRequest.getContentType());
+		con.setRequestProperty(this.usasRequest.getCookieProperty(), this.usasRequest.getCookie());
+
+		con.setDoOutput(true);
+		OutputStream os = con.getOutputStream();
+		os.write(this.usasRequest.getPOSTParameters().getBytes());
+		os.flush();
+		os.close();
+
+		con.connect();
+
+		return con;
 	}
 
 	/**
@@ -151,6 +168,7 @@ public class CognosRESTClient
 	@SuppressWarnings("finally")
 	public String sendLogonRequest()
 	{
+
 		log.info("\nConnecting to USAS Cognos server...");
 		String connectionResponse = "";
 		String logonURL = this.usasRequest.getServerURL() + properties.getLogonPath();
@@ -187,16 +205,6 @@ public class CognosRESTClient
 				log.info(properties.getConnectionException() + con.getResponseCode() + ":" + con.getResponseMessage());
 				connectionResponse = properties.getResponseCodeConnectionError();
 			}
-		}
-		catch (MalformedURLException e)
-		{
-			log.error(properties.getConnectionException() + e.getMessage() + "::" + e.getCause());
-			connectionResponse = properties.getResponseCodeConnectionError();
-		}
-		catch (IOException e)
-		{
-			log.error(properties.getConnectionException() + e.getMessage() + "::" + e.getCause());
-			connectionResponse = properties.getResponseCodeConnectionError();
 		}
 		catch (Exception e)
 		{

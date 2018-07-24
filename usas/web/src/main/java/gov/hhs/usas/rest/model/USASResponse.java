@@ -1,8 +1,6 @@
 package gov.hhs.usas.rest.model;
 
-import org.springframework.stereotype.Component;
-
-@Component
+//@Component
 public class USASResponse
 {
   private int responseCode;

@@ -33,7 +33,7 @@ import gov.hhs.usas.rest.report.model.Appointment.VacancyAnnouncementResult;
 
 @Component
 public class AppointmentReportService extends ReportService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(AppointmentReportService.class);
 	@Autowired
 	private Properties properties;
@@ -42,38 +42,38 @@ public class AppointmentReportService extends ReportService {
 	private XMLInputFactory xif;
 	private StreamSource xml;
 	private XMLStreamReader xsr;
-	
+
 	private List<ApptInfoCert> apptInfoCertList;
 	private List<ApptInfoNewHire> apptInfoNewHireList;
 	private List<Orientation> orientationList;
 	private List<PayPlan> payPlanList;
 	private List<Position> positionList;	
-	
+
 	private String requestNumber;
 	private Map<String, ArrayList<DutyStationResult>> dutyStationMap;
 	private List<VacancyAnnouncementResult> vacancyAnnouncementList;
 	private USAStaffingAppointmentResult usasAppointment;
-	
+
 	private Class<?> cls;
 	private Object object;
 	private String appointmentPackage;
-	
-	 @PostConstruct
-	  public void init(){	
-			this.apptInfoCertList = new ArrayList<ApptInfoCert>();
-			this.apptInfoNewHireList = new ArrayList<ApptInfoNewHire>();
-			this.orientationList = new ArrayList<Orientation>();
-			this.payPlanList = new ArrayList<PayPlan>();
-			this.positionList = new ArrayList<Position>();
-			
-			this.requestNumber = "";
-			this.dutyStationMap = new HashMap<String, ArrayList<DutyStationResult>>();
-			this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
-			this.usasAppointment = new USAStaffingAppointmentResult();
-			this.cls = null;
-			this.object = new Object();
-			this.appointmentPackage = "gov.hhs.usas.rest.report.model.Appointment.";
-	  }
+
+	@PostConstruct
+	public void init(){	
+		this.apptInfoCertList = new ArrayList<ApptInfoCert>();
+		this.apptInfoNewHireList = new ArrayList<ApptInfoNewHire>();
+		this.orientationList = new ArrayList<Orientation>();
+		this.payPlanList = new ArrayList<PayPlan>();
+		this.positionList = new ArrayList<Position>();
+
+		this.requestNumber = "";
+		this.dutyStationMap = new HashMap<String, ArrayList<DutyStationResult>>();
+		this.vacancyAnnouncementList = new ArrayList<VacancyAnnouncementResult>();
+		this.usasAppointment = new USAStaffingAppointmentResult();
+		this.cls = null;
+		this.object = new Object();
+		this.appointmentPackage = "gov.hhs.usas.rest.report.model.Appointment.";
+	}
 
 
 	/**
@@ -82,17 +82,27 @@ public class AppointmentReportService extends ReportService {
 	 * @param usasResponse
 	 * @return transformed XML report as USAStaffingAppointmentResult object
 	 */
-	public USAStaffingAppointmentResult parseReportFromUSASResponse(USASResponse usasResponse){
+	public USAStaffingAppointmentResult parseReportFromUSASResponse(USASResponse usasResponse, String originRequestNumber){
 		if(usasResponse.getResponseCode() != properties.getHttpStatusOk()){
 			if(usasResponse.getResponseCode() == properties.getHttpSuccessNoContent()){
 				return new USAStaffingAppointmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
 			}
 			return new USAStaffingAppointmentResult(properties.getResponseCodeConnectionError(), usasResponse.getErrorMessage());
 		}
-		this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
-		return parseReport();
+		
+		//To handle concurrency issue
+		String searchRequestNumber = "<Request__Number>" + originRequestNumber +"</Request__Number>";
+		if(usasResponse.getResponse().toString().contains(searchRequestNumber)){
+			this.requestNumber = originRequestNumber;
+			this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
+			return parseReport();
+		}else{
+			//Suggest end user to try again
+			return new USAStaffingAppointmentResult(properties.getResponseCodeReportError(), properties.getReportDataException());
+			//return new USAStaffingAppointmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
+		}
 	}
-	
+
 	/**
 	 * This method is used when a USA Staffing Report is pre-downloaded
 	 * and save at a specific location
@@ -101,16 +111,16 @@ public class AppointmentReportService extends ReportService {
 	 */
 	public USAStaffingAppointmentResult parseReportFromFile(String filePath){
 		File reportXML = new File(filePath);
-		
+
 		if(reportXML.exists() && reportXML.isFile()){
 			this.xml = new StreamSource(filePath);
 			return parseReport();
 		}
 		return new USAStaffingAppointmentResult(properties.getResponseCodeFileError(), "The requested file could not be found.");
-		
+
 	}
-	
-	
+
+
 	/**
 	 * This method partially reads the XML report and unmarshalls 
 	 * the block to respective POJO. When entire XML is read, it uses 
@@ -151,15 +161,15 @@ public class AppointmentReportService extends ReportService {
 					JAXBContext jc = JAXBContext.newInstance(new Class[] { this.cls });
 					Unmarshaller unmarshaller = jc.createUnmarshaller();
 					JAXBElement jbe = unmarshaller.unmarshal(this.xsr, this.cls);
-					
-						this.object = this.cls.newInstance();
-						this.object = jbe.getValue();
-					
+
+					this.object = this.cls.newInstance();
+					this.object = jbe.getValue();
+
 					if ((this.object instanceof ApptInfoCert))
 					{
-						if (this.requestNumber.length() <= 0) {
+						/*if (this.requestNumber.length() <= 0) {
 							this.requestNumber = ((ApptInfoCert)this.object).getRequestNumber();
-						}
+						}*/
 						this.apptInfoCertList.add((ApptInfoCert)this.object);
 					}
 					if ((this.object instanceof ApptInfoNewHire)) {
@@ -186,7 +196,7 @@ public class AppointmentReportService extends ReportService {
 						}
 						this.positionList.add((Position)this.object);
 					}
-					
+
 					if ((this.object == null) || 
 
 							(this.xsr.getEventType() == 4)) {
@@ -196,7 +206,7 @@ public class AppointmentReportService extends ReportService {
 			}
 			this.positionList = this.parser.addPayPlan(this.payPlanList, this.positionList);
 			this.dutyStationMap = this.parser.createDutyStationListForCertificate(this.positionList);
-			
+
 			this.vacancyAnnouncementList = this.parser.createVacancyAnnouncementListForUSAStaffingAppointment(this.apptInfoCertList, this.apptInfoNewHireList, this.orientationList, this.positionList, this.dutyStationMap);
 
 			this.usasAppointment = this.parser.createUSAStaffingRecruitment(this.requestNumber, this.vacancyAnnouncementList);
