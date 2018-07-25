@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import gov.hhs.usas.rest.model.USASResponse;
+import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRating;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingDates;
 import gov.hhs.usas.rest.report.model.Recruitment.ApplicantRatingResult;
@@ -87,15 +88,22 @@ public class RecruitmentReportService extends ReportService
 	 * @param usasResponse
 	 * @return transformed XML report as USAStaffingRecruitmentResult object
 	 */
-	public USAStaffingRecruitmentResult parseReportFromUSASResponse(USASResponse usasResponse){
+	public USAStaffingRecruitmentResult parseReportFromUSASResponse(USASResponse usasResponse, String originRequestNumber){
 		if(usasResponse.getResponseCode() != properties.getHttpStatusOk()){
 			if(usasResponse.getResponseCode() == properties.getHttpSuccessNoContent()){
 				return new USAStaffingRecruitmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
 			}
 			return new USAStaffingRecruitmentResult(properties.getResponseCodeConnectionError(), usasResponse.getErrorMessage());
 		}
+		String searchRequestNumber = "<Request__Number>" + originRequestNumber +"</Request__Number>";
+		if(usasResponse.getResponse().toString().contains(searchRequestNumber)){
+			this.requestNumber = originRequestNumber;
 		this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
 		return parseReport();
+		}else{
+			//Suggest end user to try again
+			return new USAStaffingRecruitmentResult(properties.getResponseCodeReportError(), properties.getReportDataException());
+		}
 	}
 
 	/**
