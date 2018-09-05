@@ -64,7 +64,7 @@ public class UsasRESTController
 			reportPath = properties.getAppointmentReportPath();
 		else
 			return "Incorrect report name. Correct URL syntax: /usas/report/{reportName}/{requestNumber}";
-		Prompt prompt = new Prompt(properties.getReportPrompt(), requestNumber, requestNumber);
+		Prompt prompt = new Prompt(properties.getReportPromptRequest(), requestNumber, requestNumber);
 
 		CognosReport report = new CognosReport(reportName, reportPath, properties.getReportFormatDataSet(), prompt);
 
@@ -89,7 +89,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/appointment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public USAStaffingAppointmentResult getAppointmentFormData(@PathVariable String requestNumber)
 	{
-		Prompt appointmentPrompt = new Prompt(properties.getReportPrompt(), requestNumber, requestNumber);
+		Prompt appointmentPrompt = new Prompt(properties.getReportPromptRequest(), requestNumber, requestNumber);
 		CognosReport appointmentReport = new CognosReport(properties.getAppointmentReportName(), properties.getAppointmentReportPath(), properties.getReportFormatDataSet(), appointmentPrompt);
 
 		USAStaffingAppointmentResult usasAppointment = new USAStaffingAppointmentResult();
@@ -119,7 +119,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/recruitment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public USAStaffingRecruitmentResult getRecruitmentFormData(@PathVariable String requestNumber)
 	{
-		Prompt recruitmentPrompt = new Prompt(properties.getReportPrompt(), requestNumber, requestNumber);
+		Prompt recruitmentPrompt = new Prompt(properties.getReportPromptRequest(), requestNumber, requestNumber);
 		CognosReport recruitmentReport = new CognosReport(properties.getRecruitmentReportName(), properties.getRecruitmentReportPath(), properties.getReportFormatDataSet(), recruitmentPrompt);
 
 		USAStaffingRecruitmentResult usasRecruitment = new USAStaffingRecruitmentResult();
@@ -146,7 +146,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportHTML/applicantroster/{vacancyNumber}", produces = MediaType.TEXT_HTML_VALUE)
 	public String getApplicantRosterReport(@PathVariable String vacancyNumber)
 	{
-		Prompt applicantRosterPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
+		Prompt applicantRosterPrompt = new Prompt(properties.getReportPromptVacancy(), vacancyNumber, vacancyNumber);
 		CognosReport applicantRosterReport = new CognosReport(properties.getApplicantRosterReportName(), properties.getApplicantRosterReportPath(), properties.getReportFormatHTML(), applicantRosterPrompt);
 
 		String applicantRosterReportResult = "";
@@ -189,7 +189,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportHTML/applicantnotification/{vacancyNumber}", produces = MediaType.TEXT_HTML_VALUE)
 	public String getApplicantNotificationReport(@PathVariable String vacancyNumber)
 	{
-		Prompt applicantNotificationPrompt = new Prompt("parm_VacancyNumber", vacancyNumber, vacancyNumber);
+		Prompt applicantNotificationPrompt = new Prompt(properties.getReportPromptVacancy(), vacancyNumber, vacancyNumber);
 		CognosReport applicantNotificationReport = new CognosReport(properties.getApplicantNotificationReportName(), properties.getApplicantNotificationReportPath(), properties.getReportFormatHTML(), applicantNotificationPrompt);
 
 		String applicantNotificationReportResult = "";

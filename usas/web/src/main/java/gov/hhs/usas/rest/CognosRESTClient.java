@@ -95,9 +95,11 @@ public class CognosRESTClient
 					}
 					in.close();
 
-					//Check is the response contains the requested 'request number'
+					//Check is the response contains the requested 'request number' or 'vacancy number'
 					String searchRequestNumber = "<Request__Number>" + report.getPrompt().getDisplayValue() +"</Request__Number>";
-					if (response.toString().contains(searchRequestNumber)){
+					String searchVacancyNumber = report.getPrompt().getDisplayValue();					
+					
+					if ((report.getPrompt().getId().equals(properties.getReportPromptRequest()) && response.toString().contains(searchRequestNumber)) || (report.getPrompt().getId().equals(properties.getReportPromptVacancy()) && response.toString().contains(searchVacancyNumber))){
 						usasResponse = new USASResponse();
 						usasResponse.setResponse(response.toString());
 						usasResponse.setResponseCode(con.getResponseCode());						
