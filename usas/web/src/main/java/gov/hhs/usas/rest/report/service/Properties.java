@@ -20,8 +20,10 @@ public class Properties {
 	private String reportDataPath;
 
 	//Report Properties
-	@Value("${report.prompt.id}")
-	private String reportPrompt;
+	@Value("${report.prompt.id.request}")
+	private String reportPromptRequest;
+	@Value("${report.prompt.id.vacancy}")
+	private String reportPromptVacancy;
 	
 	@Value("${report.path.recruitment}")
 	private String recruitmentReportPath;
@@ -161,11 +163,17 @@ public class Properties {
 	public void setReportDataPath(String reportDataPath) {
 		this.reportDataPath = reportDataPath;
 	}
-	public String getReportPrompt() {
-		return reportPrompt;
+	public String getReportPromptRequest() {
+		return reportPromptRequest;
 	}
-	public void setReportPrompt(String reportPrompt) {
-		this.reportPrompt = reportPrompt;
+	public void setReportPromptRequest(String reportPromptRequest) {
+		this.reportPromptRequest = reportPromptRequest;
+	}
+	public String getReportPromptVacancy() {
+		return reportPromptVacancy;
+	}
+	public void setReportPromptVacancy(String reportPromptVacancy) {
+		this.reportPromptVacancy = reportPromptVacancy;
 	}
 	public String getRecruitmentReportPath() {
 		return recruitmentReportPath;
