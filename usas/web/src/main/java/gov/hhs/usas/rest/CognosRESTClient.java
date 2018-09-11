@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import gov.hhs.usas.rest.model.CognosReport;
 import gov.hhs.usas.rest.model.USASCredentials;
@@ -34,7 +35,8 @@ import gov.hhs.usas.rest.report.service.Properties;
  *Prepares Request & Response for REST web service calls for 
  *authentication and to get report data. 
  */
-@Configuration
+//@Configuration
+@Service
 public class CognosRESTClient
 {
 	private static Log log = LogFactory.getLog(CognosRESTClient.class);
@@ -47,8 +49,6 @@ public class CognosRESTClient
 	@Autowired
 	private USASCredentials credentials;
 	private CookieManager manager;
-
-
 
 	public CognosRESTClient(){
 		manager = new CookieManager();
@@ -79,11 +79,12 @@ public class CognosRESTClient
 	 */
 	public USASResponse processReportDataRequest(CognosReport report)
 	{
+		this.usasResponse = new USASResponse();
 		if(sendLogonRequest().equalsIgnoreCase(properties.getResponseCodeSuccess())){
 			//Call sendReportDatarequest() method
 			try{
 				HttpURLConnection con = sendReportDataRequest(report);
-				
+
 				if (con.getResponseCode() == properties.getHttpStatusOk())
 				{
 					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -95,41 +96,57 @@ public class CognosRESTClient
 					}
 					in.close();
 
+					String responseString = response.toString();
+
 					//Check is the response contains the requested 'request number' or 'vacancy number'
 					String searchRequestNumber = "<Request__Number>" + report.getPrompt().getDisplayValue() +"</Request__Number>";
 					String searchVacancyNumber = report.getPrompt().getDisplayValue();					
-					
-					if ((report.getPrompt().getId().equals(properties.getReportPromptRequest()) && response.toString().contains(searchRequestNumber)) || (report.getPrompt().getId().equals(properties.getReportPromptVacancy()) && response.toString().contains(searchVacancyNumber))){
-						usasResponse = new USASResponse();
-						usasResponse.setResponse(response.toString());
-						usasResponse.setResponseCode(con.getResponseCode());						
-						usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
-					}//verify response if it contains 'No Data Available', send an error
-					else if(response.toString().contains("No Data Available")){
-						usasResponse = new USASResponse();
-						usasResponse.setResponse("No Data Available");
-						usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
-						usasResponse.setErrorMessage(properties.getNoDataException());
-					}else{//send request again
-						con = sendReportDataRequest(report);
-					}					
+
+					if(report.getPrompt().getId().equals(properties.getReportPromptRequest())){
+						if(response.toString().contains("No Data Available")){//verify response if it contains 'No Data Available', send an error
+							usasResponse.setResponse("No Data Available for " + report.getName() + "report - " + report.getPrompt().getDisplayValue());
+							usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
+							usasResponse.setErrorMessage(properties.getNoDataException());
+						}else if(responseString.contains(searchRequestNumber)){
+							usasResponse.setResponse(responseString);
+							usasResponse.setResponseCode(con.getResponseCode());						
+							usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
+						}else {//send request again
+							con = sendReportDataRequest(report);
+						}
+					}
+					else if(report.getPrompt().getId().equals(properties.getReportPromptVacancy())){
+						if(responseString.equalsIgnoreCase("No Data Available")){//verify response if it contains 'No Data Available', send an error
+							usasResponse.setResponse("No Data Available for " + report.getName() + "report - " + report.getPrompt().getDisplayValue());
+							usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
+							usasResponse.setErrorMessage(properties.getNoDataException());
+						}else{
+							usasResponse.setResponse(responseString);
+							usasResponse.setResponseCode(con.getResponseCode());						
+							usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
+						}
+					} 
+
 				}
 				else
 				{
 					usasResponse = new USASResponse();
+					usasResponse.setResponse("");
 					usasResponse.setResponseCode(con.getResponseCode());
 					usasResponse.setErrorMessage(properties.getReportDataException() + con.getResponseCode() + ":" + con.getResponseMessage());
 				}
 			}catch (Exception e){
 				usasResponse = new USASResponse();
+				usasResponse.setResponse("");
 				usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
 				usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}finally{
 				log.info(usasResponse.getErrorMessage());
-				sendLogoffRequest();
+				//sendLogoffRequest();
 			}
 		}else{
 			usasResponse = new USASResponse();
+			usasResponse.setResponse("");
 			usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
 			usasResponse.setErrorMessage(properties.getConnectionException());
 		}
