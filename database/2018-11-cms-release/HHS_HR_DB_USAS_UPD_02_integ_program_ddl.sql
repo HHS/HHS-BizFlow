@@ -2108,7 +2108,7 @@ BEGIN
 				COLUMNS
 					STAFFING_ORGANIZATION             VARCHAR2(122)     PATH 'New__Hire__Staffing__Organization'
 					, REQUEST_NUMBER                  VARCHAR2(202)     PATH 'New__Hire__Request__Number'
-					, PD_NUMBER						  VARCHAR2(2050)    PATH 'New__Hire__Position__Description__Number'
+					, PD_NUMBER                       VARCHAR2(2050)    PATH 'New__Hire__Position__Description__Number'
 					, NEW_HIRE_CREATE_DATE_STR        VARCHAR2(50)      PATH 'New__Hire__Creation__Date'
 					, REQUEST_STATUS                  VARCHAR2(1002)    PATH 'New__Hire__Request__Status'
 					, REQUEST_TYPE                    VARCHAR2(1002)    PATH 'New__Hire__Request__Type'
