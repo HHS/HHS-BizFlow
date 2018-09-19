@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="EHRP15Min" default="package" basedir=".">
+
+	<property file="ehrp.properties" />
+
+	<property name="proj.jdk.home" value="${jdk.home.1.7}" />
+	<property name="proj.jdk.bin" value="${jdk.home.1.7}/bin" />
+	<property name="proj.jdk.classpath" value="jdk.classpath.1.7" />
+
+	<property name="target.jvm" value="1.7" />
+	<property name="target.name" value="ehrp" />
+	<property name="target.version" value="0.0.1-SNAPSHOT" />
+	<property name="spring.boot.version" value="1.5.10.RELEASE" />
+	<property name="proj.root.dir" value="${basedir}" />
+	<property name="src.dir" value="${proj.root.dir}/src" />
+	<property name="src.main.java.dir" value="${src.dir}/main/java" />
+	<property name="src.main.res.dir" value="${src.dir}/main/resources" />
+	<property name="build.dir" value="${proj.root.dir}/build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="bootjar.dir" value="${build.dir}/bootjar" />
+	<property name="bin.dir" value="${proj.root.dir}/bin" />
+	<property name="lib.dir" value="${proj.root.dir}/lib" />
+	<property name="dist.dir" value="${proj.root.dir}/dist" />
+	<property name="manifest" value="MANIFEST.MF"/>
+
+
+
+	<path id="jdk.classpath.1.7">
+		<fileset dir="${jdk.home.1.7}">
+			<include name="lib/**/*.jar" />
+			<include name="jre/lib/**/*.jar" />
+		</fileset>
+	</path>
+
+	<patternset id="module.dependncy.lib">
+		<!--
+		<include name="axis-1.4.jar" />
+		<include name="commons-discovery-0.2.jar" />
+		<include name="commons-logging-1.1.jar" />
+		<include name="log4j-1.2.8.jar" />
+		<include name="ojdbc7-12.1.0.jar" />
+		<include name="jaxrpc-1.1.jar" />
+		<include name="saaj-1.2.jar" />
+		<include name="wsdl4j-1.5.1.jar" />
+		-->
+		<include name="*.jar" />
+	</patternset>
+
+	<path id="classpath">
+		<!-- 
+		<path refid="${proj.jdk.classpath}" />
+		-->
+		<fileset dir="${lib.dir}">
+			<patternset refid="module.dependncy.lib"/>
+		</fileset>
+	</path>
+	
+	<path id="run.classpath">
+		<pathelement location="${dist.dir}/lib"/>
+		<fileset dir="${dist.dir}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+
+	<target name="init">
+		<tstamp>
+			<format property="curtime" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<echo message="Start time          = ${curtime}" />
+		<echo message="proj.root.dir       = ${proj.root.dir}" />
+		<echo message="src.dir             = ${src.dir}" />
+		<echo message="src.main.java.dir   = ${src.main.java.dir}" />
+		<echo message="src.main.res.dir    = ${src.main.res.dir}" />
+		<echo message="build.dir           = ${build.dir}" />
+		<echo message="classes.dir         = ${classes.dir}" />
+		<echo message="bin.dir             = ${bin.dir}" />
+		<echo message="lib.dir             = ${lib.dir}" />
+		<echo message="dist.dir            = ${dist.dir}" />
+	</target>
+
+
+	<target name="clean"
+			depends="init"
+			description="cleans build and package files for fresh start">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+
+	<target name="compile"
+			depends="init"
+			description="compiles java source files">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<javac destdir="${classes.dir}"
+				fork="true" 
+				executable="${proj.jdk.bin}/javac"
+				debug="true" nowarn="false"
+				source="${target.jvm}" target="${target.jvm}"
+				deprecation="true" optimize="true" encoding="utf-8">
+			<classpath refid="classpath" />
+			<src path="${src.main.java.dir}" />
+		</javac>
+	</target>
+
+
+	<target name="package"
+			depends="compile"
+			description="creates jar file from EHRP client class files">
+		<echo message="Packaging ${target.name}.jar file." />
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/bin" />
+		<mkdir dir="${dist.dir}/conf" />
+		<mkdir dir="${dist.dir}/lib" />
+
+		<copy todir="${dist.dir}/bin">
+			<fileset dir="${src.main.res.dir}">
+				<include name="run.sh" />
+				<include name="run.bat" />
+			</fileset>
+		</copy>
+		<chmod file="${dist.dir}/bin/run.sh" perm="774" />
+
+		<copy todir="${dist.dir}/conf">
+			<fileset dir="${src.main.res.dir}">
+				<include name="application.properties" />
+				<include name="log4j.properties" />
+				<include name="logback.xml" />
+				<include name="EHRP_15min.sh" />
+				<include name="getEHRPFiles_sftp.txt" />
+			</fileset>
+		</copy>
+		<!-- In separate directory deployment approach, logback.xml is placed in ../conf execution directory. -->
+		<replace file="${dist.dir}/conf/application.properties">
+			<replacefilter>
+				<replacetoken>logging.config=logback.xml</replacetoken>
+				<replacevalue>logging.config=../conf/logback.xml</replacevalue>
+			</replacefilter>
+		</replace>
+		<!-- In separate directory deployment approach, logback.xml is searched in classpath,
+			and the log directory is created from the current execution directory (i.e. bin).  
+			In such case, the log directory is created as bin/logs.  
+			Therefore, add parent directory in from of log path. -->
+		<replace file="${dist.dir}/conf/logback.xml">
+			<replacefilter>
+				<replacetoken><![CDATA[name="LOG_PATH" value="logs"]]></replacetoken>
+				<replacevalue><![CDATA[name="LOG_PATH" value="../logs"]]></replacevalue>
+			</replacefilter>
+		</replace>
+
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<jar destfile="${dist.dir}/lib/${target.name}-${target.version}.jar" 
+				basedir="${classes.dir}" 
+				includes="**/*" 
+				compress="false"
+		/>
+	</target>
+
+
+	<target name="package.exejar"
+			depends="compile"
+			description="creates executable jar file from EHRP client class files">
+		<echo message="Packaging ${target.name}.jar file." />
+		<delete dir="${dist.dir}" />
+
+		<copy todir="${dist.dir}">
+			<fileset dir="${src.main.res.dir}">
+				<include name="application.properties" />
+				<include name="log4j.properties" />
+				<include name="logback.xml" />
+				<include name="EHRP_15min.sh" />
+				<include name="getEHRPFiles_sftp.txt" />
+			</fileset>
+			<fileset dir="${src.main.res.dir}">
+				<include name="run-jar.sh" />
+				<include name="run-jar.bat" />
+			</fileset>
+		</copy>
+		<chmod file="${dist.dir}/run-jar.sh" perm="774" />
+		<chmod file="${dist.dir}/EHRP_15min.sh" perm="774" />
+		<chmod file="${dist.dir}/getEHRPFiles_sftp" perm="774" />
+
+		<delete dir="${bootjar.dir}" />
+		<mkdir dir="${bootjar.dir}/BOOT-INF" />
+		<copy todir="${bootjar.dir}/BOOT-INF">
+			<fileset dir="${build.dir}">
+				<include name="classes/**" />
+			</fileset>
+			<fileset dir="${proj.root.dir}">
+				<include name="lib/*.jar" />
+				<exclude name="lib/spring-boot-loader-*.jar" />
+			</fileset>
+		</copy>
+		<unjar src="${lib.dir}/spring-boot-loader-${spring.boot.version}.jar"
+				dest="${bootjar.dir}"
+		/>
+		<jar destfile="${dist.dir}/${target.name}-${target.version}.jar" 
+				basedir="${bootjar.dir}" 
+				includes="**/*" 
+				compress="false"
+				manifest="${src.main.res.dir}/MANIFEST.MF"
+		/>
+	</target>
+
+
+</project>
