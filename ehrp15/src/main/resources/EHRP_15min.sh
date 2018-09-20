@@ -7,6 +7,7 @@ SCRIPT_HOME=<INSERT directory path for location of getEHRPFiles_sftp.txt>
 LOG_HOME=<INSERT directory path for log files>
 EHRP_FILES=<INSERT directory path for inbound files>
 EHRP_ARCH=<Insert directory path for archived files>
+EHRP_ERROR=<Insert directory path for error files>
 NOW=$(date +"%m-%d-%y-%H-%M-%S-%p")
 CURRDATE=`date`
 LOGFILE=$LOG_HOME/getEHRPFiles_$NOW
@@ -40,6 +41,13 @@ if cd $EHRP_ARCH; then
 	find . \( ! -name . -prune \) -type f -prune -mtime +180 -exec rm {} \;
 else
 	echo "Error in removing Archive Files Older than 180 Days" >> $LOGFILE
+fi
+
+#Removes Error Files Older than 180 Days
+if cd $EHRP_ERROR; then
+	find . \( ! -name . -prune \) -type f -prune -mtime +180 -exec rm {} \;
+else
+	echo "Error in removing Error Files Older than 180 Days" >> $LOGFILE
 fi
 
 echo "Finished script at `date`" >> $LOGFILE
