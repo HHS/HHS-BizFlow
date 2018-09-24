@@ -1,0 +1,8 @@
+if cd <INSERT EHRP FOLDER SPECIFIC TO ENVIRONMENT>; then
+	ls -l
+	mget *.xml
+	rm *.xml
+else
+	echo "Error in changing directory"
+fi
+quit
