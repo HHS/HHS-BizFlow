@@ -15,8 +15,10 @@ import gov.hhs.usas.rest.model.Prompt;
 import gov.hhs.usas.rest.report.model.ApplicantNotification;
 import gov.hhs.usas.rest.report.model.ApplicantRoster;
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
+import gov.hhs.usas.rest.report.model.CdcRecruitment.CdcRecruitmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 import gov.hhs.usas.rest.report.service.AppointmentReportService;
+import gov.hhs.usas.rest.report.service.CdcRecruitmentReportService;
 import gov.hhs.usas.rest.report.service.Properties;
 import gov.hhs.usas.rest.report.service.RecruitmentReportService;
 
@@ -33,6 +35,8 @@ public class UsasService {
 	private AppointmentReportService appointmentService;
 	@Autowired
 	private RecruitmentReportService recruitmentService;
+	@Autowired
+	private CdcRecruitmentReportService cdcRecruitmentService;
 
 	/**
 	 * This method locates the pre-downloaded
@@ -90,6 +94,35 @@ public class UsasService {
 			usasRecruitment = recruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(recruitmentReport), requestNumber);
 		}
 		return usasRecruitment;
+	}
+	
+	/**
+	 * This method locates the pre-downloaded
+	 * CDC Recruitment Report XML file and transform it to BizFlow
+	 * consumable format when program runs in test mode.
+	 * This method connects to the USA Staffing Cognos Server to
+	 * pull the CDC Recruitment Report for specific Job Request Number and 
+	 * transforms the Cognos dataSet XML format to BizFlow consumable format
+	 * when program runs in production mode.
+	 * @param requestNumber - Job Request Number
+	 * @return USAStaffingRecruitmentResult - BizFlow consumable XML format
+	 */
+	public CdcRecruitmentResult getCdcRecruitmentData(String requestNumber){
+
+		CdcRecruitmentResult cdcRecruitment = new CdcRecruitmentResult();
+
+		Prompt cdcRecruitmentPrompt = new Prompt(properties.getReportPromptRequest(), requestNumber, requestNumber);
+		CognosReport cdcRecruitmentReport = new CognosReport(properties.getCdcRecruitmentReportName(), properties.getCdcRecruitmentReportPath(), properties.getReportFormatDataSet(), cdcRecruitmentPrompt);
+
+		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){//test mode
+			String reportPath = properties.getCdcRecruitmentFileLocation() + File.separator + requestNumber + ".xml";
+			log.info("Using XML report for CDC Recruitment "+ reportPath + " for transformation.");
+			cdcRecruitment = cdcRecruitmentService.parseReportFromFile(reportPath);
+		}else{//normal or production mode
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getCdcRecruitmentReportName() + " report.");    
+			cdcRecruitment = cdcRecruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(cdcRecruitmentReport), requestNumber);
+		}
+		return cdcRecruitment;
 	}
 
 	/**
