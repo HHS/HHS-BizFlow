@@ -3,6 +3,7 @@ package gov.hhs.ehrp.model;
 public class PositionDetail {
 
 	private String jobReqNbr;
+	private String positionNbr;
 	private String reportsTo;
 	private String location;
 	private String stdHrsDflt;
@@ -19,6 +20,7 @@ public class PositionDetail {
 	
     public PositionDetail() {
     	this.jobReqNbr = "";
+    	this.positionNbr = "";
     	this.reportsTo = "";
     	this.location = "";
     	this.stdHrsDflt = "";
@@ -34,10 +36,11 @@ public class PositionDetail {
     	this.gradeDflt = "";
     }
 	
-	public PositionDetail(String jobReqNbr, String reportsTo, String location, String stdHrsDflt, String bargUnit,
+	public PositionDetail(String jobReqNbr, String positionNbr, String reportsTo, String location, String stdHrsDflt, String bargUnit,
 			String payPlan, String workSched, String orgTtlDescr, String drugTestReq, String series, String posnSensCd,
 			String securityClearance, String empFinInt, String gradeDflt) {
 		this.jobReqNbr = jobReqNbr;
+		this.positionNbr = positionNbr;
 		this.reportsTo = reportsTo;
 		this.location = location;
 		this.stdHrsDflt = stdHrsDflt;
@@ -59,6 +62,14 @@ public class PositionDetail {
 
 	public void setJobReqNbr(String jobReqNbr) {
 		this.jobReqNbr = jobReqNbr;
+	}
+
+	public String getPositionNbr() {
+		return positionNbr;
+	}
+
+	public void setPositionNbr(String positionNbr) {
+		this.positionNbr = positionNbr;
 	}
 
 	public String getReportsTo() {
@@ -167,11 +178,11 @@ public class PositionDetail {
 
 	@Override
 	public String toString() {
-		return "PositionDetail [jobReqNbr=" + jobReqNbr + ", reportsTo=" + reportsTo + ", location=" + location
-				+ ", stdHrsDflt=" + stdHrsDflt + ", bargUnit=" + bargUnit + ", payPlan=" + payPlan + ", workSched="
-				+ workSched + ", orgTtlDescr=" + orgTtlDescr + ", drugTestReq=" + drugTestReq + ", series=" + series
-				+ ", posnSensCd=" + posnSensCd + ", securityClearance=" + securityClearance + ", empFinInt=" + empFinInt
-				+ ", gradeDflt=" + gradeDflt + "]";
+		return "PositionDetail [jobReqNbr=" + jobReqNbr + ", positionNbr=" + positionNbr + ", reportsTo=" + reportsTo
+				+ ", location=" + location + ", stdHrsDflt=" + stdHrsDflt + ", bargUnit=" + bargUnit + ", payPlan="
+				+ payPlan + ", workSched=" + workSched + ", orgTtlDescr=" + orgTtlDescr + ", drugTestReq=" + drugTestReq
+				+ ", series=" + series + ", posnSensCd=" + posnSensCd + ", securityClearance=" + securityClearance
+				+ ", empFinInt=" + empFinInt + ", gradeDflt=" + gradeDflt + "]";
 	}
 	
 }

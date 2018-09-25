@@ -3,6 +3,7 @@ package gov.hhs.ehrp.model;
 public class JobCodeDetail {
 
 	private String jobReqNbr;
+	private String jobCode;
 	private String salAdminPlan;
 	private String grade;
 	private String payPlan;
@@ -13,6 +14,7 @@ public class JobCodeDetail {
 	
     public JobCodeDetail() {
     	this.jobReqNbr = "";
+    	this.jobCode = "";
     	this.salAdminPlan = "";
     	this.grade = "";
     	this.payPlan = "";
@@ -22,9 +24,10 @@ public class JobCodeDetail {
     	this.targetGrade = "";
     }
 
-	public JobCodeDetail(String jobReqNbr, String salAdminPlan, String grade, String payPlan, String series,
+	public JobCodeDetail(String jobReqNbr, String jobCode, String salAdminPlan, String grade, String payPlan, String series,
 			String officialDescr, String execFinDiscl, String targetGrade) {
 		this.jobReqNbr = jobReqNbr;
+		this.jobCode = jobCode;
 		this.salAdminPlan = salAdminPlan;
 		this.grade = grade;
 		this.payPlan = payPlan;
@@ -40,6 +43,14 @@ public class JobCodeDetail {
 
 	public void setJobReqNbr(String jobReqNbr) {
 		this.jobReqNbr = jobReqNbr;
+	}
+
+	public String getJobCode() {
+		return jobCode;
+	}
+
+	public void setJobCode(String jobCode) {
+		this.jobCode = jobCode;
 	}
 
 	public String getSalAdminPlan() {
@@ -100,9 +111,9 @@ public class JobCodeDetail {
 
 	@Override
 	public String toString() {
-		return "JobCodeDetail [jobReqNbr=" + jobReqNbr + ", salAdminPlan=" + salAdminPlan + ", grade=" + grade
-				+ ", payPlan=" + payPlan + ", series=" + series + ", officialDescr=" + officialDescr + ", execFinDiscl="
-				+ execFinDiscl + ", targetGrade=" + targetGrade + "]";
+		return "JobCodeDetail [jobReqNbr=" + jobReqNbr + ", jobCode=" + jobCode + ", salAdminPlan=" + salAdminPlan
+				+ ", grade=" + grade + ", payPlan=" + payPlan + ", series=" + series + ", officialDescr="
+				+ officialDescr + ", execFinDiscl=" + execFinDiscl + ", targetGrade=" + targetGrade + "]";
 	}
-    
+   
 }

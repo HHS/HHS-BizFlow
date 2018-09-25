@@ -6,30 +6,31 @@ import org.springframework.stereotype.Component;
 public class JobCodeTags {
 
     private static String jobCodesTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES";
-    private static String jobcodeTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/JOBCODE";
-    private static String primaryJobcodeTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_PRIMARY_JCODE";
-    private static String regRegionTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/REG_REGION";
-    private static String desiredFullPartTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/DESIRED_FULL_PART";
-    private static String desiredRegTempTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/DESIRED_REG_TEMP";
-    private static String stdHrsTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/STD_HOURS";
-    private static String stdHrsFreqTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/STD_HRS_FREQUENCY";
-    private static String desiredShiftTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/DESIRED_SHIFT";
-    private static String rqsnSalFromTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_RQSN_SAL_FROM";
-    private static String rqsnSalToTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_RQSN_SAL_TO";
-    private static String payFreqAbbrevTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/PAY_FREQ_ABBRV";
-    private static String currencyCdTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/CURRENCY_CD";
-    private static String salAdminPlanTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/SAL_ADMIN_PLAN";
-    private static String gradeTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GRADE";
-    private static String travelPerctTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_TRAVEL_PERCENT";
-    private static String managerLvlTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/MANAGER_LEVEL";
-    private static String flsaStatusTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/FLSA_STATUS";
-    private static String summerApptTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_SUMMER_APPT";
-    private static String nteDateTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_NTE_DATE";
-    private static String nteDaysTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_NTE_DAYS";
-    private static String leoPositionTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_LEO_POSITION";
-    private static String posnSensCdTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_POSN_SENS_CD";
-    private static String apptTypeTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/JOBCODES/GVT_TYPE_OF_APPT";
-	public static String getJobCodesTag() {
+    private static String jobcodeTag = "JOBCODE";
+    private static String primaryJobcodeTag = "GVT_PRIMARY_JCODE";
+    private static String regRegionTag = "REG_REGION";
+    private static String desiredFullPartTag = "DESIRED_FULL_PART";
+    private static String desiredRegTempTag = "DESIRED_REG_TEMP";
+    private static String stdHrsTag = "STD_HOURS";
+    private static String stdHrsFreqTag = "STD_HRS_FREQUENCY";
+    private static String desiredShiftTag = "DESIRED_SHIFT";
+    private static String rqsnSalFromTag = "GVT_RQSN_SAL_FROM";
+    private static String rqsnSalToTag = "GVT_RQSN_SAL_TO";
+    private static String payFreqAbbrevTag = "PAY_FREQ_ABBRV";
+    private static String currencyCdTag = "CURRENCY_CD";
+    private static String salAdminPlanTag = "SAL_ADMIN_PLAN";
+    private static String gradeTag = "GRADE";
+    private static String travelPerctTag = "GVT_TRAVEL_PERCENT";
+    private static String managerLvlTag = "MANAGER_LEVEL";
+    private static String flsaStatusTag = "FLSA_STATUS";
+    private static String summerApptTag = "GVT_SUMMER_APPT";
+    private static String nteDateTag = "GVT_NTE_DATE";
+    private static String nteDaysTag = "GVT_NTE_DAYS";
+    private static String leoPositionTag = "GVT_LEO_POSITION";
+    private static String posnSensCdTag = "GVT_POSN_SENS_CD";
+    private static String apptTypeTag = "GVT_TYPE_OF_APPT";
+	
+    public static String getJobCodesTag() {
 		return jobCodesTag;
 	}
 	public static String getJobcodeTag() {

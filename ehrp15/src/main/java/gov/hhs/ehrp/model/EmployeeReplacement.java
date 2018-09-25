@@ -5,17 +5,20 @@ public class EmployeeReplacement {
 	private String jobReqNbr;
 	private String viceEmplid;
 	private String dateVacated;
+	private String viceName;
 	
     public EmployeeReplacement() {
     	this.jobReqNbr = "";
     	this.viceEmplid = "";
     	this.dateVacated = "";
+    	this.viceName = "";
     }
 
-	public EmployeeReplacement(String jobReqNbr, String viceEmplid, String dateVacated) {
+	public EmployeeReplacement(String jobReqNbr, String viceEmplid, String dateVacated, String viceName) {
 		this.jobReqNbr = jobReqNbr;
 		this.viceEmplid = viceEmplid;
 		this.dateVacated = dateVacated;
+		this.viceName = viceName;
 	}
 
 	public String getJobReqNbr() {
@@ -42,10 +45,18 @@ public class EmployeeReplacement {
 		this.dateVacated = dateVacated;
 	}
 
+	public String getViceName() {
+		return viceName;
+	}
+
+	public void setViceName(String viceName) {
+		this.viceName = viceName;
+	}
+
 	@Override
 	public String toString() {
 		return "EmployeeReplacement [jobReqNbr=" + jobReqNbr + ", viceEmplid=" + viceEmplid + ", dateVacated="
-				+ dateVacated + "]";
+				+ dateVacated + ", viceName=" + viceName + "]";
 	}
        
 }

@@ -3,6 +3,7 @@ package gov.hhs.ehrp.model;
 public class PositionDeptHierarchy {
 
 	private String jobReqNbr;
+	private String positionNbr;
 	private String setId;
 	private String deptId;
 	private String descr;
@@ -17,6 +18,7 @@ public class PositionDeptHierarchy {
 	
     public PositionDeptHierarchy() {
     	this.jobReqNbr = "";
+    	this.positionNbr = "";
     	this.setId = "";
     	this.deptId = "";
     	this.descr = "";
@@ -30,10 +32,11 @@ public class PositionDeptHierarchy {
     	this.parDescr5 = "";
     }
 
-	public PositionDeptHierarchy(String jobReqNbr, String setId, String deptId, String descr, String parLine2,
+	public PositionDeptHierarchy(String jobReqNbr, String positionNbr, String setId, String deptId, String descr, String parLine2,
 			String parDescr2, String parLine3, String parDescr3, String parLine4, String parDescr4, String parLine5,
 			String parDescr5) {
 		this.jobReqNbr = jobReqNbr;
+		this.positionNbr = positionNbr;
 		this.setId = setId;
 		this.deptId = deptId;
 		this.descr = descr;
@@ -53,6 +56,14 @@ public class PositionDeptHierarchy {
 
 	public void setJobReqNbr(String jobReqNbr) {
 		this.jobReqNbr = jobReqNbr;
+	}
+
+	public String getPositionNbr() {
+		return positionNbr;
+	}
+
+	public void setPositionNbr(String positionNbr) {
+		this.positionNbr = positionNbr;
 	}
 
 	public String getSetId() {
@@ -145,10 +156,10 @@ public class PositionDeptHierarchy {
 
 	@Override
 	public String toString() {
-		return "PositionDeptHierarchy [jobReqNbr=" + jobReqNbr + ", setId=" + setId + ", deptId=" + deptId + ", descr="
-				+ descr + ", parLine2=" + parLine2 + ", parDescr2=" + parDescr2 + ", parLine3=" + parLine3
-				+ ", parDescr3=" + parDescr3 + ", parLine4=" + parLine4 + ", parDescr4=" + parDescr4 + ", parLine5="
-				+ parLine5 + ", parDescr5=" + parDescr5 + "]";
+		return "PositionDeptHierarchy [jobReqNbr=" + jobReqNbr + ", positionNbr=" + positionNbr + ", setId=" + setId
+				+ ", deptId=" + deptId + ", descr=" + descr + ", parLine2=" + parLine2 + ", parDescr2=" + parDescr2
+				+ ", parLine3=" + parLine3 + ", parDescr3=" + parDescr3 + ", parLine4=" + parLine4 + ", parDescr4="
+				+ parDescr4 + ", parLine5=" + parLine5 + ", parDescr5=" + parDescr5 + "]";
 	}
     
 }

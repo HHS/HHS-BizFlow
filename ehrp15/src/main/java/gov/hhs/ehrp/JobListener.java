@@ -43,8 +43,8 @@ public class JobListener extends JobExecutionListenerSupport {
 		this.exitStatus = jobExecution.getExitStatus().getExitCode().toString().replace("exitCode=", " "); 	
 
 		this.parametersMap = new HashMap<String,Object>();
-			if (jobExecution.getExecutionContext().getString(properties.getEhrpScriptName()) != null){
-				parametersMap.put(" ", (Object) properties.getScriptErrorMsg().replace("SCRIPT", properties.getEhrpScriptName()) + jobExecution.getExecutionContext().getString(properties.getEhrpScriptName()));
+			if (jobExecution.getExecutionContext().get(properties.getEhrpScriptName()) != null){
+				parametersMap.put(" ", (Object) properties.getScriptErrorMsg().replace("SCRIPT", properties.getEhrpScriptName()) + String.valueOf(jobExecution.getExecutionContext().get(properties.getEhrpScriptName())));
 			}else if (jobExecution.getExecutionContext().getString(properties.getNoFilesName())=="false"){
 				parametersMap.put(" ", (Object) properties.getNoFilesMsg());
 			}else {

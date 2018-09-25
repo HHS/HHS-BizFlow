@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 public class EmployeeReplacementTags {
 
     private static String employeeReplacementTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/Employee_Replacement"; 
-    private static String viceEmplidTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/Employee_Replacement/Vice_EMPLID";
-    private static String dateVacatedTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/Employee_Replacement/Date_Vacated";
+    private static String viceEmplidTag = "Vice_EMPLID";
+    private static String dateVacatedTag = "Date_Vacated";
+    private static String viceNameTag = "Employee_Name/Vice_Name";
 	
     public static String getEmployeeReplacementTag() {
 		return employeeReplacementTag;
@@ -17,6 +18,20 @@ public class EmployeeReplacementTags {
 	}
 	public static String getDateVacatedTag() {
 		return dateVacatedTag;
+	}
+	public static String getViceNameTag() {
+		return viceNameTag;
+	}
+	public static void setViceNameTag(String viceNameTag) {
+		EmployeeReplacementTags.viceNameTag = viceNameTag;
+	}
+	public static void setEmployeeReplacementTag(String employeeReplacementTag) {
+		EmployeeReplacementTags.employeeReplacementTag = employeeReplacementTag;
+	}
+	public static void setViceEmplidTag(String viceEmplidTag) {
+		EmployeeReplacementTags.viceEmplidTag = viceEmplidTag;
+	}
+	public static void setDateVacatedTag(String dateVacatedTag) {
+		EmployeeReplacementTags.dateVacatedTag = dateVacatedTag;
 	}    
-    
 }

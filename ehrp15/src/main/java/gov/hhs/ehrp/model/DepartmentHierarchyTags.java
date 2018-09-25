@@ -6,17 +6,17 @@ import org.springframework.stereotype.Component;
 public class DepartmentHierarchyTags {
 	
     private static String deptHierarchyTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY"; 
-    private static String setIdTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/SETID";
-    private static String deptIdTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/DEPTID";
-    private static String deptDescTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/DESCR";
-    private static String deptId2Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_LINE2";
-    private static String deptDesc2Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_DESCR2";
-    private static String deptId3Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_LINE3";
-    private static String deptDesc3Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_DESCR3";
-    private static String deptId4Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_LINE4";
-    private static String deptDesc4Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_DESCR4";
-    private static String deptId5Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_LINE5";
-    private static String deptDesc5Tag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/DEPARTMENT_HIERARCHY/GVT_PAR_DESCR5";
+    private static String setIdTag = "SETID";
+    private static String deptIdTag = "DEPTID";
+    private static String deptDescTag = "DESCR";
+    private static String deptId2Tag = "GVT_PAR_LINE2";
+    private static String deptDesc2Tag = "GVT_PAR_DESCR2";
+    private static String deptId3Tag = "GVT_PAR_LINE3";
+    private static String deptDesc3Tag = "GVT_PAR_DESCR3";
+    private static String deptId4Tag = "GVT_PAR_LINE4";
+    private static String deptDesc4Tag = "GVT_PAR_DESCR4";
+    private static String deptId5Tag = "GVT_PAR_LINE5";
+    private static String deptDesc5Tag = "GVT_PAR_DESCR5";
 	
     public static String getDeptHierarchyTag() {
 		return deptHierarchyTag;

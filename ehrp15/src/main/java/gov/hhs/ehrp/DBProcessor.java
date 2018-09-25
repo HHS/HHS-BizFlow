@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import gov.hhs.ehrp.model.Approvals;
 import gov.hhs.ehrp.model.Candidates;
 import gov.hhs.ehrp.model.DepartmentHierarchy;
-import gov.hhs.ehrp.model.EmployeeName;
 import gov.hhs.ehrp.model.EmployeeReplacement;
 import gov.hhs.ehrp.model.EwitsDetails;
 import gov.hhs.ehrp.model.JobCodeDetail;
@@ -60,25 +59,23 @@ public class DBProcessor {
 								List<EwitsDetails> ewitsDtlList, 
 								List<EmployeeReplacement> empRplList, 
 								List<PositionDetail> positionDtlList,
-								List<EmployeeName> emplNameList,
 								List<JobCodeDetail> jobcodeDtlList,
 								List<SalaryDetail> salaryDtlList,
 								List<PositionDeptHierarchy> positionDeptList) {
 		
 		insertReqDetail(reqDetailList);
 		insertJobCodes(jobCodeList);
+		insertJobCodeDtl(jobcodeDtlList);
 		insertPositions(positionsList);
+		insertPositionDetail(positionDtlList);
+		insertPositionDept(positionDeptList);
+		insertSalaryDtl(salaryDtlList);
 		insertOpenings(openingsList);
 		insertCandidates(candidatesList);
 		insertDept(deptList);
 		insertApprovals(approvalsList);
-		insertEwitsDtl(ewitsDtlList);
 		insertEmployeeReplacement(empRplList);
-		insertPositionDetail(positionDtlList);
-		insertEmployeeName(emplNameList);
-		insertJobCodeDtl(jobcodeDtlList);
-		insertSalaryDtl(salaryDtlList);
-		insertPositionDept(positionDeptList);
+		insertEwitsDtl(ewitsDtlList);
 
 	}
 
@@ -332,7 +329,7 @@ public class DBProcessor {
 	 * insertEmployeeReplacement - Inserts Employee Replacement data into the database
 	 */
 	public void insertEmployeeReplacement(final List<EmployeeReplacement> empRplList) {
-		new JdbcTemplate(hhsDataSource).batchUpdate(properties.getSqlInsertEwits(), new BatchPreparedStatementSetter() {
+		new JdbcTemplate(hhsDataSource).batchUpdate(properties.getSqlInsertEmplRpl(), new BatchPreparedStatementSetter() {
 			@Override
 			public int getBatchSize() {
 				return empRplList.size();
@@ -347,7 +344,8 @@ public class DBProcessor {
 						ps.setDate(3, java.sql.Date.valueOf(empRpl.getDateVacated()));
 					}else {
 						ps.setNull(3, Types.DATE);
-					}					
+					}
+					ps.setString(4, empRpl.getViceName());
 				}
 		});
 	}
@@ -366,39 +364,21 @@ public class DBProcessor {
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				PositionDetail positionDtl = positionDtlList.get(i);
 				ps.setInt(1, Integer.parseInt(positionDtl.getJobReqNbr()));
-				ps.setString(2, positionDtl.getReportsTo());
-				ps.setString(3, positionDtl.getLocation());
-				ps.setDouble(4, Double.parseDouble(positionDtl.getStdHrsDflt()));
-				ps.setString(5, positionDtl.getBargUnit());
-				ps.setString(6, positionDtl.getPayPlan());
-				ps.setString(7, positionDtl.getWorkSched());
-				ps.setString(8, positionDtl.getOrgTtlDescr());
-				ps.setString(9, positionDtl.getDrugTestReq());
-				ps.setString(10, positionDtl.getSeries());
-				ps.setString(11, positionDtl.getPosnSensCd());
-				ps.setString(12, positionDtl.getSecurityClearance());
-				ps.setString(13, positionDtl.getEmpFinInt());
-				ps.setString(14, positionDtl.getGradeDflt());
+				ps.setString(2, positionDtl.getPositionNbr());
+				ps.setString(3, positionDtl.getReportsTo());
+				ps.setString(4, positionDtl.getLocation());
+				ps.setDouble(5, Double.parseDouble(positionDtl.getStdHrsDflt()));
+				ps.setString(6, positionDtl.getBargUnit());
+				ps.setString(7, positionDtl.getPayPlan());
+				ps.setString(8, positionDtl.getWorkSched());
+				ps.setString(9, positionDtl.getOrgTtlDescr());
+				ps.setString(10, positionDtl.getDrugTestReq());
+				ps.setString(11, positionDtl.getSeries());
+				ps.setString(12, positionDtl.getPosnSensCd());
+				ps.setString(13, positionDtl.getSecurityClearance());
+				ps.setString(14, positionDtl.getEmpFinInt());
+				ps.setString(15, positionDtl.getGradeDflt());
 			}
-		});
-	}
-	
-	/*
-	 * insertEmployeeName - Inserts Employee Name data into the database
-	 */
-	public void insertEmployeeName(final List<EmployeeName> emplNameList) {
-		new JdbcTemplate(hhsDataSource).batchUpdate(properties.getSqlInsertEmplName(), new BatchPreparedStatementSetter() {
-			@Override
-			public int getBatchSize() {
-				return emplNameList.size();
-			}
-
-			@Override
-			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				EmployeeName emplName = emplNameList.get(i);
-					ps.setInt(1, Integer.parseInt(emplName.getJobReqNbr()));
-					ps.setString(2, emplName.getViceName());	
-				}
 		});
 	}
 	
@@ -416,13 +396,14 @@ public class DBProcessor {
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				JobCodeDetail jobCodeDtl = jobCodeDtlList.get(i);
 				ps.setInt(1, Integer.parseInt(jobCodeDtl.getJobReqNbr()));
-				ps.setString(2, jobCodeDtl.getSalAdminPlan());
-				ps.setString(3, jobCodeDtl.getGrade());
-				ps.setString(4, jobCodeDtl.getPayPlan());
-				ps.setString(5, jobCodeDtl.getSeries());
-				ps.setString(6, jobCodeDtl.getOfficialDescr());
-				ps.setString(7, jobCodeDtl.getExecFinDiscl());
-				ps.setString(8, jobCodeDtl.getTargetGrade());
+				ps.setString(2, jobCodeDtl.getJobCode());
+				ps.setString(3, jobCodeDtl.getSalAdminPlan());
+				ps.setString(4, jobCodeDtl.getGrade());
+				ps.setString(5, jobCodeDtl.getPayPlan());
+				ps.setString(6, jobCodeDtl.getSeries());
+				ps.setString(7, jobCodeDtl.getOfficialDescr());
+				ps.setString(8, jobCodeDtl.getExecFinDiscl());
+				ps.setString(9, jobCodeDtl.getTargetGrade());
 			}
 		});
 	}
@@ -441,8 +422,9 @@ public class DBProcessor {
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				SalaryDetail salaryDtl = salaryDtlList.get(i);
 				ps.setInt(1, Integer.parseInt(salaryDtl.getJobReqNbr()));
-				ps.setDouble(2, Double.parseDouble(salaryDtl.getMinSalary()));
-				ps.setDouble(3, Double.parseDouble(salaryDtl.getMaxSalary()));
+				ps.setString(2, salaryDtl.getJobCode());
+				ps.setDouble(3, Double.parseDouble(salaryDtl.getMinSalary()));
+				ps.setDouble(4, Double.parseDouble(salaryDtl.getMaxSalary()));
 			}
 		});
 	}
@@ -461,17 +443,18 @@ public class DBProcessor {
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				PositionDeptHierarchy positionDept = positionDeptList.get(i);
 				ps.setInt(1, Integer.parseInt(positionDept.getJobReqNbr()));
-				ps.setString(2, positionDept.getSetId());
-				ps.setString(3, positionDept.getDeptId());
-				ps.setString(4, positionDept.getDescr());
-				ps.setString(5, positionDept.getParLine2());
-				ps.setString(6, positionDept.getParDescr2());
-				ps.setString(7, positionDept.getParLine3());
-				ps.setString(8, positionDept.getParDescr3());
-				ps.setString(9, positionDept.getParLine4());
-				ps.setString(10, positionDept.getParDescr4());
-				ps.setString(11, positionDept.getParLine5());
-				ps.setString(12, positionDept.getParDescr5());
+				ps.setString(2, positionDept.getPositionNbr());
+				ps.setString(3, positionDept.getSetId());
+				ps.setString(4, positionDept.getDeptId());
+				ps.setString(5, positionDept.getDescr());
+				ps.setString(6, positionDept.getParLine2());
+				ps.setString(7, positionDept.getParDescr2());
+				ps.setString(8, positionDept.getParLine3());
+				ps.setString(9, positionDept.getParDescr3());
+				ps.setString(10, positionDept.getParLine4());
+				ps.setString(11, positionDept.getParDescr4());
+				ps.setString(12, positionDept.getParLine5());
+				ps.setString(13, positionDept.getParDescr5());
 			}
 		});
 	}

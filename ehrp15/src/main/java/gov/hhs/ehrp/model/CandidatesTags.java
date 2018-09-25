@@ -7,8 +7,8 @@ public class CandidatesTags {
 
     //Candidates
     private static String applicantsTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/CANDIDATES";
-    private static String seqNbrTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/CANDIDATES/SEQUENCE_NBR";
-    private static String applicantNameTag = "HE_EWITS_RECRUIT_OB/MsgData/Transaction/REQUISITION_DETAIL/CANDIDATES/NAME";
+    private static String seqNbrTag = "SEQUENCE_NBR";
+    private static String applicantNameTag = "NAME";
 	
     public static String getApplicantsTag() {
 		return applicantsTag;

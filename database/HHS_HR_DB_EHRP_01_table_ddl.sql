@@ -12,7 +12,6 @@ DROP TABLE HHS_HR.EHRP_APPROVALS;
 DROP TABLE HHS_HR.EHRP_EWITS_DTL;
 DROP TABLE HHS_HR.EHRP_EMPL_RPL;
 DROP TABLE HHS_HR.EHRP_POSITION_DTL;
-DROP TABLE HHS_HR.EHRP_EMPL_NAME;
 DROP TABLE HHS_HR.EHRP_JOBCODE_DTL;
 DROP TABLE HHS_HR.EHRP_SALARY_DTL;
 DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
@@ -159,7 +158,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     CREATE TABLE HHS_HR.EHRP_EMPL_RPL
     (HRS_JOB_OPENING_ID     NUMBER(15),
     VICE_EMPLID             VARCHAR2(11),
-    DATE_VACATED            DATE
+    DATE_VACATED            DATE,
+    VICE_NAME               VARCHAR2(50)
     );
 
 --------------------------------------------------------  
@@ -167,6 +167,7 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
 --------------------------------------------------------  
     CREATE TABLE HHS_HR.EHRP_POSITION_DTL
     (HRS_JOB_OPENING_ID         NUMBER(15),
+    POSITION_NBR                VARCHAR2(8),
     REPORTS_TO                  VARCHAR2(8),
     LOCATION                    VARCHAR2(10),
     STD_HRS_DEFAULT             NUMBER(6,2),
@@ -183,18 +184,11 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     );
 
 --------------------------------------------------------  
---DDL for Table EHRP_EMPL_NAME
---------------------------------------------------------  
-    CREATE TABLE HHS_HR.EHRP_EMPL_NAME
-    (HRS_JOB_OPENING_ID     NUMBER(15),
-    VICE_NAME               VARCHAR2(50)
-    );
-
---------------------------------------------------------  
 --DDL for Table EHRP_JOBCODE_DTL
 --------------------------------------------------------  
     CREATE TABLE HHS_HR.EHRP_JOBCODE_DTL
     (HRS_JOB_OPENING_ID     NUMBER(15),
+    JOBCODE                 VARCHAR2(8),
     SAL_ADMIN_PLAN          VARCHAR2(10),
     GRADE                   VARCHAR2(3),
     GVT_PAY_PLAN            VARCHAR2(2),
@@ -209,6 +203,7 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
 --------------------------------------------------------  
     CREATE TABLE HHS_HR.EHRP_SALARY_DTL
     (HRS_JOB_OPENING_ID     NUMBER(15),
+    JOBCODE                 VARCHAR2(8),
     MIN_RT_ANNUAL           NUMBER(18,3),
     MAX_RT_ANNUAL           NUMBER(18,3)
     );
@@ -218,6 +213,7 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
 --------------------------------------------------------  
     CREATE TABLE HHS_HR.EHRP_POSITION_DEPT
     (HRS_JOB_OPENING_ID     NUMBER(15),
+    POSITION_NBR            VARCHAR2(8),
     SETID                   VARCHAR2(10),
     DEPTID                  VARCHAR2(10),
     DESCR                   VARCHAR2(40),
