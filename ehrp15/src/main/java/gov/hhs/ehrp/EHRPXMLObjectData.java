@@ -13,8 +13,6 @@ import gov.hhs.ehrp.model.Candidates;
 import gov.hhs.ehrp.model.CandidatesTags;
 import gov.hhs.ehrp.model.DepartmentHierarchy;
 import gov.hhs.ehrp.model.DepartmentHierarchyTags;
-import gov.hhs.ehrp.model.EmployeeName;
-import gov.hhs.ehrp.model.EmployeeNameTags;
 import gov.hhs.ehrp.model.EmployeeReplacement;
 import gov.hhs.ehrp.model.EmployeeReplacementTags;
 import gov.hhs.ehrp.model.EwitsDetails;
@@ -60,8 +58,6 @@ public class EHRPXMLObjectData
 	EmployeeReplacementTags empReplTags;
 	@Autowired
 	private PositionDetailTags positionDetailTags;
-	@Autowired
-	private EmployeeNameTags employeeNameTags;
 	@Autowired
 	private JobCodeDetailTags jobcodeDetailTags;
 	@Autowired
@@ -145,7 +141,6 @@ public class EHRPXMLObjectData
     					loadEwitsDetails(reqDetailResult.getJobReqNbr()),
     					loadEmployeeReplacement(reqDetailResult.getJobReqNbr()),
     					loadPositionDetail(reqDetailResult.getJobReqNbr()),
-    					loadEmployeeName(reqDetailResult.getJobReqNbr()),
     					loadJobCodeDetail(reqDetailResult.getJobReqNbr()),
     					loadSalaryDetail(reqDetailResult.getJobReqNbr()),
     					loadPosDeptHierarchy(reqDetailResult.getJobReqNbr()));				
@@ -173,33 +168,34 @@ public class EHRPXMLObjectData
 					jobCodeResult = new JobCodes();
 					
 					jobCodeResult.setJobReqNbr(jobReqNbr);
-					jobCodeResult.setJobCode(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getJobcodeTag())));
-					jobCodeResult.setPrimaryJobCode(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getPrimaryJobcodeTag())));
-					jobCodeResult.setRegRegion(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getRegRegionTag())));
-					jobCodeResult.setDesiredFullPart(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getDesiredFullPartTag())));
-					jobCodeResult.setDesiredRegTemp(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getDesiredRegTempTag())));
-					jobCodeResult.setStdHrs(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getStdHrsTag())));
-					jobCodeResult.setStdHrsFreq(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getStdHrsFreqTag())));
-					jobCodeResult.setDesiredShift(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getDesiredShiftTag())));
-					jobCodeResult.setGvtRqsnSalFrom(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getRqsnSalFromTag())));
-					jobCodeResult.setGvtRqsnSalTo(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getRqsnSalToTag())));
-					jobCodeResult.setPayFreqAbbrev(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getPayFreqAbbrevTag())));
-					jobCodeResult.setCurrencyCd(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getCurrencyCdTag())));
-					jobCodeResult.setSalAdminPlan(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getSalAdminPlanTag())));
-					jobCodeResult.setGrade(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getGradeTag())));
-					jobCodeResult.setTravelPct(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getTravelPerctTag())));
-					jobCodeResult.setManagerLvl(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getManagerLvlTag())));
-					jobCodeResult.setFlsaStatus(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getFlsaStatusTag())));
-					jobCodeResult.setSummerAppt(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getSummerApptTag())));
-					jobCodeResult.setNteDate(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getNteDateTag())));
-					jobCodeResult.setNteDays(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getNteDaysTag())));
-					jobCodeResult.setLeoPosition(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getLeoPositionTag())));
-					jobCodeResult.setPosnSensCd(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getPosnSensCdTag())));
-					jobCodeResult.setTypeOfAppt(domObj.getNodeContent(domObj.getOnlyNode(jobCodeTags.getApptTypeTag())));	
+					jobCodeResult.setJobCode(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getJobcodeTag())));
+					jobCodeResult.setPrimaryJobCode(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getPrimaryJobcodeTag())));
+					jobCodeResult.setRegRegion(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getRegRegionTag())));
+					jobCodeResult.setDesiredFullPart(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getDesiredFullPartTag())));
+					jobCodeResult.setDesiredRegTemp(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getDesiredRegTempTag())));
+					jobCodeResult.setStdHrs(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getStdHrsTag())));
+					jobCodeResult.setStdHrsFreq(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getStdHrsFreqTag())));
+					jobCodeResult.setDesiredShift(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getDesiredShiftTag())));
+					jobCodeResult.setGvtRqsnSalFrom(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getRqsnSalFromTag())));
+					jobCodeResult.setGvtRqsnSalTo(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getRqsnSalToTag())));
+					jobCodeResult.setPayFreqAbbrev(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getPayFreqAbbrevTag())));
+					jobCodeResult.setCurrencyCd(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getCurrencyCdTag())));
+					jobCodeResult.setSalAdminPlan(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getSalAdminPlanTag())));
+					jobCodeResult.setGrade(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getGradeTag())));
+					jobCodeResult.setTravelPct(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getTravelPerctTag())));
+					jobCodeResult.setManagerLvl(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getManagerLvlTag())));
+					jobCodeResult.setFlsaStatus(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getFlsaStatusTag())));
+					jobCodeResult.setSummerAppt(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getSummerApptTag())));
+					jobCodeResult.setNteDate(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getNteDateTag())));
+					jobCodeResult.setNteDays(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getNteDaysTag())));
+					jobCodeResult.setLeoPosition(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getLeoPositionTag())));
+					jobCodeResult.setPosnSensCd(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getPosnSensCdTag())));
+					jobCodeResult.setTypeOfAppt(domObj.getNodeContent(domObj.getOnlyNode(jobCodeNode,jobCodeTags.getApptTypeTag())));	
 				}				
 
+				jobCodeResultList.add(jobCodeResult);
 			}
-			jobCodeResultList.add(jobCodeResult);
+
 		}
 		return jobCodeResultList;
 	}
@@ -224,14 +220,14 @@ public class EHRPXMLObjectData
 				positionResult = new Positions();
 				
 				positionResult.setJobReqNbr(jobReqNbr);
-				positionResult.setPositionNbr(domObj.getNodeContent(domObj.getOnlyNode(positionsTags.getPositionNbrTag())));
-				positionResult.setPrimaryPositionFlag(domObj.getNodeContent(domObj.getOnlyNode(positionsTags.getPrimaryPosnTag())));
+				positionResult.setPositionNbr(domObj.getNodeContent(domObj.getOnlyNode(positionNode, positionsTags.getPositionNbrTag())));
+				positionResult.setPrimaryPositionFlag(domObj.getNodeContent(domObj.getOnlyNode(positionNode, positionsTags.getPrimaryPosnTag())));
 				
 				}
 
+				positionResultList.add(positionResult);
 			}
 			
-			positionResultList.add(positionResult);
 		}
 		
 		return positionResultList;
@@ -256,13 +252,14 @@ public class EHRPXMLObjectData
 					openingsResult = new Openings();
 					
 					openingsResult.setJobReqNbr(jobReqNbr);
-					openingsResult.setLocation(domObj.getNodeContent(domObj.getOnlyNode(openingsTags.getLocationTag())));
-					openingsResult.setPrimaryLocationFlag(domObj.getNodeContent(domObj.getOnlyNode(openingsTags.getPrimaryLocTag())));
-					openingsResult.setDescr(domObj.getNodeContent(domObj.getOnlyNode(openingsTags.getDescrTag())));
+					openingsResult.setLocation(domObj.getNodeContent(domObj.getOnlyNode(openingsNode, openingsTags.getLocationTag())));
+					openingsResult.setPrimaryLocationFlag(domObj.getNodeContent(domObj.getOnlyNode(openingsNode, openingsTags.getPrimaryLocTag())));
+					openingsResult.setDescr(domObj.getNodeContent(domObj.getOnlyNode(openingsNode, openingsTags.getDescrTag())));
 				}
+				
+				openingsResultList.add(openingsResult);
 			}
-			
-			openingsResultList.add(openingsResult);
+
 		}
 		
 		return openingsResultList;
@@ -287,13 +284,13 @@ public class EHRPXMLObjectData
 					candidatesResult = new Candidates();
 					
 					candidatesResult.setJobReqNbr(jobReqNbr);
-					candidatesResult.setSequenceNbr(domObj.getNodeContent(domObj.getOnlyNode(candidatesTags.getSeqNbrTag())));
-					candidatesResult.setName(domObj.getNodeContent(domObj.getOnlyNode(candidatesTags.getApplicantNameTag())));
+					candidatesResult.setSequenceNbr(domObj.getNodeContent(domObj.getOnlyNode(candidateNode, candidatesTags.getSeqNbrTag())));
+					candidatesResult.setName(domObj.getNodeContent(domObj.getOnlyNode(candidateNode, candidatesTags.getApplicantNameTag())));
 				}
-				
+			
+				candidatesResultList.add(candidatesResult);
 			}
 			
-			candidatesResultList.add(candidatesResult);
 		}
 		
 		return candidatesResultList;
@@ -319,22 +316,22 @@ public class EHRPXMLObjectData
 					deptHierarchyResult = new DepartmentHierarchy();
 					
 					deptHierarchyResult.setJobReqNbr(jobReqNbr);
-					deptHierarchyResult.setSetId(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getSetIdTag())));
-					deptHierarchyResult.setDeptId(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptIdTag())));
-					deptHierarchyResult.setDescr(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptDescTag())));
-					deptHierarchyResult.setParLine2(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptId2Tag())));
-					deptHierarchyResult.setParDescr2(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptDesc2Tag())));
-					deptHierarchyResult.setParLine3(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptId3Tag())));
-					deptHierarchyResult.setParDescr3(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptDesc3Tag())));
-					deptHierarchyResult.setParLine4(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptId4Tag())));
-					deptHierarchyResult.setParDescr4(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptDesc4Tag())));
-					deptHierarchyResult.setParLine5(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptId5Tag())));
-					deptHierarchyResult.setParDescr5(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyTags.getDeptDesc5Tag())));
+					deptHierarchyResult.setSetId(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getSetIdTag())));
+					deptHierarchyResult.setDeptId(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptIdTag())));
+					deptHierarchyResult.setDescr(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptDescTag())));
+					deptHierarchyResult.setParLine2(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptId2Tag())));
+					deptHierarchyResult.setParDescr2(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptDesc2Tag())));
+					deptHierarchyResult.setParLine3(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptId3Tag())));
+					deptHierarchyResult.setParDescr3(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptDesc3Tag())));
+					deptHierarchyResult.setParLine4(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptId4Tag())));
+					deptHierarchyResult.setParDescr4(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptDesc4Tag())));
+					deptHierarchyResult.setParLine5(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptId5Tag())));
+					deptHierarchyResult.setParDescr5(domObj.getNodeContent(domObj.getOnlyNode(deptHierarchyNode, deptHierarchyTags.getDeptDesc5Tag())));
 				}
 				
+				deptHierarchyResultList.add(deptHierarchyResult);
 			}
 			
-			deptHierarchyResultList.add(deptHierarchyResult);
 		}
 		
 		return deptHierarchyResultList;
@@ -349,6 +346,7 @@ public class EHRPXMLObjectData
 		Approvals approvalResult = null;
 		List<Approvals> approvalResultList = new ArrayList<Approvals>();
 		NodeList approvalNodes = domObj.getNodeList(approvalsTags.getApprovalsTag());
+
 		if ((approvalNodes != null) && (approvalNodes.getLength() > 0))
 		{
 			for (int i = 0; i < approvalNodes.getLength(); i++)
@@ -358,20 +356,19 @@ public class EHRPXMLObjectData
 				if (approvalNode != null) {
 				
 					approvalResult = new Approvals();
-					
+
 					approvalResult.setJobReqNbr(jobReqNbr);
-					approvalResult.setStep(domObj.getNodeContent(domObj.getOnlyNode(approvalsTags.getStepTag())));
-					approvalResult.setStatus(domObj.getNodeContent(domObj.getOnlyNode(approvalsTags.getStatusTag())));
-					approvalResult.setStatusDt(domObj.getNodeContent(domObj.getOnlyNode(approvalsTags.getStatusDtTag())));
-					approvalResult.setOprid(domObj.getNodeContent(domObj.getOnlyNode(approvalsTags.getOpridTag())));
-					approvalResult.setEmplid(domObj.getNodeContent(domObj.getOnlyNode(approvalsTags.getEmplidTag())));
-					approvalResult.setComments(domObj.getNodeContent(domObj.getOnlyNode(approvalsTags.getCommentsTag())));
+					approvalResult.setStep(domObj.getNodeContent(domObj.getOnlyNode(approvalNode, approvalsTags.getStepTag())));
+					approvalResult.setStatus(domObj.getNodeContent(domObj.getOnlyNode(approvalNode, approvalsTags.getStatusTag())));
+					approvalResult.setStatusDt(domObj.getNodeContent(domObj.getOnlyNode(approvalNode, approvalsTags.getStatusDtTag())));
+					approvalResult.setOprid(domObj.getNodeContent(domObj.getOnlyNode(approvalNode, approvalsTags.getOpridTag())));
+					approvalResult.setEmplid(domObj.getNodeContent(domObj.getOnlyNode(approvalNode, approvalsTags.getEmplidTag())));
+					approvalResult.setComments(domObj.getNodeContent(domObj.getOnlyNode(approvalNode ,approvalsTags.getCommentsTag())));
 
 				}
 				
+				approvalResultList.add(approvalResult);
 			}
-
-			approvalResultList.add(approvalResult);
 		}
 		
 		return approvalResultList;
@@ -397,18 +394,18 @@ public class EHRPXMLObjectData
 					ewitsDetailResult = new EwitsDetails();
 					
 					ewitsDetailResult.setJobReqNbr(jobReqNbr);
-					ewitsDetailResult.setPhysCompAllowance(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getPhysicianCompAllowance())));
-					ewitsDetailResult.setPhysDentistPay(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getPhysicianDentistPay())));
-					ewitsDetailResult.setNonStandardPay(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getNonStandardPay())));
-					ewitsDetailResult.setPositionDescr(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getPositionDescription())));
-					ewitsDetailResult.setRecruitmentIncentive(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getRecruitmentIncentive())));
-					ewitsDetailResult.setRelocationIncentive(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getRecruitmentIncentive())));
-					ewitsDetailResult.setCan(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailsTags.getCan())));
+					ewitsDetailResult.setPhysCompAllowance(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getPhysicianCompAllowance())));
+					ewitsDetailResult.setPhysDentistPay(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getPhysicianDentistPay())));
+					ewitsDetailResult.setNonStandardPay(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getNonStandardPay())));
+					ewitsDetailResult.setPositionDescr(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getPositionDescription())));
+					ewitsDetailResult.setRecruitmentIncentive(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getRecruitmentIncentive())));
+					ewitsDetailResult.setRelocationIncentive(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getRecruitmentIncentive())));
+					ewitsDetailResult.setCan(domObj.getNodeContent(domObj.getOnlyNode(ewitsDetailNode, ewitsDetailsTags.getCan())));
 				}
 				
+				ewitsDetailResultList.add(ewitsDetailResult);
 			}
 
-			ewitsDetailResultList.add(ewitsDetailResult);
 		}
 		
 		return ewitsDetailResultList;
@@ -434,13 +431,15 @@ public class EHRPXMLObjectData
 					empRplResult = new EmployeeReplacement();
 					
 					empRplResult.setJobReqNbr(jobReqNbr);
-					empRplResult.setViceEmplid(domObj.getNodeContent(domObj.getOnlyNode(empReplTags.getViceEmplidTag())));
-					empRplResult.setDateVacated(domObj.getNodeContent(domObj.getOnlyNode(empReplTags.getDateVacatedTag())));
+					empRplResult.setViceEmplid(domObj.getNodeContent(domObj.getOnlyNode(empRplNode, empReplTags.getViceEmplidTag())));
+					empRplResult.setDateVacated(domObj.getNodeContent(domObj.getOnlyNode(empRplNode, empReplTags.getDateVacatedTag())));
+					empRplResult.setViceName(domObj.getNodeContent(domObj.getOnlyNode(empRplNode, empReplTags.getViceNameTag())));
+
 				}
 				
+				empRplResultList.add(empRplResult);
 			}
 
-			empRplResultList.add(empRplResult);
 		}
 		
 		return empRplResultList;
@@ -467,62 +466,31 @@ public class EHRPXMLObjectData
 					positionDetailResult = new PositionDetail();
 					
 					positionDetailResult.setJobReqNbr(jobReqNbr);
-					positionDetailResult.setReportsTo(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getReportsToTag())));
-					positionDetailResult.setLocation(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getPositionLocationTag())));
-					positionDetailResult.setStdHrsDflt(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getNumHoursTag())));
-					positionDetailResult.setBargUnit(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getBargainUnitTag())));
-					positionDetailResult.setPayPlan(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getPayPlanTag())));
-					positionDetailResult.setWorkSched(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getWorkScheduleTag())));
-					positionDetailResult.setOrgTtlDescr(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getPositionTitleTag())));
-					positionDetailResult.setDrugTestReq(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getDrugTestReqTag())));
-					positionDetailResult.setSeries(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getSeriesTag())));
-					positionDetailResult.setPosnSensCd(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getPositionSensCodeTag())));
-					positionDetailResult.setSecurityClearance(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getSecClearanceTypeTag())));
-					positionDetailResult.setEmpFinInt(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getEmpFinIntTag())));
-					positionDetailResult.setGradeDflt(domObj.getNodeContent(domObj.getOnlyNode(positionDetailTags.getGradeTag())));
+					positionDetailResult.setPositionNbr(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getPositionNbrTag())));
+					positionDetailResult.setReportsTo(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getReportsToTag())));
+					positionDetailResult.setLocation(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getPositionLocationTag())));
+					positionDetailResult.setStdHrsDflt(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getNumHoursTag())));
+					positionDetailResult.setBargUnit(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getBargainUnitTag())));
+					positionDetailResult.setPayPlan(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getPayPlanTag())));
+					positionDetailResult.setWorkSched(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getWorkScheduleTag())));
+					positionDetailResult.setOrgTtlDescr(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getPositionTitleTag())));
+					positionDetailResult.setDrugTestReq(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getDrugTestReqTag())));
+					positionDetailResult.setSeries(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getSeriesTag())));
+					positionDetailResult.setPosnSensCd(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getPositionSensCodeTag())));
+					positionDetailResult.setSecurityClearance(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getSecClearanceTypeTag())));
+					positionDetailResult.setEmpFinInt(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getEmpFinIntTag())));
+					positionDetailResult.setGradeDflt(domObj.getNodeContent(domObj.getOnlyNode(positionDetailNode, positionDetailTags.getGradeTag())));
 				}
-				
+			
+				positionDetailResultList.add(positionDetailResult);
 			}
 
-			positionDetailResultList.add(positionDetailResult);
 		}
 		
 		return positionDetailResultList;
 
 	}
-	
-	/**
-	 * loads all values associated with Employee_Name tags 
-	 */
-	private List<EmployeeName> loadEmployeeName(String jobReqNbr)
-	{
-		EmployeeName employeeNameResult = null;
-		List<EmployeeName> employeeNameResultList = new ArrayList<EmployeeName>();
-		NodeList employeeNameNodes = domObj.getNodeList(employeeNameTags.getEmployeeNameTags());
-		if ((employeeNameNodes != null) && (employeeNameNodes.getLength() > 0))
-		{
-			for (int i = 0; i < employeeNameNodes.getLength(); i++)
-			{				
-				Node employeeNameNode = employeeNameNodes.item(i);
-				
-				if (employeeNameNode != null) {
-				
-					employeeNameResult = new EmployeeName();
-					
-					employeeNameResult.setJobReqNbr(jobReqNbr);
-					employeeNameResult.setViceName(domObj.getNodeContent(domObj.getOnlyNode(employeeNameTags.getViceNameTag())));
-
-				}
-				
-			}
-
-			employeeNameResultList.add(employeeNameResult);
-		}
 		
-		return employeeNameResultList;
-
-	}
-	
 	
 	/**
 	 * loads all values associated with JOBCODE_DETAIL tags 
@@ -543,18 +511,20 @@ public class EHRPXMLObjectData
 					jobCodeDetailResult = new JobCodeDetail();
 					
 					jobCodeDetailResult.setJobReqNbr(jobReqNbr);
-					jobCodeDetailResult.setSalAdminPlan(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getSalAdminPlanTag())));
-					jobCodeDetailResult.setGrade(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getGradeTag())));
-					jobCodeDetailResult.setPayPlan(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getPayPlanTag())));
-					jobCodeDetailResult.setSeries(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getSeriesTag())));
-					jobCodeDetailResult.setOfficialDescr(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getOfficialDescrTag())));
-					jobCodeDetailResult.setExecFinDiscl(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getFinDisclReqTag())));
-					jobCodeDetailResult.setTargetGrade(domObj.getNodeContent(domObj.getOnlyNode(jobcodeDetailTags.getTargetGradeTag())));
+					jobCodeDetailResult.setSalAdminPlan(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getSalAdminPlanTag())));
+					jobCodeDetailResult.setJobCode(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getJobCodeTag())));
+					jobCodeDetailResult.setGrade(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getGradeTag())));
+					jobCodeDetailResult.setPayPlan(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getPayPlanTag())));
+					jobCodeDetailResult.setSeries(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getSeriesTag())));
+					jobCodeDetailResult.setOfficialDescr(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getOfficialDescrTag())));
+					jobCodeDetailResult.setExecFinDiscl(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getFinDisclReqTag())));
+					jobCodeDetailResult.setTargetGrade(domObj.getNodeContent(domObj.getOnlyNode(jobCodeDetailNode, jobcodeDetailTags.getTargetGradeTag())));
 
-				}				
+				}
+				
+				jobCodeDetailResultList.add(jobCodeDetailResult);
 			}
 
-			jobCodeDetailResultList.add(jobCodeDetailResult);
 		}
 		
 		return jobCodeDetailResultList;
@@ -580,12 +550,14 @@ public class EHRPXMLObjectData
 					salaryDetailResult = new SalaryDetail();
 					
 					salaryDetailResult.setJobReqNbr(jobReqNbr);
-					salaryDetailResult.setMinSalary(domObj.getNodeContent(domObj.getOnlyNode(salaryDetailTags.getSalaryMinTag())));
-					salaryDetailResult.setMaxSalary(domObj.getNodeContent(domObj.getOnlyNode(salaryDetailTags.getSalaryMaxTag())));
-				}				
+					salaryDetailResult.setJobCode(domObj.getNodeContent(domObj.getOnlyNode(salaryDetailNode, salaryDetailTags.getJobCodeTag())));
+					salaryDetailResult.setMinSalary(domObj.getNodeContent(domObj.getOnlyNode(salaryDetailNode, salaryDetailTags.getSalaryMinTag())));
+					salaryDetailResult.setMaxSalary(domObj.getNodeContent(domObj.getOnlyNode(salaryDetailNode, salaryDetailTags.getSalaryMaxTag())));
+				}
+				
+				salaryDetailResultList.add(salaryDetailResult);
 			}
 
-			salaryDetailResultList.add(salaryDetailResult);
 		}
 		
 		return salaryDetailResultList;
@@ -611,21 +583,23 @@ public class EHRPXMLObjectData
 					posDeptHierarchyResult = new PositionDeptHierarchy();
 					
 					posDeptHierarchyResult.setJobReqNbr(jobReqNbr);
-					posDeptHierarchyResult.setSetId(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getSetIdTag())));
-					posDeptHierarchyResult.setDeptId(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptIdTag())));
-					posDeptHierarchyResult.setDescr(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptDescTag())));
-					posDeptHierarchyResult.setParLine2(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptId2Tag())));
-					posDeptHierarchyResult.setParDescr2(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptDesc2Tag())));
-					posDeptHierarchyResult.setParLine3(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptId3Tag())));
-					posDeptHierarchyResult.setParDescr3(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptDesc3Tag())));
-					posDeptHierarchyResult.setParLine4(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptId4Tag())));
-					posDeptHierarchyResult.setParDescr4(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptDesc4Tag())));
-					posDeptHierarchyResult.setParLine5(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptId5Tag())));
-					posDeptHierarchyResult.setParDescr5(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyTags.getDeptDesc5Tag())));
-				}				
+					posDeptHierarchyResult.setPositionNbr(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getPositionNbrTag())));
+					posDeptHierarchyResult.setSetId(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getSetIdTag())));
+					posDeptHierarchyResult.setDeptId(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptIdTag())));
+					posDeptHierarchyResult.setDescr(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptDescTag())));
+					posDeptHierarchyResult.setParLine2(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptId2Tag())));
+					posDeptHierarchyResult.setParDescr2(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptDesc2Tag())));
+					posDeptHierarchyResult.setParLine3(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptId3Tag())));
+					posDeptHierarchyResult.setParDescr3(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptDesc3Tag())));
+					posDeptHierarchyResult.setParLine4(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptId4Tag())));
+					posDeptHierarchyResult.setParDescr4(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptDesc4Tag())));
+					posDeptHierarchyResult.setParLine5(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptId5Tag())));
+					posDeptHierarchyResult.setParDescr5(domObj.getNodeContent(domObj.getOnlyNode(posDeptHierarchyNode, posDeptHierarchyTags.getDeptDesc5Tag())));
+				}
+				
+				posDeptHierarchyResultList.add(posDeptHierarchyResult);
 			}
 
-			posDeptHierarchyResultList.add(posDeptHierarchyResult);
 		}
 		
 		return posDeptHierarchyResultList;

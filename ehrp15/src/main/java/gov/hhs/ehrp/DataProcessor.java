@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import gov.hhs.ehrp.model.Approvals;
 import gov.hhs.ehrp.model.Candidates;
 import gov.hhs.ehrp.model.DepartmentHierarchy;
-import gov.hhs.ehrp.model.EmployeeName;
 import gov.hhs.ehrp.model.EmployeeReplacement;
 import gov.hhs.ehrp.model.EwitsDetails;
 import gov.hhs.ehrp.model.JobCodeDetail;
@@ -35,7 +34,6 @@ public class DataProcessor {
 							List<EwitsDetails> ewitsDtlList, 
 							List<EmployeeReplacement> empRplList, 
 							List<PositionDetail> positionDtlList,
-							List<EmployeeName> emplNameList,
 							List<JobCodeDetail> jobcodeDtlList,
 							List<SalaryDetail> salaryDtlList,
 							List<PositionDeptHierarchy> positionDeptList) {
@@ -52,7 +50,6 @@ public class DataProcessor {
 									 processEwitsDtl(ewitsDtlList),
 									 processEmplRpl(empRplList),
 									 processPositionDtl(positionDtlList),
-									 processEmpName(emplNameList),
 									 processJobCodeDtl(jobcodeDtlList),
 									 processSalaryDtl(salaryDtlList),
 									 processPosDept(positionDeptList));	
@@ -280,6 +277,7 @@ public class DataProcessor {
 				newEmpRpl.setJobReqNbr(empRpl.getJobReqNbr());
 				newEmpRpl.setViceEmplid(empRpl.getViceEmplid());
 				newEmpRpl.setDateVacated(empRpl.getDateVacated());
+				newEmpRpl.setViceName(empRpl.getViceName());
 			}
 			if (newEmpRpl!= null) {
 				empRplFnlList.add(newEmpRpl);
@@ -292,45 +290,87 @@ public class DataProcessor {
 	 * processPositionDtl- Processes the Position Detail Data
 	 */
 	public List<PositionDetail> processPositionDtl(List<PositionDetail> positionDtlList) {
-		
-		return positionDtlList;		
-	}
-	
-	/*
-	 * processEmpName- Processes the Employee Name Data
-	 */
-	public List<EmployeeName> processEmpName(List<EmployeeName> emplNameList) {
-		List<EmployeeName> emplNameFnlList = new ArrayList<EmployeeName>();
-		EmployeeName newEmpName = null;
+		List<PositionDetail> posDtlFnlLst = new ArrayList<PositionDetail>();
+		PositionDetail newPosDtl = null;
 
-		for(EmployeeName empRpl: emplNameList) {
-			if(!EHRPFileUtil.isNull(empRpl.getViceName())) {
-				newEmpName = new EmployeeName();
+		for(PositionDetail posDtl: positionDtlList) {
+			if(!EHRPFileUtil.isNull(posDtl.getPositionNbr())) {
+				newPosDtl = new PositionDetail();
 				
-				newEmpName.setJobReqNbr(empRpl.getJobReqNbr());
-				newEmpName.setViceName(empRpl.getViceName());
+				newPosDtl.setJobReqNbr(posDtl.getJobReqNbr());
+				newPosDtl.setPositionNbr(posDtl.getPositionNbr());
+				newPosDtl.setReportsTo(posDtl.getReportsTo());
+				newPosDtl.setLocation(posDtl.getLocation());
+				newPosDtl.setStdHrsDflt(posDtl.getStdHrsDflt());
+				newPosDtl.setBargUnit(posDtl.getBargUnit());
+				newPosDtl.setPayPlan(posDtl.getPayPlan());
+				newPosDtl.setWorkSched(posDtl.getWorkSched());
+				newPosDtl.setOrgTtlDescr(posDtl.getOrgTtlDescr());
+				newPosDtl.setDrugTestReq(posDtl.getDrugTestReq());
+				newPosDtl.setSeries(posDtl.getSeries());
+				newPosDtl.setPosnSensCd(posDtl.getPosnSensCd());
+				newPosDtl.setSecurityClearance(posDtl.getSecurityClearance());
+				newPosDtl.setEmpFinInt(posDtl.getEmpFinInt());
+				newPosDtl.setGradeDflt(posDtl.getGradeDflt());
 			}
-			if (newEmpName!= null) {
-				emplNameFnlList.add(newEmpName);
+			if (newPosDtl!= null) {
+				posDtlFnlLst.add(newPosDtl);
 			}
 		}
-		return emplNameFnlList;		
+		return posDtlFnlLst;
 	}
+	
+
 	
 	/*
 	 * processJobCodeDtl- Processes the JobCode Detail data
 	 */
 	public List<JobCodeDetail> processJobCodeDtl(List<JobCodeDetail> jobcodeDtlList) {
+		List<JobCodeDetail> jobCodeDtlFnlLst = new ArrayList<JobCodeDetail>();
+		JobCodeDetail newjobCodeDtl = null;
 
-		return jobcodeDtlList;		
+		for(JobCodeDetail jobCodeDtl: jobcodeDtlList) {
+			if(!EHRPFileUtil.isNull(jobCodeDtl.getJobCode())) {
+				newjobCodeDtl = new JobCodeDetail();
+				
+				newjobCodeDtl.setJobReqNbr(jobCodeDtl.getJobReqNbr());
+				newjobCodeDtl.setJobCode(jobCodeDtl.getJobCode());
+				newjobCodeDtl.setSalAdminPlan(jobCodeDtl.getSalAdminPlan());
+				newjobCodeDtl.setGrade(jobCodeDtl.getGrade());
+				newjobCodeDtl.setPayPlan(jobCodeDtl.getPayPlan());
+				newjobCodeDtl.setSeries(jobCodeDtl.getSeries());
+				newjobCodeDtl.setOfficialDescr(jobCodeDtl.getOfficialDescr());
+				newjobCodeDtl.setExecFinDiscl(jobCodeDtl.getExecFinDiscl());
+				newjobCodeDtl.setTargetGrade(jobCodeDtl.getTargetGrade());
+			}
+			if (newjobCodeDtl!= null) {
+				jobCodeDtlFnlLst.add(newjobCodeDtl);
+			}
+		}
+		return jobCodeDtlFnlLst;		
 	}
 	
 	/*
 	 * processSalaryDtl- Processes the Salary Detail data
 	 */
 	public List<SalaryDetail> processSalaryDtl(List<SalaryDetail> salaryDtlList) {
+		List<SalaryDetail> salaryDtlFnlLst = new ArrayList<SalaryDetail>();
+		SalaryDetail newSalaryDtl = null;
 
-		return salaryDtlList;		
+		for(SalaryDetail salaryDtl: salaryDtlList) {
+			if(!EHRPFileUtil.isNull(salaryDtl.getJobCode())) {
+				newSalaryDtl = new SalaryDetail();
+				
+				newSalaryDtl.setJobReqNbr(salaryDtl.getJobReqNbr());
+				newSalaryDtl.setJobCode(salaryDtl.getJobCode());
+				newSalaryDtl.setMinSalary(salaryDtl.getMinSalary());
+				newSalaryDtl.setMaxSalary(salaryDtl.getMaxSalary());
+			}
+			if (newSalaryDtl!= null) {
+				salaryDtlFnlLst.add(newSalaryDtl);
+			}
+		}
+		return salaryDtlFnlLst;		
 	}
 	
 	/*
@@ -341,10 +381,11 @@ public class DataProcessor {
 		PositionDeptHierarchy newDept = null;
 
 		for(PositionDeptHierarchy dept: positionDeptList) {
-			if(!EHRPFileUtil.isNull(dept.getDeptId())) {
+			if(!EHRPFileUtil.isNull(dept.getPositionNbr())) {
 				newDept = new PositionDeptHierarchy();
 				
 				newDept.setJobReqNbr(dept.getJobReqNbr());
+				newDept.setPositionNbr(dept.getPositionNbr());
 				newDept.setSetId(dept.getSetId());
 				newDept.setDeptId(dept.getDeptId());
 				newDept.setDescr(dept.getDescr());

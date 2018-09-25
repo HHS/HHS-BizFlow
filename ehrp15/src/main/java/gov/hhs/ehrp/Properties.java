@@ -67,8 +67,6 @@ public class Properties {
 	private String emplRplTblName;
 	@Value("${positionDtl.table}")
 	private String positionDtlTblName;
-	@Value("${emplName.table}")
-	private String emplNameTblName;
 	@Value("${jobcodeDtl.table}")
 	private String jobcodeDtlTblName;	
 	@Value("${salaryDtl.table}")
@@ -101,8 +99,6 @@ public class Properties {
 	private String sqlInsertEmplRpl;
 	@Value("${sql.insert.positionDtl}")
 	private String sqlInsertPositionDtl;
-	@Value("${sql.insert.emplName}")
-	private String sqlInsertEmplName;
 	@Value("${sql.insert.jobcodeDtl}")
 	private String sqlInsertJobcodeDtl;
 	@Value("${sql.insert.salaryDtl}")
@@ -281,12 +277,6 @@ public class Properties {
 	public void setPositionDtlTblName(String positionDtlTblName) {
 		this.positionDtlTblName = positionDtlTblName;
 	}
-	public String getEmplNameTblName() {
-		return emplNameTblName;
-	}
-	public void setEmplNameTblName(String emplNameTblName) {
-		this.emplNameTblName = emplNameTblName;
-	}
 	public String getJobcodeDtlTblName() {
 		return jobcodeDtlTblName;
 	}
@@ -367,12 +357,6 @@ public class Properties {
 	}
 	public void setSqlInsertPositionDtl(String sqlInsertPositionDtl) {
 		this.sqlInsertPositionDtl = sqlInsertPositionDtl;
-	}
-	public String getSqlInsertEmplName() {
-		return sqlInsertEmplName;
-	}
-	public void setSqlInsertEmplName(String sqlInsertEmplName) {
-		this.sqlInsertEmplName = sqlInsertEmplName;
 	}
 	public String getSqlInsertJobcodeDtl() {
 		return sqlInsertJobcodeDtl;

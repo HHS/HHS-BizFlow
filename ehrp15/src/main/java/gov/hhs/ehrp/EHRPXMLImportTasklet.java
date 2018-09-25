@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import gov.hhs.ehrp.model.Approvals;
 import gov.hhs.ehrp.model.Candidates;
 import gov.hhs.ehrp.model.DepartmentHierarchy;
-import gov.hhs.ehrp.model.EmployeeName;
 import gov.hhs.ehrp.model.EmployeeReplacement;
 import gov.hhs.ehrp.model.EwitsDetails;
 import gov.hhs.ehrp.model.JobCodeDetail;
@@ -54,7 +53,6 @@ public class EHRPXMLImportTasklet implements Tasklet {
 	private static List<EwitsDetails> ewitsDetailsResultList = new ArrayList<EwitsDetails>();
 	private static List<EmployeeReplacement> empReplResultList =  new ArrayList<EmployeeReplacement>();
 	private static List<PositionDetail> positionDetailResultList = new ArrayList<PositionDetail>();
-	private static List<EmployeeName> employeeNameResultList = new ArrayList<EmployeeName>();
 	private static List<JobCodeDetail> jobCodeDetailResultList = new ArrayList<JobCodeDetail>();
 	private static List<SalaryDetail> salaryDetailResultList = new ArrayList<SalaryDetail>();
 	private static List<PositionDeptHierarchy> posDeptHierarchyResultList = new ArrayList<PositionDeptHierarchy>();
@@ -65,7 +63,7 @@ public class EHRPXMLImportTasklet implements Tasklet {
 	private int errorCnt = 0;
 	private boolean filesDetected = false;
 		
-	public void setData(RequisitionDetail reqDetailResult, List<JobCodes> jobCodesList , List<Positions> positionsList, List<Openings> openingsList, List<Candidates> candidatesList, List<DepartmentHierarchy> deptHierarchyList, List<Approvals> approvalsList, List<EwitsDetails> ewitsDetailsList, List<EmployeeReplacement> empReplList, List<PositionDetail> positionDetailList, List<EmployeeName> employeeNameList, List<JobCodeDetail> jobCodeDetailList, List<SalaryDetail> salaryDetailList, List<PositionDeptHierarchy> posDeptHierarchyList) {
+	public void setData(RequisitionDetail reqDetailResult, List<JobCodes> jobCodesList , List<Positions> positionsList, List<Openings> openingsList, List<Candidates> candidatesList, List<DepartmentHierarchy> deptHierarchyList, List<Approvals> approvalsList, List<EwitsDetails> ewitsDetailsList, List<EmployeeReplacement> empReplList, List<PositionDetail> positionDetailList, List<JobCodeDetail> jobCodeDetailList, List<SalaryDetail> salaryDetailList, List<PositionDeptHierarchy> posDeptHierarchyList) {
 		this.reqDetailResultList.clear();
 		this.reqDetailResultList.add(this.reqDetailResultList.size(), reqDetailResult);
 		this.jobCodeResultList = jobCodesList;
@@ -77,14 +75,13 @@ public class EHRPXMLImportTasklet implements Tasklet {
 		this.ewitsDetailsResultList = ewitsDetailsList;
 		this.empReplResultList = empReplList;
 		this.positionDetailResultList = positionDetailList;
-		this.employeeNameResultList = employeeNameList;
 		this.jobCodeDetailResultList = jobCodeDetailList;
 		this.salaryDetailResultList = salaryDetailList;
 		this.posDeptHierarchyResultList = posDeptHierarchyList;
 	
 	}
 	
-	public void setProcessedData(List <RequisitionDetail> reqDtlList, List<JobCodes> jobCodesList, List<Positions> positionsList, List<Openings> openingsList, List<Candidates> candidatesList, List<DepartmentHierarchy> deptHierarchyList, List<Approvals> approvalsList, List<EwitsDetails> ewitsDetailsList, List<EmployeeReplacement> empReplList, List<PositionDetail> positionDetailList, List<EmployeeName> employeeNameList, List<JobCodeDetail> jobCodeDetailList, List<SalaryDetail> salaryDetailList, List<PositionDeptHierarchy> posDeptHierarchyList) {
+	public void setProcessedData(List <RequisitionDetail> reqDtlList, List<JobCodes> jobCodesList, List<Positions> positionsList, List<Openings> openingsList, List<Candidates> candidatesList, List<DepartmentHierarchy> deptHierarchyList, List<Approvals> approvalsList, List<EwitsDetails> ewitsDetailsList, List<EmployeeReplacement> empReplList, List<PositionDetail> positionDetailList, List<JobCodeDetail> jobCodeDetailList, List<SalaryDetail> salaryDetailList, List<PositionDeptHierarchy> posDeptHierarchyList) {
 		this.reqDetailResultList = reqDtlList;
 		this.jobCodeResultList = jobCodesList;
 		this.positionResultList = positionsList;
@@ -95,7 +92,6 @@ public class EHRPXMLImportTasklet implements Tasklet {
 		this.ewitsDetailsResultList = ewitsDetailsList;
 		this.empReplResultList = empReplList;
 		this.positionDetailResultList = positionDetailList;
-		this.employeeNameResultList = employeeNameList;
 		this.jobCodeDetailResultList = jobCodeDetailList;
 		this.salaryDetailResultList = salaryDetailList;
 		this.posDeptHierarchyResultList = posDeptHierarchyList;
@@ -165,7 +161,6 @@ public class EHRPXMLImportTasklet implements Tasklet {
 											ewitsDetailsResultList,
 											empReplResultList,
 											positionDetailResultList,
-											employeeNameResultList,
 											jobCodeDetailResultList,
 											salaryDetailResultList,
 											posDeptHierarchyResultList);
@@ -181,7 +176,6 @@ public class EHRPXMLImportTasklet implements Tasklet {
 													ewitsDetailsResultList,
 													empReplResultList,
 													positionDetailResultList,
-													employeeNameResultList,
 													jobCodeDetailResultList,
 													salaryDetailResultList,
 													posDeptHierarchyResultList);
