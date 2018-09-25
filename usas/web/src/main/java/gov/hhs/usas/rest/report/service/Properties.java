@@ -33,6 +33,8 @@ public class Properties {
 	private String applicantRosterReportPath;
 	@Value("${report.path.applicant-notification}")
 	private String applicantNotificationReportPath;
+	@Value("${report.path.cdc-recruitment}")
+	private String cdcRecruitmentReportPath;
 	
 	@Value("${report.name.recruitment}")
 	private String recruitmentReportName;
@@ -42,6 +44,8 @@ public class Properties {
 	private String applicantRosterReportName;
 	@Value("${report.name.applicant-notification}")
 	private String applicantNotificationReportName;
+	@Value("${report.name.cdc-recruitment}")
+	private String cdcRecruitmentReportName;
 	@Value("${report.format.property}")
 	private String reportFormatProperty;	
 	@Value("${report.format.dataset}")
@@ -126,6 +130,8 @@ public class Properties {
 	private String applicantNotificationFileLocation;
 	@Value("${location.applicant-roster}")
 	private String applicantRosterFileLocation;
+	@Value("${location.cdc-recruitment}")
+	private String cdcRecruitmentFileLocation;
 
 	public String getXmlDataProperty() {
 		return xmlDataProperty;
@@ -199,6 +205,12 @@ public class Properties {
 	public void setApplicantNotificationReportPath(String applicantNotificationReportPath) {
 		this.applicantNotificationReportPath = applicantNotificationReportPath;
 	}
+	public String getCdcRecruitmentReportPath() {
+		return cdcRecruitmentReportPath;
+	}
+	public void setCdcRecruitmentReportPath(String cdcRecruitmentReportPath) {
+		this.cdcRecruitmentReportPath = cdcRecruitmentReportPath;
+	}
 	public String getRecruitmentReportName() {
 		return recruitmentReportName;
 	}
@@ -222,6 +234,12 @@ public class Properties {
 	}
 	public void setApplicantNotificationReportName(String applicantNotificationReportName) {
 		this.applicantNotificationReportName = applicantNotificationReportName;
+	}
+	public String getCdcRecruitmentReportName() {
+		return cdcRecruitmentReportName;
+	}
+	public void setCdcRecruitmentReportName(String cdcRecruitmentReportName) {
+		this.cdcRecruitmentReportName = cdcRecruitmentReportName;
 	}
 	public String getReportFormatProperty() {
 		return reportFormatProperty;
@@ -438,5 +456,11 @@ public class Properties {
 	}
 	public void setApplicantRosterFileLocation(String applicantRosterFileLocation) {
 		this.applicantRosterFileLocation = applicantRosterFileLocation;
+	}
+	public String getCdcRecruitmentFileLocation() {
+		return cdcRecruitmentFileLocation;
+	}
+	public void setCdcRecruitmentFileLocation(String cdcRecruitmentFileLocation) {
+		this.cdcRecruitmentFileLocation = cdcRecruitmentFileLocation;
 	}
 }
