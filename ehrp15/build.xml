@@ -128,7 +128,6 @@
 				<include name="log4j.properties" />
 				<include name="logback.xml" />
 				<include name="EHRP_15min.sh" />
-				<include name="getEHRPFiles_sftp.txt" />
 			</fileset>
 		</copy>
 		<!-- In separate directory deployment approach, logback.xml is placed in ../conf execution directory. -->
@@ -174,7 +173,6 @@
 				<include name="log4j.properties" />
 				<include name="logback.xml" />
 				<include name="EHRP_15min.sh" />
-				<include name="getEHRPFiles_sftp.txt" />
 			</fileset>
 			<fileset dir="${src.main.res.dir}">
 				<include name="run-jar.sh" />
@@ -183,7 +181,6 @@
 		</copy>
 		<chmod file="${dist.dir}/run-jar.sh" perm="774" />
 		<chmod file="${dist.dir}/EHRP_15min.sh" perm="774" />
-		<chmod file="${dist.dir}/getEHRPFiles_sftp" perm="774" />
 
 		<delete dir="${bootjar.dir}" />
 		<mkdir dir="${bootjar.dir}/BOOT-INF" />
