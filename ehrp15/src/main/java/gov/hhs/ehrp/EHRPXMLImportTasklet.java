@@ -117,6 +117,7 @@ public class EHRPXMLImportTasklet implements Tasklet {
 			//Creates collection of existing job opening ids
 			jobOpeningNbrsList= dbProcessor.selectJobOpeningNbrs();
 					
+			Thread.sleep(10000);
 			//get a directory file listing based on extension
 			fileList = new ArrayList(FileUtils.listFiles(inboundDir, extensions, false));
 			
