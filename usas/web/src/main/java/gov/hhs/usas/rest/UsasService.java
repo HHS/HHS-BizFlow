@@ -57,7 +57,7 @@ public class UsasService {
 			log.info("Using XML report for Appointment "+ reportPath + " for transformation.");
 			usasAppointment = appointmentService.parseReportFromFile(reportPath);
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report for Request Number ["+requestNumber+"].");
 			usasAppointment = appointmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(appointmentReport), requestNumber);
 		}
 		return usasAppointment;
@@ -86,7 +86,7 @@ public class UsasService {
 			log.info("Using XML report for Recruitment "+ reportPath + " for transformation.");
 			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report for Request Number ["+requestNumber+"].");    
 			usasRecruitment = recruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(recruitmentReport), requestNumber);
 		}
 		return usasRecruitment;
@@ -129,7 +129,7 @@ public class UsasService {
 				applicantRoster.setHtmlResponse(properties.getNoFileException() + "File: " + report);
 			}
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report for Vacancy Number ["+vacancyNumber+"].");    
 			applicantRoster.setHtmlResponse(client.processReportDataRequest(applicantRosterReport).getResponse());
 		}
 
@@ -173,7 +173,7 @@ public class UsasService {
 				applicantNotification.setHtmlResponse(properties.getNoFileException() + "File: " + report);
 			}
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report for Vacancy Number ["+vacancyNumber+"].");    
 			applicantNotification.setHtmlResponse(client.processReportDataRequest(applicantNotificationReport).getResponse());
 		}
 
@@ -189,7 +189,7 @@ public class UsasService {
 	 * @return
 	 */
 	public String getCognosDatasetReport(String reportName, String requestNumber){
-		log.info("Connecting to USAS - Cognos Server to get " + reportName + " report.");
+		log.info("Connecting to USAS - Cognos Server to get " + reportName + " report for Request Number ["+requestNumber+"].");
 		String reportPath = "";
 		if(reportName.equalsIgnoreCase("recruitment"))
 			reportPath = properties.getRecruitmentReportPath();

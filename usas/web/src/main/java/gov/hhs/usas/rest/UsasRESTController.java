@@ -1,5 +1,7 @@
 package gov.hhs.usas.rest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 @RequestMapping({"/usas"})
 public class UsasRESTController
 {
+	private static Log log = LogFactory.getLog(UsasRESTController.class);
 	@Autowired
 	private UsasService usasService;
 
@@ -33,7 +36,7 @@ public class UsasRESTController
 	 */
 	@GetMapping(path = "/report/{reportName}/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public String getReportFromUSASCognos(@PathVariable("reportName") String reportName, @PathVariable("requestNumber") String requestNumber)
-	{
+	{		
 		String response = usasService.getCognosDatasetReport(reportName, requestNumber);
 		return response;
 	}
@@ -47,6 +50,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/appointment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public USAStaffingAppointmentResult getAppointmentFormData(@PathVariable String requestNumber)
 	{
+		log.info("Appointment Form Data Request received for Request Number ["+requestNumber+"].");
 		USAStaffingAppointmentResult usasAppointment = usasService.getAppointmentData(requestNumber);
 
 		return usasAppointment;
@@ -61,6 +65,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/recruitment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public USAStaffingRecruitmentResult getRecruitmentFormData(@PathVariable String requestNumber)
 	{
+		log.info("Recruitment Form Data Request received for Request Number ["+requestNumber+"].");
 		USAStaffingRecruitmentResult usasRecruitment = usasService.getRecruitmentData(requestNumber);
 
 		return usasRecruitment;
@@ -75,6 +80,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportHTML/applicantroster/{vacancyNumber}", produces = MediaType.TEXT_HTML_VALUE)
 	public String getApplicantRosterReport(@PathVariable String vacancyNumber)
 	{
+		log.info("Applicant Roster Report Request received for Vacancy Number ["+vacancyNumber+"].");
 		String applicantRosterReportResult = usasService.getApplicantRosterReport(vacancyNumber).getHtmlResponse();
 		return applicantRosterReportResult;
 	}
@@ -88,6 +94,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportHTML/applicantnotification/{vacancyNumber}", produces = MediaType.TEXT_HTML_VALUE)
 	public String getApplicantNotificationReport(@PathVariable String vacancyNumber)
 	{
+		log.info("Applicant Notification Report Request received for Vacancy Number ["+vacancyNumber+"].");
 		String applicantNotificationReportResult = usasService.getApplicantNotificationReport(vacancyNumber).getHtmlResponse();
 		return applicantNotificationReportResult;
 	}
