@@ -30,7 +30,7 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     DEPTID                  VARCHAR2(10),
     GVT_RECR_OFFICE         VARCHAR2(40),
     HE_APPROVALO_OPRID      VARCHAR2(30),
-    GVT_SEL_OFFICIAL        VARCHAR2(11),
+    GVT_SEL_OFFICIAL        VARCHAR2(30),
     STATUS_DT               DATE,
     OPENINGS_TARGET         NUMBER(38,0),
     SETID_DEPT              VARCHAR2(10),
@@ -42,12 +42,14 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     DESIRED_START_DT        DATE,
     AUTHORIZATION_DT        DATE,
     COUNTRY                 VARCHAR2(3),
-    GVT_STAFF_SPCLST        VARCHAR2(11),
+    GVT_STAFF_SPCLST        VARCHAR2(30),
     GVT_CONSIDER_AREA       VARCHAR2(1),
     GVT_RQSN_TYPE           VARCHAR2(1),
     INITIATOR_OPRID         VARCHAR2(30),
     HE_COMMENTS             CLOB
     );
+    
+    CREATE UNIQUE INDEX EHRP_REQ_DTL_PK ON HHS_HR.EHRP_REQ_DTL (HRS_JOB_OPENING_ID);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_JOBCODES
@@ -79,6 +81,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     GVT_TYPE_OF_APPT        VARCHAR2(2)
     );
 
+    CREATE UNIQUE INDEX EHRP_JOBCODES_PK ON HHS_HR.EHRP_JOBCODES (HRS_JOB_OPENING_ID, JOBCODE);
+    
 --------------------------------------------------------  
 --DDL for Table EHRP_POSITIONS
 --------------------------------------------------------  
@@ -87,6 +91,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     POSITION_NBR                VARCHAR2(8),
     HRS_JO_PRM_PSN_FLG          VARCHAR2(1)
     );
+    
+    CREATE UNIQUE INDEX EHRP_POSITIONS_PK ON HHS_HR.EHRP_POSITIONS (HRS_JOB_OPENING_ID, POSITION_NBR);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_OPENINGS
@@ -97,6 +103,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     HRS_JO_PRM_LOC_FLG          VARCHAR2(1),
     DESCR                       VARCHAR2(30)
     );
+    
+    CREATE UNIQUE INDEX EHRP_OPENINGS_PK ON HHS_HR.EHRP_OPENINGS (HRS_JOB_OPENING_ID, LOCATION);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_CANDIDATES
@@ -107,6 +115,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     NAME                    VARCHAR2(50)
     );
 
+    CREATE UNIQUE INDEX EHRP_CANDIDATES_PK ON HHS_HR.EHRP_CANDIDATES (HRS_JOB_OPENING_ID, SEQUENCE_NBR);
+    
 --------------------------------------------------------  
 --DDL for Table EHRP_DEPT
 --------------------------------------------------------  
@@ -124,6 +134,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     GVT_PAR_LINE5           VARCHAR2(10),
     GVT_PAR_DESCR5          VARCHAR2(40)
     );
+    
+    CREATE UNIQUE INDEX EHRP_DEPT_PK ON HHS_HR.EHRP_DEPT (HRS_JOB_OPENING_ID);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_APPROVALS
@@ -137,6 +149,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     EMPLID                  VARCHAR2(11),
     COMMENTS                CLOB
     );
+    
+    CREATE UNIQUE INDEX EHRP_APPROVALS_PK ON HHS_HR.EHRP_APPROVALS (HRS_JOB_OPENING_ID, STEP);
 
 -------------------------------------------------------  
 --DDL for Table EHRP_EWITS_DTL
@@ -152,6 +166,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     CAN                         VARCHAR2(25)
     );
 
+    CREATE UNIQUE INDEX EHRP_EWITS_DTL_PK ON HHS_HR.EHRP_EWITS_DTL (HRS_JOB_OPENING_ID);
+    
 --------------------------------------------------------  
 --DDL for Table EHRP_EMPL_RPL
 --------------------------------------------------------  
@@ -162,6 +178,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     VICE_NAME               VARCHAR2(50)
     );
 
+    CREATE UNIQUE INDEX EHRP_EMPL_RPL_PK ON HHS_HR.EHRP_EMPL_RPL (HRS_JOB_OPENING_ID, VICE_EMPLID);
+    
 --------------------------------------------------------  
 --DDL for Table EHRP_POSITION_DTL
 --------------------------------------------------------  
@@ -182,6 +200,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     GVT_EMP_FIN_INT             VARCHAR2(1),
     GRADE_DEFAULT               VARCHAR2(3)
     );
+    
+    CREATE UNIQUE INDEX EHRP_POSITION_DTL_PK ON HHS_HR.EHRP_POSITION_DTL (HRS_JOB_OPENING_ID, POSITION_NBR);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_JOBCODE_DTL
@@ -197,6 +217,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     GVT_EXEC_FIN_DISCL      VARCHAR2(1),
     GVT_TARGET_GRADE        VARCHAR2(2)
     );
+    
+    CREATE UNIQUE INDEX EHRP_JOBCODE_DTL_PK ON HHS_HR.EHRP_JOBCODE_DTL (HRS_JOB_OPENING_ID, JOBCODE);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_SALARY_DTL
@@ -207,6 +229,8 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     MIN_RT_ANNUAL           NUMBER(18,3),
     MAX_RT_ANNUAL           NUMBER(18,3)
     );
+    
+    CREATE UNIQUE INDEX EHRP_SALARY_DTL_PK ON HHS_HR.EHRP_SALARY_DTL (HRS_JOB_OPENING_ID, JOBCODE);
 
 --------------------------------------------------------  
 --DDL for Table EHRP_POSITION_DEPT
@@ -226,3 +250,5 @@ DROP TABLE HHS_HR.EHRP_POSITION_DEPT;
     GVT_PAR_LINE5           VARCHAR2(10),
     GVT_PAR_DESCR5          VARCHAR2(40)
     );
+    
+    CREATE UNIQUE INDEX EHRP_POSITION_DEPT_PK ON HHS_HR.EHRP_POSITION_DEPT (HRS_JOB_OPENING_ID, POSITION_NBR);
