@@ -119,7 +119,7 @@ public class UsasService {
 			log.info("Using XML report for CDC Recruitment "+ reportPath + " for transformation.");
 			cdcRecruitment = cdcRecruitmentService.parseReportFromFile(reportPath);
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getCdcRecruitmentReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getCdcRecruitmentReportName() + " report for Request Number ["+requestNumber+"].");    
 			cdcRecruitment = cdcRecruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(cdcRecruitmentReport), requestNumber);
 		}
 		return cdcRecruitment;

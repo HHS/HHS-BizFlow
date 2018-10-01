@@ -81,6 +81,7 @@ public class UsasRESTController
 	@GetMapping(path = "/reportXML/cdcrecruitment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
 	public CdcRecruitmentResult getCdcRecruitmentFormData(@PathVariable String requestNumber)
 	{
+		log.info("CDC Recruitment Form Data Request received for Request Number ["+requestNumber+"].");
 		CdcRecruitmentResult cdcRecruitment = usasService.getCdcRecruitmentData(requestNumber);
 
 		return cdcRecruitment;
