@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.hhs.usas.rest.report.model.Appointment.USAStaffingAppointmentResult;
+import gov.hhs.usas.rest.report.model.CdcRecruitment.CdcRecruitmentResult;
 import gov.hhs.usas.rest.report.model.Recruitment.USAStaffingRecruitmentResult;
 
 /**
@@ -71,6 +72,20 @@ public class UsasRESTController
 		return usasRecruitment;
 	}
 
+	/**
+	 * This method pulls the CDC Recruitment Report for specific Job Request Number and 
+	 * transforms the Cognos dataSet XML format to BizFlow consumable format.
+	 * @param requestNumber - Job Request Number
+	 * @return CdcRecruitmentResult - BizFlow consumable XML format
+	 */
+	@GetMapping(path = "/reportXML/cdcrecruitment/{requestNumber}", produces = MediaType.APPLICATION_XML_VALUE)
+	public CdcRecruitmentResult getCdcRecruitmentFormData(@PathVariable String requestNumber)
+	{
+		CdcRecruitmentResult cdcRecruitment = usasService.getCdcRecruitmentData(requestNumber);
+
+		return cdcRecruitment;
+	}
+	
 	/**
 	 * This method pulls the Applicant Roster Report for 
 	 * specific Vacancy Number in HTML format and returns the HTML string.
