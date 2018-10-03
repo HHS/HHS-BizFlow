@@ -63,19 +63,45 @@ public class DBProcessor {
 								List<SalaryDetail> salaryDtlList,
 								List<PositionDeptHierarchy> positionDeptList) {
 		
-		insertReqDetail(reqDetailList);
-		insertJobCodes(jobCodeList);
-		insertJobCodeDtl(jobcodeDtlList);
-		insertPositions(positionsList);
-		insertPositionDetail(positionDtlList);
-		insertPositionDept(positionDeptList);
-		insertSalaryDtl(salaryDtlList);
-		insertOpenings(openingsList);
-		insertCandidates(candidatesList);
-		insertDept(deptList);
-		insertApprovals(approvalsList);
-		insertEmployeeReplacement(empRplList);
-		insertEwitsDtl(ewitsDtlList);
+		if (!reqDetailList.isEmpty()) {
+			insertReqDetail(reqDetailList);
+		}
+		if (!jobCodeList.isEmpty()) {
+			insertJobCodes(jobCodeList);
+		}
+		if (!jobcodeDtlList.isEmpty()) {
+			insertJobCodeDtl(jobcodeDtlList);
+		}
+		if (!positionsList.isEmpty()) {
+			insertPositions(positionsList);
+		}
+		if (!positionDtlList.isEmpty()) {
+			insertPositionDetail(positionDtlList);
+		}
+		if (!positionDeptList.isEmpty()) {
+			insertPositionDept(positionDeptList);
+		}
+		if (!salaryDtlList.isEmpty()) {
+			insertSalaryDtl(salaryDtlList);
+		}
+		if (!openingsList.isEmpty()) {
+			insertOpenings(openingsList);
+		}
+		if (!candidatesList.isEmpty()) {
+			insertCandidates(candidatesList);
+		}
+		if (!deptList.isEmpty()) {
+			insertDept(deptList);
+		}
+		if (!approvalsList.isEmpty()) {
+			insertApprovals(approvalsList);
+		}
+		if (!empRplList.isEmpty()) {
+			insertEmployeeReplacement(empRplList);
+		}
+		if (!ewitsDtlList.isEmpty()) {
+			insertEwitsDtl(ewitsDtlList);
+		}
 
 	}
 

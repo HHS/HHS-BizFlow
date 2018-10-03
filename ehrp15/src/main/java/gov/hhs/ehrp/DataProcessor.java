@@ -358,7 +358,7 @@ public class DataProcessor {
 		SalaryDetail newSalaryDtl = null;
 
 		for(SalaryDetail salaryDtl: salaryDtlList) {
-			if(!EHRPFileUtil.isNull(salaryDtl.getJobCode())) {
+			if((!EHRPFileUtil.isNull(salaryDtl.getJobCode())) && ((!EHRPFileUtil.isNull(salaryDtl.getMinSalary())) || (!EHRPFileUtil.isNull(salaryDtl.getMaxSalary())))) {
 				newSalaryDtl = new SalaryDetail();
 				
 				newSalaryDtl.setJobReqNbr(salaryDtl.getJobReqNbr());
