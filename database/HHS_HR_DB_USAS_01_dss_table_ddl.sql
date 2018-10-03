@@ -798,11 +798,11 @@ CREATE TABLE HHS_HR.DSS_TIME_TO_OFFER
 (
     STAFFING_ORGANIZATION           VARCHAR2(122),
     REQUEST_NUMBER                  VARCHAR2(202),
+    PD_NUMBER                       VARCHAR2(2050),
     NEW_HIRE_CREATE_DATE            DATE,
     REQUEST_STATUS                  VARCHAR2(1002),
     REQUEST_TYPE                    VARCHAR2(1002),
     POSITION_TITLE                  VARCHAR2(2050),
-    AREA_CONSIDER                   VARCHAR2(24),
     NEW_HIRE_PAY_PLAN               VARCHAR2(2050),
     NEW_HIRE_SERIES                 VARCHAR2(2050),
     NEW_HIRE_GRADE                  VARCHAR2(2050),
