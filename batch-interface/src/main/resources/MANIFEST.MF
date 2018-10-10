@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: interface
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: gov.hhs.batch
+Spring-Boot-Version: 1.5.10.RELEASE
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: gov.hhs.batch.InterfaceApplication
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+Class-Path: . ..
+
+
