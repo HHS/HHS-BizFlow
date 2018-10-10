@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="LOG_PATH" value="logs"/>
+	
+ 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{logFileName}] %magenta([%thread]) %highlight(%-5level) %logger.%M\(\) - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name = "FILE-NAME" class="ch.qos.logback.classic.sift.SiftingAppender">
+	
+		<discriminator>
+			<key>logFileName</key>
+			<defaultValue>interface</defaultValue>
+		</discriminator>
+		
+		<sift>
+			<appender name="FILE-${logFileName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				
+				<encoder>
+					<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger.%M\(\) - %msg%n</pattern>
+				</encoder>
+				
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<fileNamePattern>${LOG_PATH}/${logFileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
+					<maxHistory>100</maxHistory>
+					<totalSizeCap>100MB</totalSizeCap>
+				</rollingPolicy>
+				
+			</appender>
+		</sift>
+	</appender>
+
+
+	<root level="INFO">
+ 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE-NAME" />
+	</root>
+
+</configuration>
