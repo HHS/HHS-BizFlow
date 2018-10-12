@@ -20,6 +20,10 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
+import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import gov.hhs.batch.biis.BIISJobListener;
 import gov.hhs.batch.biis.BIISProperties;
@@ -56,9 +61,6 @@ public class BatchConfiguration {
 
 	@Autowired
 	private StepListener stepsListener;
-	
-	@Autowired
-	private JobLauncher jobLauncher;
 	
 	@Autowired
 	@Qualifier("hhsDb")
@@ -112,7 +114,7 @@ public class BatchConfiguration {
 		try {
 			if(Boolean.valueOf(properties.getRunEhrpJob())) {
 				JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).toJobParameters();
-				jobLauncher.run(Ehrp15MinInterfaceJob(), jobParameters);
+				getJobLauncher().run(Ehrp15MinInterfaceJob(), jobParameters);
 			} else {
 				log.info(ehrpProperties.getEhrpInterfaceName() + " is turned off.");
 			}
@@ -130,7 +132,7 @@ public class BatchConfiguration {
 		try {
 			if(Boolean.valueOf(properties.getRunBiisJob())) {
 				JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).toJobParameters();
-				jobLauncher.run(BiisInterfaceJob(), jobParameters);	
+				getJobLauncher().run(BiisInterfaceJob(), jobParameters);	
 			} else {
 				log.info(biisProperties.getBiisInterfaceName() + " is turned off.");
 			}
@@ -233,6 +235,27 @@ public class BatchConfiguration {
 				.tasklet(ehrpRefDataTasklet)
 				.listener(stepsListener)
 				.build();
+	}
+	
+	//***To resolve error: Can't serialize access for this transaction***
+	private JobRepository getJobRepository() throws Exception {
+		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+		factory.setDataSource(hhsDataSource);
+		factory.setTransactionManager(getTransactionManager());
+		factory.setIsolationLevelForCreate("ISOLATION_READ_COMMITTED");//Added to get rid of ->Caused by: java.sql.SQLException: ORA-08177: can't serialize access for this transaction
+		factory.afterPropertiesSet();
+		return (JobRepository) factory.getObject();
+	}
+
+	private PlatformTransactionManager getTransactionManager() {
+		return new ResourcelessTransactionManager();
+	}
+
+	public JobLauncher getJobLauncher() throws Exception {
+		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+		jobLauncher.setJobRepository(getJobRepository());
+		jobLauncher.afterPropertiesSet();
+		return jobLauncher;
 	}
 	
 }
