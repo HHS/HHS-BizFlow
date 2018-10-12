@@ -179,10 +179,14 @@
 			<fileset dir="${src.main.res.dir}">
 				<include name="run-jar.sh" />
 				<include name="run-jar.bat" />
+				<include name="start-interface.sh" />
+				<include name="stop-interface.sh" />
 			</fileset>
 		</copy>
 		<chmod file="${dist.dir}/run-jar.sh" perm="774" />
 		<chmod file="${dist.dir}/EHRP_15min.sh" perm="774" />
+		<chmod file="${dist.dir}/start-interface.sh" perm="774" />
+		<chmod file="${dist.dir}/stop-interface.sh" perm="774" />			
 
 		<delete dir="${bootjar.dir}" />
 		<mkdir dir="${bootjar.dir}/BOOT-INF" />
