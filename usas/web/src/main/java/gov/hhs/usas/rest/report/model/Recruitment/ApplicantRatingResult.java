@@ -108,7 +108,9 @@ public class ApplicantRatingResult
   @Override
 public String toString()
   {
-    return "announcementNumber: " + getAnnouncementNumber() + "  totalNumberOfApplicants: " + getTotalNumberOfApplicants() + "  totalNumberOfEligibleApplicants: " + getTotalNumberOfEligibleApplicants() + "  totalNumberOfUniqueReferredApplicants: " + getTotalNumberOfUniqueReferredApplicants() + "  dateApplicantsNotifiedEligibilityStatus: " + getDateApplicantsNotifiedEligibilityStatus() + "  dateApplicantsNotifiedReferralStatus: " + getDateApplicantsNotifiedReferralStatus();
+    return "ApplicantRatingResult [announcementNumber: " + getAnnouncementNumber() + "| totalNumberOfApplicants: " + getTotalNumberOfApplicants() 
+    		+ "| totalNumberOfEligibleApplicants: " + getTotalNumberOfEligibleApplicants() + "| totalNumberOfUniqueReferredApplicants: " + getTotalNumberOfUniqueReferredApplicants() 
+    		+ "|  dateApplicantsNotifiedEligibilityStatus: " + getDateApplicantsNotifiedEligibilityStatus() + "| dateApplicantsNotifiedReferralStatus: " + getDateApplicantsNotifiedReferralStatus() + "]";
   }
 }
 

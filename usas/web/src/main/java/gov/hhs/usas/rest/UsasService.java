@@ -57,13 +57,18 @@ public class UsasService {
 		CognosReport appointmentReport = new CognosReport(properties.getAppointmentReportName(), properties.getAppointmentReportPath(), properties.getReportFormatDataSet(), appointmentPrompt);
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){//test mode
+			log.info("**Application is running in TEST MODE: Pre-downloaded Appointment report will be used to generate the response.");
 			String reportPath = properties.getAppointmentFileLocation() + File.separator + requestNumber + ".xml";
 			log.info("Using XML report for Appointment "+ reportPath + " for transformation.");
 			usasAppointment = appointmentService.parseReportFromFile(reportPath);
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report.");
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getAppointmentReportName() + " report for Request Number ["+requestNumber+"].");
 			usasAppointment = appointmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(appointmentReport), requestNumber);
 		}
+		
+		if(usasAppointment.getRequestNumber().length() == 0)//setting request number for response if not available			
+			usasAppointment.setRequestNumber(requestNumber);
+		log.info(usasAppointment.toString());
 		return usasAppointment;
 	}
 
@@ -86,13 +91,17 @@ public class UsasService {
 		CognosReport recruitmentReport = new CognosReport(properties.getRecruitmentReportName(), properties.getRecruitmentReportPath(), properties.getReportFormatDataSet(), recruitmentPrompt);
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){//test mode
+			log.info("**Application is running in TEST MODE: Pre-downloaded Recruitment report will be used to generate the response.");
 			String reportPath = properties.getRecruitmentFileLocation() + File.separator + requestNumber + ".xml";
 			log.info("Using XML report for Recruitment "+ reportPath + " for transformation.");
 			usasRecruitment = recruitmentService.parseReportFromFile(reportPath);
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getRecruitmentReportName() + " report for Request Number ["+requestNumber+"].");    
 			usasRecruitment = recruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(recruitmentReport), requestNumber);
 		}
+		if(usasRecruitment.getRequestNumber().length() == 0)//setting request number for response if not available			
+			usasRecruitment.setRequestNumber(requestNumber);
+		log.info(usasRecruitment.toString());
 		return usasRecruitment;
 	}
 	
@@ -115,13 +124,15 @@ public class UsasService {
 		CognosReport cdcRecruitmentReport = new CognosReport(properties.getCdcRecruitmentReportName(), properties.getCdcRecruitmentReportPath(), properties.getReportFormatDataSet(), cdcRecruitmentPrompt);
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){//test mode
+			log.info("**Application is running in TEST MODE: Pre-downloaded CDC Recruitment report will be used to generate the response.");
 			String reportPath = properties.getCdcRecruitmentFileLocation() + File.separator + requestNumber + ".xml";
 			log.info("Using XML report for CDC Recruitment "+ reportPath + " for transformation.");
 			cdcRecruitment = cdcRecruitmentService.parseReportFromFile(reportPath);
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getCdcRecruitmentReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getCdcRecruitmentReportName() + " report for Request Number ["+requestNumber+"].");    
 			cdcRecruitment = cdcRecruitmentService.parseReportFromUSASResponse(this.client.processReportDataRequest(cdcRecruitmentReport), requestNumber);
 		}
+		log.info(cdcRecruitment.toString());
 		return cdcRecruitment;
 	}
 
@@ -141,10 +152,11 @@ public class UsasService {
 		CognosReport applicantRosterReport = new CognosReport(properties.getApplicantRosterReportName(), properties.getApplicantRosterReportPath(), properties.getReportFormatHTML(), applicantRosterPrompt);
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){//test mode
+			log.info("**Application is running in TEST MODE: Pre-downloaded Applicant Roster report will be used to generate the response.");
 			String report = properties.getApplicantRosterFileLocation() + File.separator + vacancyNumber + ".html";
 			File htmlFile = new File(report);
 			if(htmlFile.exists() && htmlFile.isFile()){
-				log.info("Pulling HTML report for " + properties.getApplicantRosterReportName() + " " + report + ".");
+				log.info("Pulling HTML report for " + properties.getApplicantRosterReportName() + " [" + report + "].");
 
 				StringBuilder contentBuilder = new StringBuilder();
 				try {
@@ -162,10 +174,12 @@ public class UsasService {
 				applicantRoster.setHtmlResponse(properties.getNoFileException() + "File: " + report);
 			}
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantRosterReportName() + " report for Vacancy Number ["+vacancyNumber+"].");    
 			applicantRoster.setHtmlResponse(client.processReportDataRequest(applicantRosterReport).getResponse());
 		}
-
+		if(applicantRoster.getVacancyNumber().length() == 0)//setting vacancy number for response if not available			
+			applicantRoster.setVacancyNumber(vacancyNumber);
+		log.info(applicantRoster.toString());
 		return applicantRoster;
 	}
 
@@ -185,10 +199,11 @@ public class UsasService {
 		CognosReport applicantNotificationReport = new CognosReport(properties.getApplicantNotificationReportName(), properties.getApplicantNotificationReportPath(), properties.getReportFormatHTML(), applicantNotificationPrompt);
 
 		if(properties.getProgramMode().equalsIgnoreCase(properties.getTestMode())){//test mode
+			log.info("**Application is running in TEST MODE: Pre-downloaded Applicant Notification report will be used to generate the response.");
 			String report = properties.getApplicantNotificationFileLocation() + File.separator + vacancyNumber + ".html";
 			File htmlFile = new File(report);
 			if(htmlFile.exists() && htmlFile.isFile()){
-				log.info("Pulling HTML report for " + properties.getApplicantNotificationReportName() + " " + report + ".");
+				log.info("Pulling HTML report for " + properties.getApplicantNotificationReportName() + " [" + report + "].");
 
 				StringBuilder contentBuilder = new StringBuilder();
 				try {
@@ -206,10 +221,12 @@ public class UsasService {
 				applicantNotification.setHtmlResponse(properties.getNoFileException() + "File: " + report);
 			}
 		}else{//normal or production mode
-			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report.");    
+			log.info("Connecting to USAS - Cognos Server to get " + properties.getApplicantNotificationReportName() + " report for Vacancy Number ["+vacancyNumber+"].");    
 			applicantNotification.setHtmlResponse(client.processReportDataRequest(applicantNotificationReport).getResponse());
 		}
-
+		if(applicantNotification.getVacancyNumber().length() == 0)//setting vacancy number for response if not available			
+			applicantNotification.setVacancyNumber(vacancyNumber);
+		log.info(applicantNotification.toString());
 		return applicantNotification;
 	}
 
@@ -222,7 +239,7 @@ public class UsasService {
 	 * @return
 	 */
 	public String getCognosDatasetReport(String reportName, String requestNumber){
-		log.info("Connecting to USAS - Cognos Server to get " + reportName + " report.");
+		log.info("Connecting to USAS - Cognos Server to get " + reportName + " report for Request Number ["+requestNumber+"].");
 		String reportPath = "";
 		if(reportName.equalsIgnoreCase("recruitment"))
 			reportPath = properties.getRecruitmentReportPath();

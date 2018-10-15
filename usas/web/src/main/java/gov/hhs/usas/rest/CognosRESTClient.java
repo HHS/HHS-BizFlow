@@ -104,7 +104,7 @@ public class CognosRESTClient
 
 					if(report.getPrompt().getId().equals(properties.getReportPromptRequest())){
 						if(response.toString().contains("No Data Available")){//verify response if it contains 'No Data Available', send an error
-							usasResponse.setResponse("No Data Available for " + report.getName() + "report - " + report.getPrompt().getDisplayValue());
+							usasResponse.setResponse("No Data Available for " + report.getName() + " report [" + report.getPrompt().getDisplayValue() + "]");
 							usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
 							usasResponse.setErrorMessage(properties.getNoDataException());
 						}else if(responseString.contains(searchRequestNumber)){
@@ -117,7 +117,7 @@ public class CognosRESTClient
 					}
 					else if(report.getPrompt().getId().equals(properties.getReportPromptVacancy())){
 						if(responseString.equalsIgnoreCase("No Data Available")){//verify response if it contains 'No Data Available', send an error
-							usasResponse.setResponse("No Data Available for " + report.getName() + "report - " + report.getPrompt().getDisplayValue());
+							usasResponse.setResponse("No Data Available for " + report.getName() + " report [" + report.getPrompt().getDisplayValue() + "]");
 							usasResponse.setResponseCode(properties.getHttpSuccessNoContent());
 							usasResponse.setErrorMessage(properties.getNoDataException());
 						}else{
@@ -126,7 +126,6 @@ public class CognosRESTClient
 							usasResponse.setErrorMessage(properties.getResponseCodeSuccess());
 						}
 					} 
-
 				}
 				else
 				{
@@ -141,7 +140,7 @@ public class CognosRESTClient
 				usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
 				usasResponse.setErrorMessage(properties.getReportDataException() + e.getMessage() + "::" + e.getCause());
 			}finally{
-				log.info(usasResponse.getErrorMessage());
+				log.info(usasResponse.getResponse());
 				//sendLogoffRequest();
 			}
 		}else{
@@ -150,11 +149,13 @@ public class CognosRESTClient
 			usasResponse.setResponseCode(properties.getHttpClientErrorBadRequest());
 			usasResponse.setErrorMessage(properties.getConnectionException());
 		}
+		log.debug(this.usasResponse.toString());
 		return usasResponse;
 	}
 
 	private HttpURLConnection sendReportDataRequest(CognosReport cognosReport) throws Exception
 	{
+		log.info("Sending Report Data Request to USAS Cognos server for " + cognosReport.getName() +":" + cognosReport.getPrompt().getDisplayValue());
 		HttpURLConnection con = null;		
 
 		String reportURL = this.usasRequest.getServerURL() + properties.getReportDataPath() + cognosReport.getPath();
@@ -177,6 +178,8 @@ public class CognosRESTClient
 		os.close();
 
 		con.connect();
+		log.debug("ReportURL: " + reportURL);
+		log.debug(this.usasRequest.toString());
 
 		return con;
 	}
@@ -188,7 +191,7 @@ public class CognosRESTClient
 	public String sendLogonRequest()
 	{
 
-		log.info("\nConnecting to USAS Cognos server...");
+		log.info("Connecting to USAS Cognos server...");
 		String connectionResponse = "";
 		String logonURL = this.usasRequest.getServerURL() + properties.getLogonPath();
 		this.usasRequest.setRequestMethod("POST");
@@ -213,21 +216,24 @@ public class CognosRESTClient
 			con.connect();
 			con.getContent();			
 
+			log.debug("LogonURL: " + logonURL);
+			log.debug(this.usasRequest.toString());
 			if (con.getResponseCode() == properties.getHttpStatusOk())
 			{
-				log.info("Connection successful");
+				log.info("Connection Status: SUCCESS");
 				createCookieString(cookieJar);//store the cookies for subsequent requests
 				connectionResponse = properties.getResponseCodeSuccess();
 			}
 			else
 			{
-				log.info(properties.getConnectionException() + con.getResponseCode() + ":" + con.getResponseMessage());
+				log.info("Connection Status: FAIL");
+				log.error(properties.getConnectionException() + con.getResponseCode() + ":" + con.getResponseMessage());
 				connectionResponse = properties.getResponseCodeConnectionError();
 			}
 		}
 		catch (Exception e)
 		{
-			log.error(properties.getConnectionException() + e.getMessage() + "::" + e.getCause());
+			log.error(properties.getConnectionException(), e);
 			connectionResponse = properties.getResponseCodeConnectionError();
 		}finally{
 			return connectionResponse;
@@ -251,15 +257,15 @@ public class CognosRESTClient
 			con.setRequestProperty(this.usasRequest.getAcceptLanguageProperty(), this.usasRequest.getAcceptLanguage());
 			con.setRequestProperty(this.usasRequest.getCookieProperty(), this.usasRequest.getCookie());
 
-			log.info("\nDisconnecting from USAS Cognos server::" + con.getResponseCode() + "::" + con.getResponseMessage());
+			log.info("Disconnecting from USAS Cognos server::" + con.getResponseCode() + "::" + con.getResponseMessage());
 		}
 		catch (MalformedURLException e)
 		{
-			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause());
+			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause(), e);
 		}
 		catch (IOException e)
 		{
-			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause());
+			log.error("An error occurred while trying to disconnect from USA Staffing server. " + e.getMessage() + "::" + e.getCause(), e);
 		}
 	}
 

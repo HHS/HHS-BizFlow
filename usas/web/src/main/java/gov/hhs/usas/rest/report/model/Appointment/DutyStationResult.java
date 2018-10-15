@@ -34,5 +34,11 @@ public class DutyStationResult {
 	public void setDutyStationCode(String dutyStationCode) {
 		this.dutyStationCode = dutyStationCode;
 	}
+	
+	@Override
+	public String toString(){
+		return "DutyStationResult [dutyStationName: " + this.getDutyStationName() 
+				+ "| dutyStationCode: " + this.getDutyStationCode() + "]";
+	}
 
 }

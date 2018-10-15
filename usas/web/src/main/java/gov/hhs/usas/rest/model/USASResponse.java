@@ -42,4 +42,11 @@ public int getResponseCode()
   {
     this.xmlResponse = responseXML;
   }
+  
+  @Override
+	public String toString()
+	{
+		return "responseCode: " + this.getResponseCode() + " | errorMessage: " + this.getErrorMessage()
+				+ " | xmlResponse: " + this.getResponse();
+	}
 }

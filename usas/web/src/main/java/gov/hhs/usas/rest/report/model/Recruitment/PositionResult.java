@@ -236,7 +236,8 @@ public class PositionResult
 	@Override
 	public String toString()
 	{
-		return " positionTitle: " + getTitle() + " payPlan: " + getPayPlan() + " series: " + getSeries() + " grade: " + getGrades() + " fullPerformanceLevel: " + getFullPerformanceLevel() + " dutyLocation: " + getDutyLocation();
+		return "PositionResult [positionTitle: " + getTitle() + "| payPlan: " + getPayPlan() + "| series: " + getSeries() 
+				+ "| grade: " + getGrades() + "| fullPerformanceLevel: " + getFullPerformanceLevel() + "| dutyLocation: " + getDutyLocation() +"]";
 	}
 }
 

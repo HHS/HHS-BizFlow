@@ -142,7 +142,9 @@ public class USAStaffingRecruitmentResult
 	@Override
 	public String toString()
 	{
-		return "requestNumber: " + getRequestNumber() + " vacancyCount: " + getVacancyCount() + " positionCount: " + getPositionCount() + " vacancyAnnouncementList: " + getVacancyAnnouncementList() + " positions: " + getPositions();
+		return "USAStaffingRecruitmentResult [requestNumber: " + getRequestNumber() + "| vacancyCount: " + getVacancyCount() + "| positionCount: " + getPositionCount() 
+		+ "| vacancyAnnouncementList: " + getVacancyAnnouncementList() + "| positions: " + getPositions()
+		+ "| resultCode: " + getResultCode() + "| failureMessage: " + getFailureMessage() + "]";
 	}
 }
 

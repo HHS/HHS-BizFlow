@@ -141,10 +141,10 @@ public class VacancyAnnouncementResult {
 	
 	@Override
 	public String toString(){
-		return "vacancyIdentificationNumber: " + this.getVacancyIdentificationNumber() + " vacancyAnnouncementNumber: " + this.getVacancyAnnouncementNumber()
-		+ " supervisoryStatus: " + this.getSupervisoryStatus() + " of306AssignedInOnboardingManager: " + this.getOf306AssignedInOnboardingManager() + " relationshipToRecruitmentAction: " + this.getRelationshipToRecruitmentAction()
-		+ " jobCode: " + this.getJobCode() + " clearanceLevelRequiredForPosition: " + this.getClearanceLevelRequiredForPosition() 
-		+ " typeOfSelection: " + this.getTypeOfSelection() + " eod: " + this.getEod() + " certificate: " + this.getCertificate();
+		return "VacancyAnnouncementResult [vacancyIdentificationNumber: " + this.getVacancyIdentificationNumber() + "| vacancyAnnouncementNumber: " + this.getVacancyAnnouncementNumber()
+		+ "| supervisoryStatus: " + this.getSupervisoryStatus() + "| of306AssignedInOnboardingManager: " + this.getOf306AssignedInOnboardingManager() + "| relationshipToRecruitmentAction: " + this.getRelationshipToRecruitmentAction()
+		+ "| jobCode: " + this.getJobCode() + "| clearanceLevelRequiredForPosition: " + this.getClearanceLevelRequiredForPosition() 
+		+ "| typeOfSelection: " + this.getTypeOfSelection() + "| eod: " + this.getEod() + "| certificate: " + this.getCertificate() + "]";
 	}
 	
 	

@@ -292,8 +292,11 @@ public String getAnnouncementNumber()
   @Override
 public String toString()
   {
-    return 
-    
-      "announcementNumber: " + getAnnouncementNumber() + " certificateType: " + getCertificateType() + " certificateNumber: " + getCertificateNumber() + " positionTitle: " + getPositionTitle() + " series: " + getSeries() + " gradeList: " + getGrades() + " dutyLocationList: " + getDutyLocation() + " dateCertificateIssued: " + getDateCertificateIssued() + " dateCertificateSentToSO: " + getDateCertificateSentToSO() + " selectionMade: " + getSelectionMade() + " actionTaken: " + getActionTaken() + " dateHiringDecisionRecievedInHR: " + getDateHiringDecisionRecievedInHR() + " dateFinalApplcantStatusesSet: " + getDateFinalApplcantStatusesSet() + " dateAuditCompleted: " + getDateAuditCompleted();
+    return "CertificateResult [announcementNumber: " + getAnnouncementNumber() + "| certificateType: " + getCertificateType() 
+    		+ "| certificateNumber: " + getCertificateNumber() + "| positionTitle: " + getPositionTitle() + "| series: " + getSeries() 
+    		+ "| gradeList: " + getGrades() + "| dutyLocationList: " + getDutyLocation() + "| dateCertificateIssued: " + getDateCertificateIssued() 
+    		+ "| dateCertificateSentToSO: " + getDateCertificateSentToSO() + "| selectionMade: " + getSelectionMade() + "| actionTaken: " + getActionTaken()
+    		+ "| dateHiringDecisionRecievedInHR: " + getDateHiringDecisionRecievedInHR() + "| dateFinalApplcantStatusesSet: " + getDateFinalApplcantStatusesSet() 
+    		+ "| dateAuditCompleted: " + getDateAuditCompleted() + "]";
   }
 }

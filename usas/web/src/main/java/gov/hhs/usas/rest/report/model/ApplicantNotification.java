@@ -18,6 +18,10 @@ public class ApplicantNotification {
 		this.htmlResponse = htmlResponse;
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		return "ApplicantNotification [vacancyNumber: " + this.getVacancyNumber() + "| htmlResponse: " + this.getHtmlResponse() + "]";
+	}
 
 }
