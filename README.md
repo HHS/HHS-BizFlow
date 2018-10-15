@@ -6,7 +6,7 @@ Modules
 - **database** : HHS BizFlow common database script.
 - **jdbcconn** : JDBC Connection test tool.
 - **usas** : USA Staffing interface has two parts - batch and web. 
-
+- **consolidated batch** : Batch interface contains the nightly BIIS interface and EHRP 15 Minute Interface
 
 
 ## JDBC Connection test tool
@@ -349,3 +349,145 @@ The deployed module can be accessed by web service call with the designated serv
 		http://localhost:8080/usasrwsc/usas/reportHTML/applicantroster/{vacancyNumber}
 
 Replace the protocol, server DNS name, port, and report identifying information as appropriate.
+
+
+## Consolidated Interface Batch Code
+This project is composed of multiple interface batch jobs, such as the BIIS Nightly batch and the EHRP 15 Minute Interface. Each batch job is scheduled via the internal Spring Boot cron scheduler. The Cron schedule can be updated in the application.properties file.
+
+The EHRP 15 Minute Interface connects to a remote server to import XML files onto the HHS server. These XML files are processed to insert the data into the HHS common database. 
+
+The BIIS interface is composed of three modules-- BIIS Person Directory, BIIS Reference Data, and EHRP Reference/Job Requisition Data. The BIIS Person Directory module pulls HHS employee directory information into the BizFlow user profile database table. Whereas, the other two modules import data into the HHS common database which is refreshed on a nightly basis.
+
+Note: Once the user profile information is imported, BizFlow system administrator will need to manually maintain license assignment, authority group assignment, and user group assignment through BizFlow Administration menu.
+
+
+### Pre-requisite
+* Source and target database connection information
+* JDK 1.7
+* Apache Ant 1.9.x
+
+### Directory Structure
+
+* **batch-interface/src/main/java** : Source code directory for interface
+* **batch-interface/src/main/resources** : Resource directory for the interface which contains property files and shell scripts required to run the job
+* **batch-interface/lib** : Library directory for dependency
+
+### Build Instruction
+1. In the build machine, download the project repository files.
+
+2. Open a command line, and change directory to `interface-batch` directory.
+
+		cd interface-batch
+
+3. Using a text editor, open `interface.properties` file, and modify the JDK location in the following property.
+
+		jdk.home.1.7=<full_path_to_jdk_home_dir>	
+		
+4. In the command line, run ANT build script commands.
+
+		ant	
+		
+		ant package.exejar
+
+5. Capture the generated executable JAR file, configuration files, and shell scripts to run the interface.
+
+		batch-interface/dist/application.properties
+		batch-interface/dist/biis.properties
+		batch-interface/dist/ehrp.properties
+		batch-interface/dist/EHRP_15min.sh
+		batch-interface/dist/interface-<version>.jar
+		batch-interface/dist/logback.xml
+		batch-interface/dist/run-jar.sh
+		batch-interface/dist/start-interface.sh
+		batch-interface/dist/stop-interface.sh
+		
+### Deployment Instruction
+
+1. Log in to the target environment server as the BizFlow service owner (or sudo).
+
+1. Create a directory where the Interface batch will be installed.
+
+	For example:
+
+		mkdir -p <server_dir>/interface/
+		
+2. Next create a subdirectory specific to the EHRP interface 
+
+	For example:
+
+		mkdir -p <server_dir>/interface/ehrp/
+		
+3. Then create the following sub-folders in the EHRP directory 
+
+	For example:
+
+		mkdir -p <server_dir>/interface/ehrp/inbound/
+		mkdir -p <server_dir>/interface/ehrp/processing/	
+		mkdir -p <server_dir>/interface/ehrp/archive/	
+		mkdir -p <server_dir>/interface/ehrp/error/	
+		mkdir -p <server_dir>/interface/ehrp/logs/			
+
+4. Copy the module JAR file, configuration files, and shell script files.
+
+	* From (build machine):
+		* batch-interface/dist/*
+	* To (target environment):
+		* <server_dir>/interface/
+
+5. Make sure the run script has correct JAVA_HOME environment variable set.  Open and edit `run-jar.sh` script.
+
+	JAVA_HOME=<path_to_java_runtime_home_dir>
+
+6. Configure the application properties.  Open and edit `application.properties` file for the following entries.  There are many other properties, but the following entries are essential.
+
+		target.datasource.url=
+		target.datasource.username=
+		target.datasource.password=
+		cognos.username=
+		cognos.password=
+		cognos.namespace=
+		cognos.url=
+		
+7. Configure properties specific to the EHRP interface.  Open and edit `ehrp.properties` file for the following entries.  There are many other properties, but the following entries are essential.		
+
+		ehrp.script.path=
+		inbound.directory=
+		processing.directory=
+		archive.directory=
+		error.directory=
+
+7. Configure properties specific to the BIIS interface.  Open and edit `biis.properties` file for the following entries.  There are many other properties, but the following entries are essential.
+
+		import.biis.person=
+		import.biis.ref.data=
+		import.ehrp.ref.data=
+		
+		
+### Usage
+The deployed module can be run on demand or as a stand alone application.  
+
+
+For UNIX environment, make the following shell scripts executable.
+
+	cd <server_dir>/interface
+	chmod 744 run-jar.sh
+	chmod 744 EHRP_15min.sh
+	chmod 744 start-interface.sh
+	chmod 744 stop-interface.sh
+
+For on-demand run, execute the following shell script in command line.
+
+	./start-interface.sh
+	
+To stop the on-demand run, execute the following shell script in command line.
+
+	./stop-interface.sh
+
+For regular usage in server environment, it is expected to be running as a background process. Therefore, there needs to be a crontab entry to start the jar and another to stop the jar before the server goes down at night. 
+
+	crontab -e
+
+		#Consolidated Interface Batch Job (EHRP 15 Min, BIIS Nightly)
+		00 06 * * * /bin/sh <server_dir>/interface/start-interface.sh
+		40 23 * * * /bin/sh<server_dir>/interface/stop-interface.sh
+				
