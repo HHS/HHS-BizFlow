@@ -138,6 +138,9 @@ public class EHRPXMLImportTasklet implements Tasklet {
 				
 				Iterator fileListIterator = fileList.iterator();
 				
+				archiveCnt = 0;
+				errorCnt = 0;
+				
 				while (fileListIterator.hasNext()) {
 					filesDetected = true;
 					currentFile = ((File) fileListIterator.next());
