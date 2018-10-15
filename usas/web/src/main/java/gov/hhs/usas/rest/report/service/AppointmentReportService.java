@@ -97,7 +97,7 @@ public class AppointmentReportService extends ReportService {
 			this.xml = new StreamSource(new StringReader(usasResponse.getResponse()));
 			return parseReport();
 		}else{
-			//Suggest end user to try again
+			//Send report data request error
 			return new USAStaffingAppointmentResult(properties.getResponseCodeReportError(), properties.getReportDataException());
 			//return new USAStaffingAppointmentResult(properties.getResponseCodeNoDataError(), usasResponse.getErrorMessage());
 		}
@@ -113,10 +113,11 @@ public class AppointmentReportService extends ReportService {
 		File reportXML = new File(filePath);
 
 		if(reportXML.exists() && reportXML.isFile()){
+			log.info("Appointment report found: " + filePath);
 			this.xml = new StreamSource(filePath);
 			return parseReport();
 		}
-		return new USAStaffingAppointmentResult(properties.getResponseCodeFileError(), "The requested file could not be found.");
+		return new USAStaffingAppointmentResult(properties.getResponseCodeFileError(), "The requested Appointment report [" + filePath + "] could not be found.");
 
 	}
 
@@ -130,6 +131,7 @@ public class AppointmentReportService extends ReportService {
 	private USAStaffingAppointmentResult parseReport()
 	{
 		init();
+		log.info("Started parsing Appointment report...");
 		try
 		{
 			this.xif = XMLInputFactory.newFactory();
@@ -228,6 +230,7 @@ public class AppointmentReportService extends ReportService {
 			log.error(error, e);
 			this.usasAppointment = new USAStaffingAppointmentResult(properties.getResponseCodeParseError(), error);
 		}
+		log.info("Completed parsing Appointment report.");
 		return this.usasAppointment;
 	}
 

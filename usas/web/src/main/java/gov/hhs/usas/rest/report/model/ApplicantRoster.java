@@ -17,4 +17,10 @@ public class ApplicantRoster {
 	public void setHtmlResponse(String htmlResponse) {
 		this.htmlResponse = htmlResponse;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "ApplicantRoster [vacancyNumber: " + this.getVacancyNumber() + "| htmlResponse: " + this.getHtmlResponse() + "]";
+	}
 }

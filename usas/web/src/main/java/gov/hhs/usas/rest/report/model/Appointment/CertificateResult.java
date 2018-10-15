@@ -198,13 +198,13 @@ public class CertificateResult {
 	
 	@Override
 	public String toString(){
-		return "certificateNumber: " + this.getCertificateNumber() + " certificateType: " + this.getCertificateType() + " positionTitle: " + this.getPositionTitle()
-				+ " payPlan: " + this.getPayPlan() + " series: " + this.getSeries() + " grade: " + this.getGrade() + " fullPerformanceLevel: " + this.getFullPerformanceLevel()
-				+ " dutyStations: " + this.getDutyStationList()
-				+ " dateCertificateSentToSO: " + this.getDateCertificateSentToSO() + " dateHiringDecisionReceivedInHR: " + this.getDateHiringDecisionReceivedInHR()
-				+ " dateOfTentativeJobOffer: " + this.getDateOfTentativeJobOffer() + " dateOfOfficialJobOffer: " + this.getDateOfOfficialJobOffer()
-				+ " appointeesEmailAddressForOrientationContact: " + this.getAppointeesEmailAddressForOrientationContact()
-				+ " dateOfficialOfferSent: " + this.getDateOfficialOfferSent();
+		return "CertificateResult [certificateNumber: " + this.getCertificateNumber() + "| certificateType: " + this.getCertificateType() + "| positionTitle: " + this.getPositionTitle()
+				+ "| payPlan: " + this.getPayPlan() + "| series: " + this.getSeries() + "| grade: " + this.getGrade() + "| fullPerformanceLevel: " + this.getFullPerformanceLevel()
+				+ "| dutyStations: " + this.getDutyStationList()
+				+ "| dateCertificateSentToSO: " + this.getDateCertificateSentToSO() + "| dateHiringDecisionReceivedInHR: " + this.getDateHiringDecisionReceivedInHR()
+				+ "| dateOfTentativeJobOffer: " + this.getDateOfTentativeJobOffer() + "| dateOfOfficialJobOffer: " + this.getDateOfOfficialJobOffer()
+				+ "| appointeesEmailAddressForOrientationContact: " + this.getAppointeesEmailAddressForOrientationContact()
+				+ "| dateOfficialOfferSent: " + this.getDateOfficialOfferSent() + "]";
 	}
 	
 

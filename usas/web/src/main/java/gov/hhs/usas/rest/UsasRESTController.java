@@ -53,7 +53,7 @@ public class UsasRESTController
 	{
 		log.info("Appointment Form Data Request received for Request Number ["+requestNumber+"].");
 		USAStaffingAppointmentResult usasAppointment = usasService.getAppointmentData(requestNumber);
-
+		log.info("Appointment Form Data Response sent for Request Number ["+requestNumber+"].");
 		return usasAppointment;
 	}
 
@@ -68,7 +68,7 @@ public class UsasRESTController
 	{
 		log.info("Recruitment Form Data Request received for Request Number ["+requestNumber+"].");
 		USAStaffingRecruitmentResult usasRecruitment = usasService.getRecruitmentData(requestNumber);
-
+		log.info("Recruitment Form Data Response sent for Request Number ["+requestNumber+"].");
 		return usasRecruitment;
 	}
 
@@ -83,7 +83,7 @@ public class UsasRESTController
 	{
 		log.info("CDC Recruitment Form Data Request received for Request Number ["+requestNumber+"].");
 		CdcRecruitmentResult cdcRecruitment = usasService.getCdcRecruitmentData(requestNumber);
-
+		log.info("CDC Recruitment Form Data Response sent for Request Number ["+requestNumber+"].");
 		return cdcRecruitment;
 	}
 	
@@ -98,6 +98,7 @@ public class UsasRESTController
 	{
 		log.info("Applicant Roster Report Request received for Vacancy Number ["+vacancyNumber+"].");
 		String applicantRosterReportResult = usasService.getApplicantRosterReport(vacancyNumber).getHtmlResponse();
+		log.info("Applicant Roster Report Response sent for Vacancy Number ["+vacancyNumber+"].");
 		return applicantRosterReportResult;
 	}
 
@@ -112,6 +113,7 @@ public class UsasRESTController
 	{
 		log.info("Applicant Notification Report Request received for Vacancy Number ["+vacancyNumber+"].");
 		String applicantNotificationReportResult = usasService.getApplicantNotificationReport(vacancyNumber).getHtmlResponse();
+		log.info("Applicant Notification Report Response sent for Vacancy Number ["+vacancyNumber+"].");
 		return applicantNotificationReportResult;
 	}
 

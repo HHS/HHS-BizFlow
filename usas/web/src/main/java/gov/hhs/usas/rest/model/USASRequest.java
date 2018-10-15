@@ -116,4 +116,15 @@ public class USASRequest
 	{
 		this.cookie = cookie;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "serverURL: " + this.getServerURL() + " | requestMethod: " + this.getRequestMethod()
+				+ " | " + this.getUserAgentProperty() +  ": " + this.getUserAgent()
+				+ " | " + this.getAcceptLanguageProperty() + ": " + this.getAcceptLanguage()
+				+ " | " + this.contentTypeProperty + ": " + this.getContentType()
+				+ " | POSTParameters: " + this.getPOSTParameters() 
+				+ " | " + this.getCookieProperty() + ": " + this.getCookie();
+	}
 }

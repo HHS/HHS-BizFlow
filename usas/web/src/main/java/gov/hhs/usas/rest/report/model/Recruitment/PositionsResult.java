@@ -87,7 +87,8 @@ public class PositionsResult
   @Override
 public String toString()
   {
-    return " positionCount: " + getPositionCount() + " numberOfPositionsToBeAdvertised: " + getNumberOfPositionsToBeAdvertised() + " clearanceLevelRequiredForPosition: " + getClearanceLevelRequiredForPosition() + " positions: " + getPositionList();
+    return "PositionsResult [positionCount: " + getPositionCount() + "| numberOfPositionsToBeAdvertised: " + getNumberOfPositionsToBeAdvertised() 
+    		+ "| clearanceLevelRequiredForPosition: " + getClearanceLevelRequiredForPosition() + "| positions: " + getPositionList() + "]";
   }
 }
 

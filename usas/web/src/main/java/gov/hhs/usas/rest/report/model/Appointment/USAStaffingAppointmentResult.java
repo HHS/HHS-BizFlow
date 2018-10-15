@@ -101,8 +101,9 @@ public class USAStaffingAppointmentResult {
 
 	@Override
 	public String toString(){
-		return "requestNumber: " + this.getRequestNumber() + " vacancyCount: " + this.getVacancyCount()
-		+ " vacancyAnnouncementList: " + this.getVacancyAnnouncementList();
+		return "USAStaffingAppointmentResult [requestNumber: " + this.getRequestNumber() + "| vacancyCount: " + this.getVacancyCount()
+		+ "| vacancyAnnouncementList: " + this.getVacancyAnnouncementList()
+		+ "| resultCode: " + this.getResultCode() + "| failureMessage: " + this.getFailureMessage() + "]";
 	}
 	
 	

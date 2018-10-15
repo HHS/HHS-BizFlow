@@ -287,7 +287,13 @@ public int getVacancyPositionCount()
   @Override
 public String toString()
   {
-    return "vacancyPositionCount: " + getVacancyPositionCount() + " vacancyCertificateCount: " + getVacancyCertificateCount() + " numberOfPositionsAdvertised: " + getNumberOfPositionsAdvertised() + "  areaOfConsideration: " + getAreaOfConsideration() + "  interdisciplinaryPosition: " + getInterdisciplinaryPosition() + "  vacancyIdentificationNumber: " + getVacancyIdentificationNumber() + "  vacancyAnnouncementNumber: " + getVacancyAnnouncementNumber() + "  announcementType: " + getAnnouncementType() + "  dateAnnouncementPosted: " + getDateAnnouncementPosted() + "  dateAnnouncementOpened: " + getDateAnnouncementOpened() + "  dateAnnouncementClosed: " + getDateAnnouncementClosed() + "  dateAnnouncementCancelled: " + getDateAnnouncementCancelled() + "positionList: " + getPositionList() + " applicants: " + getApplicants() + " certificate: " + getCertificateList();
+    return "VacancyAnnouncementResult [vacancyPositionCount: " + getVacancyPositionCount() + "| vacancyCertificateCount: " 
+    		+ getVacancyCertificateCount() + "| numberOfPositionsAdvertised: " + getNumberOfPositionsAdvertised() + "|  areaOfConsideration: " 
+    		+ getAreaOfConsideration() + "|  interdisciplinaryPosition: " + getInterdisciplinaryPosition() + "|  vacancyIdentificationNumber: " 
+    		+ getVacancyIdentificationNumber() + "|  vacancyAnnouncementNumber: " + getVacancyAnnouncementNumber() + "|  announcementType: " 
+    		+ getAnnouncementType() + "|  dateAnnouncementPosted: " + getDateAnnouncementPosted() + "|  dateAnnouncementOpened: " 
+    		+ getDateAnnouncementOpened() + "|  dateAnnouncementClosed: " + getDateAnnouncementClosed() + "|  dateAnnouncementCancelled: " 
+    		+ getDateAnnouncementCancelled() + "| positionList: " + getPositionList() + "| applicants: " + getApplicants() + "| certificate: " + getCertificateList() + "]";
   }
 }
 
