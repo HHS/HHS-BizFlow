@@ -12,8 +12,13 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import gov.hhs.usas.dss.model.Announcement;
 import gov.hhs.usas.dss.model.Application;
@@ -267,5 +273,25 @@ public class BatchConfiguration {
 		return new JdbcTemplate(targetDataSource);
 	}	
 	
+	//***To resolve error: Can't serialize access for this transaction***
+	private JobRepository getJobRepository() throws Exception {
+		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+		factory.setDataSource(targetDataSource);//
+		factory.setTransactionManager(getTransactionManager());
+		factory.setIsolationLevelForCreate("ISOLATION_READ_COMMITTED");//Added to get rid of ->Caused by: java.sql.SQLException: ORA-08177: can't serialize access for this transaction
+		factory.afterPropertiesSet();
+		return (JobRepository) factory.getObject();
+	}
+
+	private PlatformTransactionManager getTransactionManager() {
+		return new ResourcelessTransactionManager();
+	}
+
+	public JobLauncher getJobLauncher() throws Exception {
+		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+		jobLauncher.setJobRepository(getJobRepository());
+		jobLauncher.afterPropertiesSet();
+		return jobLauncher;
+	}
 
 }
