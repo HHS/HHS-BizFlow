@@ -6,7 +6,7 @@ Modules
 - **database** : HHS BizFlow common database script.
 - **jdbcconn** : JDBC Connection test tool.
 - **usas** : USA Staffing interface has two parts - batch and web. 
-
+- **consolidated batch** : Batch interface contains the nightly BIIS interface and EHRP 15 Minute Interface
 
 
 ## JDBC Connection test tool
