@@ -2076,6 +2076,7 @@ BEGIN
 			, REQUEST_STATUS
 			, REQUEST_TYPE
 			, POSITION_TITLE
+			, AREA_CONSIDER
 			, NEW_HIRE_PAY_PLAN
 			, NEW_HIRE_SERIES
 			, NEW_HIRE_GRADE
@@ -2093,6 +2094,7 @@ BEGIN
 			, X.REQUEST_STATUS
 			, X.REQUEST_TYPE
 			, X.POSITION_TITLE
+			, X.AREA_CONSIDER
 			, X.NEW_HIRE_PAY_PLAN
 			, X.NEW_HIRE_SERIES
 			, X.NEW_HIRE_GRADE
@@ -2113,6 +2115,7 @@ BEGIN
 					, REQUEST_STATUS                  VARCHAR2(1002)    PATH 'New__Hire__Request__Status'
 					, REQUEST_TYPE                    VARCHAR2(1002)    PATH 'New__Hire__Request__Type'
 					, POSITION_TITLE                  VARCHAR2(2050)    PATH 'Position__Title'
+					, AREA_CONSIDER                   VARCHAR2(24)      PATH 'Area__of__Consideration'					
 					, NEW_HIRE_PAY_PLAN               VARCHAR2(2050)    PATH 'Pay__Plan'
 					, NEW_HIRE_SERIES                 VARCHAR2(2050)    PATH 'Series'
 					, NEW_HIRE_GRADE                  VARCHAR2(2050)    PATH 'Grade'
