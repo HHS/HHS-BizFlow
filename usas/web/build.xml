@@ -230,6 +230,7 @@
 			<classes dir="${src.main.res.dir}">
 				<include name="application.properties" />
 				<include name="log4j.properties" />
+				<include name="logback.xml" />
 			</classes>
 			<lib dir="${lib.dir}">
 				<patternset refid="module.dependncy.lib"/>
@@ -265,6 +266,7 @@
 			<classes dir="${src.main.res.dir}">
 				<include name="application.properties" />
 				<include name="log4j.properties" />
+				<include name="logback.xml" />
 			</classes>
 			<lib dir="${lib.dir}">
 				<patternset refid="module.dependncy.lib"/>
