@@ -115,13 +115,18 @@ public class ReportTasklet implements Tasklet {
 						if (saveReportFile) {
 							ReportGeneration.saveReportFile(rpt, reportXml);
 						}
-						ReportGeneration.insertReporttoDB(targetDataSource, rpt, reportXml);
+						ReportGeneration.insertReportToStg(targetDataSource, rpt, reportXml);
 					}else {
 						log.info("The report " + rpt.getReportName() + " did not retrieve data between " + rpt.getRvpStartUseval() + " and " + rpt.getRvpEndUseval());
 						errCnt++;
 					}
 
 				}
+				
+				if(!Util.isNull(rpt.getSpStgToFnl())) {
+					ReportGeneration.insertReportStgToFnl(targetDataSource, rpt);
+				}
+				
 				time = System.currentTimeMillis() - start;
 				log.info("Time taken for downloading " + rpt.getReportName() + " data: " + time + "ms");
 				
