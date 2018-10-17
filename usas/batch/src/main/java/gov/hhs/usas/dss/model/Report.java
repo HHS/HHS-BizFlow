@@ -41,6 +41,9 @@ public class Report {
 	//Stores Stored procedure for truncating report tables
 	private String spTruncate;
 	
+	//Stores Stored procedure name for inserting data from stg to fnl table
+	private String spStgToFnl;
+	
 	//Determines if report should be run, true or false value
 	private boolean runReport;
 	
@@ -178,6 +181,14 @@ public class Report {
 
 	public void setSpTruncate(String spTruncate) {
 		this.spTruncate = spTruncate;
+	}
+
+	public String getSpStgToFnl() {
+		return spStgToFnl;
+	}
+
+	public void setSpStgToFnl(String spStgToFnl) {
+		this.spStgToFnl = spStgToFnl;
 	}
 
 	public boolean isRunReport() {

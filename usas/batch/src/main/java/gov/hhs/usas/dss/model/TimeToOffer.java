@@ -20,6 +20,7 @@ public class TimeToOffer extends Report {
 	@Value("${offer.date.interval}") private int dateInterval;
 	@Value("${offer.end.date}") private String endDate;
 	@Value("${offer.truncate}") private String spTruncate;
+	@Value("${offer.stgToFnl}") private String spStgToFnl;
 	@Value("${offer.run.report}") private boolean runReport;
 
 	public TimeToOffer() {
@@ -38,6 +39,7 @@ public class TimeToOffer extends Report {
 		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
+		super.setSpStgToFnl(spStgToFnl);
 		super.setRunReport(runReport);
 	}
 	
