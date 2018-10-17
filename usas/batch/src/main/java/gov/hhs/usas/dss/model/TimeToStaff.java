@@ -20,6 +20,7 @@ public class TimeToStaff extends Report {
 	@Value("${staff.date.interval}") private int dateInterval;
 	@Value("${staff.end.date}") private String endDate;
 	@Value("${staff.truncate}") private String spTruncate;
+	@Value("${staff.stgToFnl}") private String spStgToFnl;
 	@Value("${staff.run.report}") private boolean runReport;
 
 	public TimeToStaff() {
@@ -38,6 +39,7 @@ public class TimeToStaff extends Report {
 		super.setDateInterval(dateInterval);
 		super.setEndDate(endDate);
 		super.setSpTruncate(spTruncate);
+		super.setSpStgToFnl(spStgToFnl);
 		super.setRunReport(runReport);
 	}
 	
