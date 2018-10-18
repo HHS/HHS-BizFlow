@@ -9,13 +9,47 @@ DROP TABLE HHS_HR.DSS_IHS_VAC_ANN_LOCATION_STG;
 DROP TABLE HHS_HR.DSS_IHS_VAC_ANN_REVIEW_STG;
 DROP TABLE HHS_HR.DSS_IHS_VAC_CERTIFICATE_STG;
 DROP TABLE HHS_HR.DSS_IHS_VAC_NEW_HIRE_STG;
+DROP TABLE HHS_HR.DSS_TIME_TO_OFFER;
 */
 
 
 SET DEFINE OFF;
 
-ALTER TABLE HHS_HR.DSS_TIME_TO_OFFER
-ADD PD_NUMBER VARCHAR2(2050);
+--==================================
+
+--Recreate DSS_TIME_TO_OFFER
+
+--==================================
+DROP TABLE HHS_HR.DSS_TIME_TO_OFFER;
+
+------------------------------------
+--DDL for table DSS_TIME_TO_OFFER_
+------------------------------------
+CREATE TABLE HHS_HR.DSS_TIME_TO_OFFER
+(
+    STAFFING_ORGANIZATION           VARCHAR2(122),
+    REQUEST_NUMBER                  VARCHAR2(202),
+    PD_NUMBER                       VARCHAR2(2050),
+    NEW_HIRE_CREATE_DATE            DATE,
+    REQUEST_STATUS                  VARCHAR2(1002),
+    REQUEST_TYPE                    VARCHAR2(1002),
+    POSITION_TITLE                  VARCHAR2(2050),
+    AREA_CONSIDER                   VARCHAR2(24),
+    NEW_HIRE_PAY_PLAN               VARCHAR2(2050),
+    NEW_HIRE_SERIES                 VARCHAR2(2050),
+    NEW_HIRE_GRADE                  VARCHAR2(2050),
+    SEND_TENT_OFFR_CMPL_DATE        DATE,
+    INIT_BKGRND_INVST_DATE          DATE,
+    RCVE_BKGRND_INVST_DATE          DATE,
+    SEND_OFCL_OFFR_CMPL_DATE        DATE,
+    NEW_HIRE_NAME                   VARCHAR2(2050),
+    EOD_DATE                        DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_TIME_TO_OFFER_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_TIME_TO_OFFER_I1 ON DSS_TIME_TO_OFFER (REQUEST_NUMBER);
 
 
 --==================================
