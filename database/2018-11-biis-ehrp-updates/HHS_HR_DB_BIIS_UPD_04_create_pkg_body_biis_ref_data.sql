@@ -1,0 +1,538 @@
+CREATE OR REPLACE PACKAGE BODY HHS_HR.REF_DATA_PKS AS
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+--THIS PACKAGE WILL HANDLE PULLING AND POPULATING REF DATA TABLES, IT DOESN'T NOT SUPPORT UPDATE, LOCAL TABLE ARE REFRESHED THEN INSERT NEW RECORDS NIGHTLY
+--ONLY REQUIRED FIELDS ARE FETCHED FROM REMOTE DATABASE AND COLUMNS ARE RENAMED TO SOMETHING MEANINGFUL IN LOCAL DATABASE. FILTERS HAVE BEEN APPLIED TO SOME TABLES
+--TO RETRIEVE NEEDED RECORDS ONLY.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--======================================================
+--  - - -   - - - - - - - - - - - - - - - - - - - - - - 
+
+--GLOBAL VARIABLES
+
+--- -  -  -- - - - - - - - - - - - - - - - - - - - - - -
+--======================================================
+	GCV_DUTY_STATION    CONSTANT   VARCHAR2(10)     := 'location';
+	GCV_LEGAL_AUTH      CONSTANT   VARCHAR2(10)     := 'legal';
+	GCV_NOA             CONSTANT   VARCHAR2(10)     := 'noa';
+	GCV_OCC_SERIES      CONSTANT    VARCHAR2(10)    := 'series'; 
+	GCV_SECUTITY        CONSTANT    VARCHAR2(10)    := 'security';
+	GCV_ADMIN           CONSTANT    VARCHAR2(10)    := 'admin';
+	GCV_PLAN            CONSTANT    VARCHAR2(10)    := 'plan';
+	GCV_APT             CONSTANT    VARCHAR2(10)    := 'appt';
+
+--======================================================
+-- - - -- - - - - - - - - - - - - - - - - - - - - - - -
+
+--CURSORS and TYPES
+
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--======================================================
+
+--------------------------------------------------------
+--CURSOR: CUR_LOC
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- DUTY_STATION table
+--------------------------------------------------------
+CURSOR CUR_LOC
+IS
+	SELECT
+		DUTY_STATION_CD,
+		CITY_OR_COUNTRY_NAME, 
+		STATE_OR_COUNTRY_NAME,
+		STATE_OR_COUNTRY_ABBR,
+		COUNTY,
+		STATE_OR_COUNTRY_CD
+	FROM HISTDBA.DUTY_STATION@BIIS_DBLINK;
+	
+	TYPE TYP_LOCATIONSTYPE IS TABLE OF CUR_LOC%ROWTYPE
+		INDEX BY PLS_INTEGER;
+	
+	LOCATIONS TYP_LOCATIONSTYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_LA
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- LEGAL_AUTHORITY table. The table is filtered by 
+-- the active status only
+--------------------------------------------------------
+CURSOR CUR_LA
+IS
+	SELECT
+		LEGAL_AUTH_CD,
+		LEGAL_AUTH_TXT,
+		STATUS,
+		EFFECTIVE_DATE,
+		AS_OF_DATE
+	FROM HISTDBA.LEGAL_AUTHORITY@BIIS_DBLINK
+	WHERE UPPER(STATUS) = UPPER('Active');
+	
+	TYPE TYP_LEGAL_AUTHTYPE IS TABLE OF CUR_LA%ROWTYPE
+		INDEX BY PLS_INTEGER;
+
+	LEGAL_AUTH TYP_LEGAL_AUTHTYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_NOA
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- NATURE_OF_ACTION table.
+--------------------------------------------------------
+CURSOR CUR_NOA
+IS
+	SELECT
+		NOA_CD,
+		NOA_SUFFIX_CD,
+		NOA_DESC,
+		LOAD_DTE
+	FROM HISTDBA.NATURE_OF_ACTION@BIIS_DBLINK;
+	
+	TYPE TYP_NOATYPE IS TABLE OF CUR_NOA%ROWTYPE
+		INDEX BY PLS_INTEGER;
+
+	NATUREOFACTION TYP_NOATYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_OCC
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- MD715_SERIES table for pulling over Occupational Series info
+--------------------------------------------------------
+CURSOR CUR_OCC
+IS
+	SELECT
+		SERIES,
+		SERIES_DESCR
+	FROM HISTDBA.MD715_SERIES@BIIS_DBLINK;
+	
+	TYPE TYP_SERIESTYPE IS TABLE OF CUR_OCC%ROWTYPE
+		INDEX BY PLS_INTEGER;
+		
+	SERIES TYP_SERIESTYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_CSECURITY
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- CYBERSECURITY_CD_TBL table
+--------------------------------------------------------
+CURSOR CUR_CSECURITY
+IS
+	SELECT
+		CYBERSECURITY_CD,
+		DESCR
+	FROM HISTDBA.CYBERSECURITY_CD_TBL@BIIS_DBLINK
+	WHERE LENGTH(CYBERSECURITY_CD) = 3;
+	
+	TYPE TYP_CSECURITYTYPE IS TABLE OF CUR_CSECURITY%ROWTYPE
+		INDEX BY PLS_INTEGER;
+
+	SECURITYTYPE TYP_CSECURITYTYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_ADMIN_CODE
+--DESCRIPTION: Cursor retrieves admin codes from the BIIS
+-- SAC_HIST_EXTENDED table
+--------------------------------------------------------
+CURSOR CUR_ADMIN_CODE
+IS
+	SELECT
+		ORG_CD,
+		ORG_TITLE,
+		OPDIV,
+		OPDIV_NAME,
+		STAFFDIV,
+		STAFFDIV_NAME,
+		DATE_CREATED,
+		LAST_UPDATE_DATE,
+		EEOC_OPDIV,
+		ARCHIVE_IND 
+	FROM HISTDBA.SAC_HIST_EXTENDED@BIIS_DBLINK
+		WHERE ARCHIVE_IND IS NULL
+		AND UPPER(SUBSTR(ORG_CD, 1, 1)) != UPPER('O');
+		
+	TYPE TYP_ADMINCODETYPE IS TABLE OF CUR_ADMIN_CODE%ROWTYPE
+		INDEX BY PLS_INTEGER;
+		
+	ADMINCODES TYP_ADMINCODETYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_PPLAN
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- PAY_PLAN_TBL table
+--------------------------------------------------------
+CURSOR CUR_PPLAN
+IS
+	SELECT
+		PAY_PLAN_CD,
+		DESCR
+	FROM HISTDBA.PAY_PLAN_TBL@BIIS_DBLINK;
+
+	TYPE TYP_PPLANTYPE IS TABLE OF CUR_PPLAN%ROWTYPE
+		INDEX BY PLS_INTEGER;
+	
+	PLANTYPES TYP_PPLANTYPE;
+
+--------------------------------------------------------
+--CURSOR: CUR_APPT
+--DESCRIPTION: Cursor retrieves records from the BIIS
+-- EHRP_APPT_TYPE_CD_TBL table
+--------------------------------------------------------
+CURSOR CUR_APPT
+IS
+	SELECT
+		APPT_TYPE_CD,
+		DESCR
+	FROM HISTDBA.EHRP_APPT_TYPE_CD_TBL@BIIS_DBLINK;
+	
+	TYPE TYP_APPTTYPE IS TABLE OF CUR_APPT%ROWTYPE
+		INDEX BY PLS_INTEGER;
+
+	APPTTYPES TYP_APPTTYPE;
+
+--======================================================
+-- - - -- - - - - - - - - - - - - - - - - - - - - - - -
+
+--PROCEDURES
+
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--======================================================
+
+--------------------------------------------------------
+--PROCEDURE: LOGGER
+--DESCRIPTION: Logs bulk errors to error log table,
+-- thrown during forall bulk insert
+--------------------------------------------------------
+PROCEDURE LOGGER
+AS
+	ERR PLS_INTEGER;
+	MSG VARCHAR2(32767);
+BEGIN
+	FOR CODE IN 1..SQL%BULK_EXCEPTIONS.COUNT LOOP
+		--LOG ERRORS TO DB
+		ERR := SQL%BULK_EXCEPTIONS(CODE).ERROR_CODE;
+		MSG := SQLERRM(ERR);
+		SP_INTERFACE_ERROR_LOGGER(ERR,MSG);--STORED PROCEDURE OUTSIDE OF THIS PACKAGE TO HANDLE MULTIPLE ERRORS
+	END LOOP;
+END LOGGER;
+
+--------------------------------------------------------
+--PROCEDURE: SINGLE_LOGGER
+--DESCRIPTION: Logs all kinds of errors at once
+--------------------------------------------------------
+PROCEDURE SINGLE_LOGGER
+AS
+BEGIN
+	IF SQLCODE = -24381 THEN -- bulk error thrown by FORALL insert
+		LOGGER();
+	ELSE --anything else
+		SP_ERROR_LOG();
+	END IF;
+END SINGLE_LOGGER;
+
+--------------------------------------------------------
+--PROCEDURE: FETCH_RESULT
+--DESCRIPTION: Open, Fetch, Close cursor
+--------------------------------------------------------
+PROCEDURE FETCH_RESULT
+	(SQLQUERY IN VARCHAR2)
+AS
+BEGIN
+	CASE SQLQUERY
+		WHEN 'location' THEN
+			OPEN CUR_LOC;
+			FETCH CUR_LOC BULK COLLECT INTO LOCATIONS;
+			CLOSE CUR_LOC;
+		WHEN 'legal' THEN
+			OPEN CUR_LA;
+			FETCH CUR_LA BULK COLLECT INTO LEGAL_AUTH;
+			CLOSE CUR_LA;
+		WHEN 'noa' THEN
+			OPEN CUR_NOA;
+			FETCH CUR_NOA BULK COLLECT INTO NATUREOFACTION;
+			CLOSE CUR_NOA;
+		WHEN 'series' THEN
+			OPEN CUR_OCC;
+			FETCH CUR_OCC BULK COLLECT INTO SERIES;
+			CLOSE CUR_OCC;
+		WHEN 'security' THEN
+			OPEN CUR_CSECURITY;
+			FETCH CUR_CSECURITY BULK COLLECT INTO SECURITYTYPE;
+			CLOSE CUR_CSECURITY;
+		WHEN 'admin' THEN
+			OPEN CUR_ADMIN_CODE;
+			FETCH CUR_ADMIN_CODE BULK COLLECT INTO ADMINCODES;
+			CLOSE CUR_ADMIN_CODE;
+		WHEN 'plan' THEN
+			OPEN CUR_pplan;
+			FETCH CUR_pplan BULK COLLECT INTO PLANTYPES;
+			CLOSE CUR_pplan;
+		ELSE
+			OPEN CUR_appt;
+			FETCH CUR_appt BULK COLLECT INTO APPTTYPES;
+			CLOSE CUR_appt;
+	END CASE;
+END FETCH_RESULT;
+
+--------------------------------------------------------
+--PROCEDURE: SP_INSERT_DUTY_STATION
+--DESCRIPTION: Insert new records into DUTY_STATION table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_DUTY_STATION
+AS
+BEGIN
+	FETCH_RESULT(GCV_DUTY_STATION);
+	IF LOCATIONS.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE DUTY_STATION';
+		FORALL i IN LOCATIONS.FIRST..LOCATIONS.LAST SAVE EXCEPTIONS
+			INSERT INTO DUTY_STATION
+						(GEO_CODE,
+						CITY_OR_COUNTRY_NAME,
+						STATE_OR_COUNTRY_NAME,
+						STATE_ABBRV,COUNTY,
+						STATE_OR_COUNTRY_CD)
+			VALUES(LOCATIONS(i).DUTY_STATION_CD,
+					LOCATIONS(i).CITY_OR_COUNTRY_NAME,
+					LOCATIONS(i).STATE_OR_COUNTRY_NAME,
+					LOCATIONS(i).STATE_OR_COUNTRY_ABBR,
+					LOCATIONS(i).COUNTY,
+					LOCATIONS(i).STATE_OR_COUNTRY_CD);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+	WHEN OTHERS THEN
+		SINGLE_LOGGER();
+END SP_INSERT_DUTY_STATION;
+
+--------------------------------------------------------
+--PROCEDURE: SP_INSERT_LEGAL_AUTHORITY
+--DESCRIPTION: Insert new records into LEGAL_AUTHORITY table
+------------------------------------------------------------
+PROCEDURE SP_INSERT_LEGAL_AUTHORITY
+AS
+BEGIN
+	FETCH_RESULT(GCV_LEGAL_AUTH);
+	IF LEGAL_AUTH.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE LEGAL_AUTHORITY';
+		FORALL i IN LEGAL_AUTH.FIRST..LEGAL_AUTH.LAST SAVE EXCEPTIONS --save exceptions into SQL%BULK_EXCEPTION obj
+			INSERT INTO LEGAL_AUTHORITY
+						(AUTH_CODE,
+						AUTH_DESC,
+						STATUS,
+						EFFECTIVE_DATE,
+						AS_OF_DATE)
+			VALUES(LEGAL_AUTH(i).LEGAL_AUTH_CD,
+					LEGAL_AUTH(i).LEGAL_AUTH_TXT,
+					LEGAL_AUTH(i).STATUS,
+					LEGAL_AUTH(i).EFFECTIVE_DATE,
+					LEGAL_AUTH(i).AS_OF_DATE);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_LEGAL_AUTHORITY;
+
+--------------------------------------------------------
+--PROCEDURE: SP_INSERT_NATURE_OF_ACTION
+--DESCRIPTION: Insert new records into NATURE_OF_ACTION table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_NATURE_OF_ACTION
+AS
+BEGIN
+	FETCH_RESULT(GCV_NOA);
+	IF NATUREOFACTION.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE NATURE_OF_ACTION';
+		FORALL i IN  NATUREOFACTION.FIRST..NATUREOFACTION.LAST SAVE EXCEPTIONS
+			INSERT INTO NATURE_OF_ACTION
+					(NOA_CODE,
+					NOA_DESC,
+					NOA_SUFFIX_CD,
+					LOAD_DATE)
+			VALUES(NATUREOFACTION(i).NOA_CD,
+				NATUREOFACTION(i).NOA_DESC,
+				NATUREOFACTION(i).NOA_SUFFIX_CD,
+				NATUREOFACTION(i).LOAD_DTE);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_NATURE_OF_ACTION;
+
+--------------------------------------------------------
+--PROCEDURE: SP_INSERT_OCCUPATIONAL_SERIES
+--DESCRIPTION: Insert new records into OCCUPATIONAL_SERIES table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_OCCUPATIONAL_SERIES
+AS
+BEGIN
+	FETCH_RESULT(GCV_OCC_SERIES);
+	IF SERIES.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE OCCUPATIONAL_SERIES';
+		FORALL i IN  SERIES.FIRST..SERIES.LAST SAVE EXCEPTIONS
+			INSERT INTO OCCUPATIONAL_SERIES
+						(POSITION_SERIES,
+						SERIES_DESC)
+			VALUES(SERIES(i).SERIES,
+					SERIES(i).SERIES_DESCR);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_OCCUPATIONAL_SERIES;
+  
+  --------------------------------------------------------
+--PROCEDURE: SP_INSERT_CYBERSECURITY_CODE
+--DESCRIPTION: Insert new records into CYBERSECURITY_CODE table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_CYBERSECURITY_CODE
+AS
+BEGIN
+	FETCH_RESULT(GCV_SECUTITY);
+	IF SECURITYTYPE.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE CYBERSECURITY_CODE';
+		FORALL i IN  SECURITYTYPE.FIRST..SECURITYTYPE.LAST SAVE EXCEPTIONS
+			INSERT INTO CYBERSECURITY_CODE
+					(CYBERSECURITY_CODE,
+					CYBERSECURITY_CD_DESC)
+			VALUES(SECURITYTYPE(i).CYBERSECURITY_CD,
+					SECURITYTYPE(i).DESCR);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_CYBERSECURITY_CODE;
+  
+ --------------------------------------------------------
+--PROCEDURE: SP_INSERT_ADMIN_CODE
+--DESCRIPTION: Insert new records into ADMINISTRATIVE_CODE table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_ADMINCODE
+AS
+BEGIN
+	FETCH_RESULT(GCV_ADMIN);
+	IF ADMINCODES.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE ADMINISTRATIVE_CODE';
+		FORALL i IN  ADMINCODES.FIRST..ADMINCODES.LAST SAVE EXCEPTIONS
+			INSERT INTO ADMINISTRATIVE_CODE
+					(ADMIN_CODE,
+					ADMIN_CODE_DESC,
+					OPDIV,
+					OPDIV_NAME,
+					STAFFDIV,
+					STAFFDIV_NAME,
+					DATE_CREATED,
+					LAST_UPDATE_DATE,
+					EEOC_OPDIV,
+					ARCHIVE_IND)
+			VALUES(ADMINCODES(i).ORG_CD,
+					ADMINCODES(i).ORG_TITLE,
+					ADMINCODES(i).OPDIV,
+					ADMINCODES(i).OPDIV_NAME,
+					ADMINCODES(i).STAFFDIV,
+					ADMINCODES(i).STAFFDIV_NAME,
+					ADMINCODES(i).DATE_CREATED,
+					ADMINCODES(i).LAST_UPDATE_DATE,
+					ADMINCODES(i).EEOC_OPDIV,
+					ADMINCODES(i).ARCHIVE_IND);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_ADMINCODE;
+
+--------------------------------------------------------
+--PROCEDURE: SP_INSERT_PAY_PLAN
+--DESCRIPTION: Insert new records into PAY_PLAN table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_PAY_PLAN 
+AS
+BEGIN
+	FETCH_RESULT(GCV_PLAN);
+	IF PLANTYPES.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE PAY_PLAN';
+		FORALL i IN PLANTYPES.FIRST..PLANTYPES.LAST SAVE EXCEPTIONS
+			INSERT INTO PAY_PLAN
+					(POSITION_PAY_PLAN,
+					PAY_PLAN_DESC)
+			VALUES(PLANTYPES(i).PAY_PLAN_CD,
+					PLANTYPES(i).DESCR);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_PAY_PLAN;
+
+--------------------------------------------------------
+--PROCEDURE: SP_INSERT_APPOINTMENT_TYPE
+--DESCRIPTION: Insert new records into APPOINTMENT TYPE table
+--------------------------------------------------------
+PROCEDURE SP_INSERT_APPOINTMENT_TYPE 
+AS
+BEGIN
+	FETCH_RESULT(GCV_APT);
+	IF APPTTYPES.COUNT > 0 THEN
+		EXECUTE IMMEDIATE 'TRUNCATE TABLE APPOINTMENT_TYPE';
+		FORALL i IN  APPTTYPES.FIRST..APPTTYPES.LAST SAVE EXCEPTIONS
+			INSERT INTO APPOINTMENT_TYPE
+					(APPMNT_CD,
+					DESCRIPTION)
+			VALUES(APPTTYPES(i).APPT_TYPE_CD,
+					APPTTYPES(i).DESCR);
+		COMMIT;
+	END IF;
+	--CATCH EXCEPTIONS
+	EXCEPTION
+		WHEN OTHERS THEN
+			SINGLE_LOGGER();
+END SP_INSERT_APPOINTMENT_TYPE;
+ 
+--------------------------------------------------------
+--PROCEDURE: FN_IMPORT_REF_DATA
+--DESCRIPTION: FN_IMPORT_REF_DATA will be called by spring 
+--batch, which will call individual procedures in the package.
+--------------------------------------------------------
+FUNCTION FN_IMPORT_REF_DATA 
+RETURN VARCHAR2
+IS
+BEGIN
+--------------
+--call methods from package for each ref table
+	SP_INSERT_ADMINCODE();
+	SP_INSERT_CYBERSECURITY_CODE();
+	SP_INSERT_DUTY_STATION();
+	SP_INSERT_LEGAL_AUTHORITY();
+	SP_INSERT_NATURE_OF_ACTION();
+	SP_INSERT_OCCUPATIONAL_SERIES();
+	SP_INSERT_PAY_PLAN();
+	SP_INSERT_APPOINTMENT_TYPE();
+	RETURN ERROR_LOG();
+EXCEPTION
+	WHEN OTHERS THEN
+		RETURN ERROR_LOG();
+END FN_IMPORT_REF_DATA;
+
+--------------------------------------------------------
+--PROCEDURE: ERROR_LOG
+--DESCRIPTION: Return SQLCODE and SQLERRM
+--------------------------------------------------------
+FUNCTION ERROR_LOG
+RETURN VARCHAR2
+IS
+	ERR_CODE   PLS_INTEGER     :=SQLCODE;
+	ERR_MSG    VARCHAR2(32767) := SQLERRM;
+BEGIN
+	RETURN ERR_CODE ||' : ' ||ERR_MSG;
+END ERROR_LOG;
+
+END REF_DATA_PKS;
+/
