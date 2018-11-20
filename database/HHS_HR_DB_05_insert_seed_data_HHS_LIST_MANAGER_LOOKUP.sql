@@ -8,6 +8,7 @@ Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKU
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Reason Cleared','Not well qualified','Not well qualified',null,null,null);
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Reason Cleared','Employee separated from agency','Employee separated from agency',null,null,null);
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Reason Cleared','Eligibility rescinded for any other reason','Eligibility rescinded for any other reason',null,null,null);
+Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Reason Cleared','Other','Other',null,null,null);
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Assign to HHS Op Div or Staff Div',null,null,null,null,null);
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('HHS Employment Status','Inactive','Inactive',null,null,null);
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('HHS Employment Status','Active','Active',null,null,null);
@@ -156,5 +157,8 @@ Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKU
 
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values('listendReasonEndOTHER',null,'Does not meet required qualification standards',null,null,null);
 Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values('listendReasonEndOTHER',null,'Did not apply to announcement',null,null,null);
+
+Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Priority','1','1',null,null,null);
+Insert into HHS_HR.HHS_LIST_MANAGER_LOOKUP (LOOKUP_NAME,LOOKUP_DESCRIPTION,LOOKUP_CODE,CONDITION_1,CONDITION_2,DISP_ORDER) values ('Priority','2','2',null,null,null);
 
 commit;
