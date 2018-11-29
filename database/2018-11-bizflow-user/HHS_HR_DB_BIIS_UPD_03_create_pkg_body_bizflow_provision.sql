@@ -1,0 +1,146 @@
+CREATE OR REPLACE PACKAGE BODY HHS_HR.BIZFLOW_PROVISION_PKG AS
+
+--======================================================
+--  - - -   - - - - - - - - - - - - - - - - - - - - - - 
+
+--GLOBAL VARIABLES
+
+--- -  -  -- - - - - - - - - - - - - - - - - - - - - - -
+--======================================================
+	GCV_USR_LICENSE     CONSTANT   BIZFLOW.MEMBER.MEMBERID%TYPE     := 'licsgrp004';
+	GCV_USR_AUTHORITY   CONSTANT   BIZFLOW.MEMBER.MEMBERID%TYPE     := 'authgrp005';
+	GCV_USR_TYPE        CONSTANT   BIZFLOW.MEMBER.TYPE%TYPE         := 'U';
+
+
+--======================================================
+--  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+--PROCEDURES
+
+--  - - -   - - - - - - - - - - - - - - - - - - - - - - - -
+--======================================================
+--------------------------------------------------------
+--PROCEDURE: ASSIGN_LICENSE
+--DESCRIPTION: assign user license
+--------------------------------------------------------
+PROCEDURE ASSIGN_LICENSE
+IS
+	V_USRGRPID        VARCHAR2(10);
+BEGIN
+
+	SELECT MEMBERID
+	INTO V_USRGRPID
+	FROM BIZFLOW.MEMBER
+	WHERE MEMBERID = GCV_USR_LICENSE  -- user license
+	;
+
+	MERGE INTO BIZFLOW.USRGRPPRTCP TRG
+	USING
+	(
+		SELECT
+			V_USRGRPID AS USRGRPID
+			, MEMBERID AS PRTCP
+			, TYPE     AS PRTCPTYPE
+			, 100      AS DISPORDER
+			, NULL     AS USRGRPHID
+		FROM BIZFLOW.MEMBER
+		WHERE TYPE = GCV_USR_TYPE
+	) SRC ON (SRC.USRGRPID = TRG.USRGRPID AND SRC.PRTCP = TRG.PRTCP)
+	WHEN NOT MATCHED THEN INSERT
+	(
+		TRG.USRGRPID
+		, TRG.PRTCP
+		, TRG.PRTCPTYPE
+		, TRG.DISPORDER
+		, TRG.USRGRPHID
+	)
+	VALUES
+	(
+		SRC.USRGRPID
+		, SRC.PRTCP
+		, SRC.PRTCPTYPE
+		, SRC.DISPORDER
+		, SRC.USRGRPHID
+	)
+	;
+END;
+
+--------------------------------------------------------
+--PROCEDURE: ASSIGN_AUTH_GRP
+--DESCRIPTION: assign user authority group
+--------------------------------------------------------
+PROCEDURE ASSIGN_AUTH_GRP
+IS
+	V_USRGRPID        VARCHAR2(10);
+BEGIN
+
+	SELECT MEMBERID
+	INTO V_USRGRPID
+	FROM BIZFLOW.MEMBER
+	WHERE MEMBERID = GCV_USR_AUTHORITY  -- user authority
+	;
+
+	MERGE INTO BIZFLOW.USRGRPPRTCP TRG
+	USING
+	(
+		SELECT
+			V_USRGRPID AS USRGRPID
+			, MEMBERID AS PRTCP
+			, TYPE     AS PRTCPTYPE
+			, 100      AS DISPORDER
+			, NULL     AS USRGRPHID
+		FROM BIZFLOW.MEMBER
+		WHERE TYPE = GCV_USR_TYPE
+	) SRC ON (SRC.USRGRPID = TRG.USRGRPID AND SRC.PRTCP = TRG.PRTCP)
+	WHEN NOT MATCHED THEN INSERT
+	(
+		TRG.USRGRPID
+		, TRG.PRTCP
+		, TRG.PRTCPTYPE
+		, TRG.DISPORDER
+		, TRG.USRGRPHID
+	)
+	VALUES
+	(
+		SRC.USRGRPID
+		, SRC.PRTCP
+		, SRC.PRTCPTYPE
+		, SRC.DISPORDER
+		, SRC.USRGRPHID
+	)
+	;
+END;
+
+
+--======================================================
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+--FUNCTIONS
+
+-- - - -- - - - - - - - - - - - - - - - - - - - - - - -
+--======================================================
+--------------------------------------------------------
+--FUNCTION: FN_ACTIVATE_USERS
+--DESCRIPTION: Enable user access for all members
+--------------------------------------------------------
+FUNCTION FN_ACTIVATE_USERS
+	(O_ERRMSG       OUT VARCHAR2)
+RETURN NUMBER
+IS
+BEGIN
+
+	ASSIGN_LICENSE;
+	ASSIGN_AUTH_GRP;
+	
+	O_ERRMSG := SQLERRM || ' - ' || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+	COMMIT;
+	RETURN SQLCODE;
+EXCEPTION
+	WHEN OTHERS THEN
+		ROLLBACK;
+		O_ERRMSG := SQLERRM || ' - ' || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE;
+		RETURN SQLCODE;
+END;
+
+END BIZFLOW_PROVISION_PKG;
+/
