@@ -62,6 +62,7 @@ public class BIISJobListener extends JobExecutionListenerSupport {
 		parametersMap.put(biisProperties.getBiisRefDataName(), jobExecution.getExecutionContext().get(biisProperties.getBiisRefDataName()));
 		parametersMap.put(biisProperties.getEhrpRefDataName(), jobExecution.getExecutionContext().get(biisProperties.getEhrpRefDataName()));
 		parametersMap.put(biisProperties.getBiisPersonName(), jobExecution.getExecutionContext().get(biisProperties.getBiisPersonName()));
+		parametersMap.put(biisProperties.getActivateBizflowUsers(), jobExecution.getExecutionContext().get(biisProperties.getActivateBizflowUsers()));
 		
 		if (Boolean.valueOf(properties.getSendBiisEmailNotification())) {
 			try {
