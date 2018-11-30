@@ -64,22 +64,22 @@ public class BizflowProvisionTasklet implements Tasklet{
 				Map out = simpleJdbcCall.execute();
 				sqlcode = (int) out.get("SQL_CODE");
 				sqlerrm = (String) out.get("SQL_MSG");
-				log.info(biisProperties.getPlsqlEmployeeCatalog() + "."+ biisProperties.getPlsqlEmployeeFunction() + " :: "+ "SQL_CODE:: "+out.get("SQL_CODE") + "::::" + "SQL_MSG:: "+out.get("SQL_MSG"));
+				log.info(biisProperties.getPlsqlBizflowUserCatalog() + "."+ biisProperties.getPlsqlBizflowUserFunction() + " :: "+ "SQL_CODE:: "+out.get("SQL_CODE") + "::::" + "SQL_MSG:: "+out.get("SQL_MSG"));
 				
 				//A sqlcode of 0 means success
 				if (sqlcode!= 0) {
-					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBiisPersonName(), biisProperties.getModuleErrorStatus());
+					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBizflowUsersName(), biisProperties.getModuleErrorStatus());
 				} else {
-					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBiisPersonName(), biisProperties.getModuleSuccessStatus());
+					chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBizflowUsersName(), biisProperties.getModuleSuccessStatus());
 				}
 			
 			}else {
 				log.info("Activating the BizFlow user provision information is turned off");
-				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBiisPersonName(), biisProperties.getModuleOffStatus());
+				chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBizflowUsersName(), biisProperties.getModuleOffStatus());
 			}
 		}catch (Exception e) {
 			log.info(e.getMessage() + "::" + e.getCause());
-			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBiisPersonName(), biisProperties.getModuleErrorStatus());
+			chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext().put(biisProperties.getBizflowUsersName(), biisProperties.getModuleErrorStatus());
 			contribution.setExitStatus(new ExitStatus(ExitStatus.FAILED.getExitCode(),e.getMessage()));
 		}finally{
 			return RepeatStatus.FINISHED;
