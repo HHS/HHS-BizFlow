@@ -197,9 +197,9 @@ public class BatchConfiguration {
 				.listener(biisJobListener)
 				.preventRestart()
 				.start(importEmployeeDataStep()).on("*")
+				.to(activateBizFlowUsersStep()).on("*")
 				.to(importBiisRefDataStep()).on("*")
-				.to(importEHRPRefDataStep()).on("*")
-				.to(activateBizFlowUsersStep())
+				.to(importEHRPRefDataStep())
 				.end()
 				.build();
 	}
