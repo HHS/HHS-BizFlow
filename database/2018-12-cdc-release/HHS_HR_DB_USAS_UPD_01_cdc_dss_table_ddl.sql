@@ -8,6 +8,10 @@ DROP TABLE HHS_HR.DSS_CDC_CERTIFICATE;
 DROP TABLE HHS_HR.DSS_CDC_TIME_TO_OFFER_STG;
 DROP TABLE HHS_HR.DSS_CDC_TIME_TO_STAFF_STG;
 DROP TABLE HHS_HR.DSS_CDC_CERTIFICATE_STG;
+DROP TABLE HHS_HR.DSS_CDC_JR_RLTNSHP;
+DROP TABLE HHS_HR.DSS_CDC_JR_RLTNSHP_STG;
+DROP TABLE HHS_HR.DSS_CDC_CERT_AUDIT;
+DROP TABLE HHS_HR.DSS_CDC_CERT_AUDIT_STG;
 */
 
 
@@ -167,3 +171,75 @@ CREATE TABLE HHS_HR.DSS_CDC_CERTIFICATE_STG
 --DDL for index DSS_CDC_CERTIFICATE_STG_I1
 ----------------------------------------------
 CREATE INDEX HHS_HR.DSS_CDC_CERTIFICATE_STG_I1 ON DSS_CDC_CERTIFICATE_STG (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CDC_JR_RLTNSHP
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CDC_JR_RLTNSHP
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    CHILD_REQUEST_NUMBER        VARCHAR2(202),
+    VACANCY_NUMBER              NUMBER(10),
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    HIRING_AUTHORITY            VARCHAR2(202),
+    REQUEST_CREATE_DATE         DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CDC_JR_RLTNSHP_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CDC_JR_RLTNSHP_I1 ON DSS_CDC_JR_RLTNSHP (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CDC_JR_RLTNSHP_STG
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CDC_JR_RLTNSHP_STG
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    CHILD_REQUEST_NUMBER        VARCHAR2(202),
+    VACANCY_NUMBER              NUMBER(10),
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    HIRING_AUTHORITY            VARCHAR2(202),
+    REQUEST_CREATE_DATE         DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CDC_JR_RLTNSHP_STG_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CDC_JR_RLTNSHP_STG_I1 ON DSS_CDC_JR_RLTNSHP_STG (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CDC_CERT_AUDIT
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CDC_CERT_AUDIT
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    AUDIT_CODE                  VARCHAR2(82),
+    AUDIT_DATE                  DATE,
+    CERT_LAST_UPDATE_DATE       DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CDC_CERT_AUDIT_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CDC_CERT_AUDIT_I1 ON DSS_CDC_CERT_AUDIT (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CDC_CERT_AUDIT_STG
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CDC_CERT_AUDIT_STG
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    AUDIT_CODE                  VARCHAR2(82),
+    AUDIT_DATE                  DATE,
+    CERT_LAST_UPDATE_DATE       DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CDC_CERT_AUDIT_STG_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CDC_CERT_AUDIT_STG_I1 ON DSS_CDC_CERT_AUDIT_STG (REQUEST_NUMBER);
