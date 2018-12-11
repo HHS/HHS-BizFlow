@@ -326,6 +326,179 @@ EXCEPTION
 END;
 /
 
+CREATE OR REPLACE PROCEDURE HHS_HR.SP_UPDATE_CDC_JR_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CDC_JR_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_CDC_JR_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_CDC_JR_RLTNSHP_STG table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_CDC_JR_RLTNSHP_STG table');
+		INSERT INTO HHS_HR.DSS_CDC_JR_RLTNSHP_STG
+			(REQUEST_NUMBER
+			, CHILD_REQUEST_NUMBER
+			, VACANCY_NUMBER
+			, CERTIFICATE_NUMBER
+			, ANNOUNCEMENT_NUMBER
+			, HIRING_AUTHORITY
+			, REQUEST_CREATE_DATE)
+		SELECT
+			X.REQUEST_NUMBER
+			, X.CHILD_REQUEST_NUMBER
+			, X.VACANCY_NUMBER
+			, X.CERTIFICATE_NUMBER
+			, X.ANNOUNCEMENT_NUMBER
+			, X.HIRING_AUTHORITY
+			, TO_DATE(SUBSTR(X.REQUEST_CREATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REQUEST_CREATE_DATE
+		FROM HHS_HR.INTG_DATA_DTL IDX
+			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_JRInfo"]'
+				PASSING IDX.FIELD_DATA
+				COLUMNS
+					REQUEST_NUMBER                    VARCHAR2(202)   PATH 'Request__Number'
+					, CHILD_REQUEST_NUMBER            VARCHAR2(202)   PATH 'Child__Request__Number'
+					, VACANCY_NUMBER                  NUMBER(10)      PATH 'Vacancy__Number'
+					, CERTIFICATE_NUMBER              VARCHAR2(102)   PATH 'Certificate__Number'
+					, ANNOUNCEMENT_NUMBER             VARCHAR2(56)    PATH 'Announcement__Number'
+					, HIRING_AUTHORITY                VARCHAR2(202)   PATH 'Hiring__Authority'
+					, REQUEST_CREATE_DATE_STR         VARCHAR2(50)    PATH 'Request__Create__Date'
+			) X
+		WHERE IDX.ID = I_ID;
+		
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_CDC_JR_TABLE: Invalid CDC JR data.  IA_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CDC_JR_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_JR_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_JR_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		HHS_HR.SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_JR_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE HHS_HR.SP_UPDATE_CDC_AUDIT_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CDC_AUDIT_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_CDC_AUDIT_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_CDC_CERT_AUDIT_STG table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_CDC_CERT_AUDIT_STG table');
+		INSERT INTO HHS_HR.DSS_CDC_CERT_AUDIT_STG
+			(REQUEST_NUMBER
+			, CERTIFICATE_NUMBER
+			, AUDIT_CODE
+			, AUDIT_DATE
+			, CERT_LAST_UPDATE_DATE)
+		SELECT
+			X.REQUEST_NUMBER
+			, X.CERTIFICATE_NUMBER
+			, X.AUDIT_CODE
+			, TO_DATE(SUBSTR(X.AUDIT_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS AUDIT_DATE
+			, TO_DATE(SUBSTR(X.CERT_LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS CERT_LAST_UPDATE_DATE
+		FROM HHS_HR.INTG_DATA_DTL IDX
+			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_CertAuditCodes"]'
+				PASSING IDX.FIELD_DATA
+				COLUMNS
+					REQUEST_NUMBER                    VARCHAR2(202)   PATH 'Request__Number'
+					, CERTIFICATE_NUMBER              VARCHAR2(102)   PATH 'Certificate__Number'
+					, AUDIT_CODE                      VARCHAR2(56)    PATH 'Audit__Code'
+					, AUDIT_DATE_STR                  VARCHAR2(50)    PATH 'Audit__Date'
+					, CERT_LAST_UPDATE_DATE_STR       VARCHAR2(50)    PATH 'Certificate__Last__Update__Date'
+			) X
+		WHERE IDX.ID = I_ID;
+		
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_CDC_AUDIT_TABLE: Invalid CDC audit data.  IA_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CDC_AUDIT_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_AUDIT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_AUDIT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		HHS_HR.SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_AUDIT_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+/
+
+
 
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_INTG_DATA
@@ -451,6 +624,10 @@ BEGIN
 		SP_UPDATE_CDC_TIME2STAFF_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'CDC-CERT' THEN
 		SP_UPDATE_CDC_CERT_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'CDC-JR' THEN
+		SP_UPDATE_CDC_JR_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'CDC-AUDIT' THEN
+		SP_UPDATE_CDC_AUDIT_TABLE(V_ID);
 	END IF;
 	
 
