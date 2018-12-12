@@ -90,7 +90,8 @@ CREATE TABLE HHS_HR.DSS_CDC_CERTIFICATE
     CERTIFICATE_ISSUE_DATE      DATE,
     REVIEW_RETURN_DATE          DATE,
     CERT_SIGNED_DATE            DATE,
-    CERT_EXPIRED_DATE           DATE
+    CERT_EXPIRED_DATE           DATE,
+    TOTAL_APPLICANTS            NUMBER(4)
 );
 
 ----------------------------------------------
@@ -174,7 +175,8 @@ CREATE TABLE HHS_HR.DSS_CDC_CERTIFICATE_STG
     CERTIFICATE_ISSUE_DATE      DATE,
     REVIEW_RETURN_DATE          DATE,
     CERT_SIGNED_DATE            DATE,
-    CERT_EXPIRED_DATE           DATE
+    CERT_EXPIRED_DATE           DATE,
+    TOTAL_APPLICANTS            NUMBER(4)
 );
 
 ----------------------------------------------
