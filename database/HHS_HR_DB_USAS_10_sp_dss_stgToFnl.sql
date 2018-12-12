@@ -602,6 +602,7 @@ END;
 /
 
 
+
 --------------------------------------------------------
 --  DDL for Procedure SP_CDC_CERT_STG2FNL
 --------------------------------------------------------
@@ -626,6 +627,7 @@ IS
 			, REVIEW_RETURN_DATE
 			, CERT_SIGNED_DATE
 			, CERT_EXPIRED_DATE
+			, TOTAL_APPLICANTS
 		FROM HHS_HR.DSS_CDC_CERTIFICATE_STG;
 
 		TYPE TYPE_CERT_STG IS TABLE OF CUR_CERT_STG%ROWTYPE
