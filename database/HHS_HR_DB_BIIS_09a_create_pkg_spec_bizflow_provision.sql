@@ -13,6 +13,12 @@ PROCEDURE ASSIGN_LICENSE;
 PROCEDURE ASSIGN_AUTH_GRP;
 
 --------------------------------------------------------
+--PROCEDURE: ENABLE_RDR_VISITOR
+--DESCRIPTION: Enable RDR Visitor for all members
+--------------------------------------------------------
+PROCEDURE ENABLE_RDR_VISITOR;
+
+--------------------------------------------------------
 --FUNCTION: FN_ACTIVATE_USERS
 --DESCRIPTION: Enable user access for all members
 --------------------------------------------------------
