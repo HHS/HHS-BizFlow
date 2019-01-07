@@ -30,6 +30,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import gov.hhs.usas.dss.model.Announcement;
 import gov.hhs.usas.dss.model.Application;
+import gov.hhs.usas.dss.model.CDCAnnouncement;
 import gov.hhs.usas.dss.model.CDCAudit;
 import gov.hhs.usas.dss.model.CDCCertificate;
 import gov.hhs.usas.dss.model.CDCTimeToOffer;
@@ -122,6 +123,9 @@ public class BatchConfiguration {
 	@Autowired
 	private CDCAudit cdcAudit;
 	
+	@Autowired
+	private CDCAnnouncement cdcAnn;
+	
 		 
 	/*
 	 * Job - importDSSReports
@@ -136,6 +140,7 @@ public class BatchConfiguration {
     	final Flow cdcStaffFlow = new FlowBuilder<Flow>("cdcStaffFlow").from(stepBuilderFactory.get("executeCDCStaffReportStep").tasklet(cdcStaffTasklet()).listener(stepListener).build()).end();
     	final Flow cdcCertFlow = new FlowBuilder<Flow>("cdcCertFlow").from(stepBuilderFactory.get("executeCDCCertificateReportStep").tasklet(cdcCertTasklet()).listener(stepListener).build()).end();
     	final Flow cdcAuditFlow = new FlowBuilder<Flow>("cdcAuditFlow").from(stepBuilderFactory.get("executeCDCAuditReportStep").tasklet(cdcAuditTasklet()).listener(stepListener).build()).end();
+    	final Flow cdcAnnFlow = new FlowBuilder<Flow>("cdcAnnFlow").from(stepBuilderFactory.get("executeCDCAnnouncementReportStep").tasklet(cdcAnnTasklet()).listener(stepListener).build()).end();    	 
     	final Flow appFlow = new FlowBuilder<Flow>("appFlow").from(stepBuilderFactory.get("executeApplicationReportStep").tasklet(appTasklet()).listener(stepListener).build()).end();
     	final Flow annFlow = new FlowBuilder<Flow>("annFlow").from(stepBuilderFactory.get("executeAnnouncementReportStep").tasklet(annTasklet()).listener(stepListener).build()).end();
     	final Flow certFlow = new FlowBuilder<Flow>("certFlow").from(stepBuilderFactory.get("executeCertificateReportStep").tasklet(certTasklet()).listener(stepListener).build()).end();
@@ -146,7 +151,7 @@ public class BatchConfiguration {
     	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
 
     	//Parallel Report Flows
-    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, ihsVacancyFlow, cdcOfferFlow, cdcStaffFlow, cdcCertFlow,cdcAuditFlow).build();
+    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, ihsVacancyFlow, cdcOfferFlow, cdcStaffFlow, cdcCertFlow,cdcAuditFlow, cdcAnnFlow).build();
     	final Flow parallelFlow2 = new FlowBuilder<Flow>("parallelFlow2").split(new SimpleAsyncTaskExecutor()).add(appFlow, annFlow, certFlow).build();
     	final Flow parallelFlow3 = new FlowBuilder<Flow>("parallelFlow3").split(new SimpleAsyncTaskExecutor()).add(newHireFlow, requestFlow, reviewFlow).build();
     	final Flow parallelFlow4 = new FlowBuilder<Flow>("parallelFlow4").split(new SimpleAsyncTaskExecutor()).add(taskFlow, vacFlow).build();
@@ -309,6 +314,16 @@ public class BatchConfiguration {
 		rt.setReport(cdcAudit);
 		return rt;
 	}
+	
+	//CDC Announcement Tasklet
+	@Bean
+	@StepScope
+	public Tasklet cdcAnnTasklet() {
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(cdcAnn);
+		return rt;
+	}
+	
 	
 	//IHS Vacancy Tasklet
 	@Bean

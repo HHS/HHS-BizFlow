@@ -51,6 +51,9 @@ public class JobListener extends JobExecutionListenerSupport {
 	@Value("${cdc.audit.report.name}")
 	private String cdcAuditReport;
 	
+	@Value("${cdc.ann.report.name}")
+	private String cdcAnnReport;	
+	
 	@Value("${app.report.name}")
 	private String appReport;
 	
@@ -94,6 +97,7 @@ public class JobListener extends JobExecutionListenerSupport {
 			parametersMap.put(cdcOfferReport, jobExecution.getExecutionContext().get(cdcOfferReport));
 			parametersMap.put(cdcCertReport, jobExecution.getExecutionContext().get(cdcCertReport));
 			parametersMap.put(cdcAuditReport, jobExecution.getExecutionContext().get(cdcAuditReport));
+			parametersMap.put(cdcAnnReport, jobExecution.getExecutionContext().get(cdcAnnReport));
 			parametersMap.put(appReport, jobExecution.getExecutionContext().get(appReport));
 			parametersMap.put(annReport, jobExecution.getExecutionContext().get(annReport));
 			parametersMap.put(certReport, jobExecution.getExecutionContext().get(certReport));
