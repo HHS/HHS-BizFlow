@@ -12,6 +12,10 @@ DROP TABLE HHS_HR.DSS_CDC_CERT_AUDIT;
 DROP TABLE HHS_HR.DSS_CDC_CERT_AUDIT_STG;
 DROP TABLE HHS_HR.DSS_CDC_ANNOUNCEMENT;
 DROP TABLE HHS_HR.DSS_CDC_ANNOUNCEMENT_STG;
+DROP TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS;
+DROP TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG;
+DROP TABLE HHS_HR.DSS_CMS_TIME_TO_HIRE;
+DROP TABLE HHS_HR.DSS_CMS_TIME_TO_HIRE_STG;
 */
 
 
@@ -264,3 +268,106 @@ CREATE TABLE HHS_HR.DSS_CDC_ANNOUNCEMENT_STG
 ----------------------------------------------
 CREATE INDEX HHS_HR.DSS_CDC_ANNOUNCEMENT_STG_I1 ON DSS_CDC_ANNOUNCEMENT_STG (REQUEST_NUMBER);
 
+------------------------------------
+--DDL for table DSS_CMS_TIME_OF_POSSESS
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    REQUEST_APPROVAL_DATE       DATE,
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    HM_ANN_RVW_SENT_DATE        DATE,
+    HM_ANN_RVW_CMPL_DATE        DATE,
+    ANNOUNCEMENT_OPEN_DATE      DATE,
+    ANNOUNCEMENT_CLOSE_DATE     DATE,
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    CERTIFICATE_ISSUE_DATE      DATE,
+    REVIEW_SENT_DATE            DATE,
+    REVIEW_RETURN_DATE          DATE,
+    INITIAL_AUDIT_DATE          DATE,   
+    NEW_HIRE_CREATE_DATE        DATE,
+    SEND_TENT_OFFR_CMPL_DATE    DATE,
+    TENT_OFFR_RSPNS_DATE        DATE,
+    RCVE_BKGRND_INVST_DATE      DATE,
+    EOD_DATE                    DATE,
+    SEND_OFCL_OFFR_CMPL_DATE    DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CMS_TIME_OF_POSSESS_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CMS_TIME_OF_POSSESS_I1 ON DSS_CMS_TIME_OF_POSSESS (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CMS_TIME_OF_POSSESS_STG
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    REQUEST_APPROVAL_DATE       DATE,
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    HM_ANN_RVW_SENT_DATE        DATE,
+    HM_ANN_RVW_CMPL_DATE        DATE,
+    ANNOUNCEMENT_OPEN_DATE      DATE,
+    ANNOUNCEMENT_CLOSE_DATE     DATE,
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    CERTIFICATE_ISSUE_DATE      DATE,
+    REVIEW_SENT_DATE            DATE,
+    REVIEW_RETURN_DATE          DATE,
+    INITIAL_AUDIT_DATE          DATE,   
+    NEW_HIRE_CREATE_DATE        DATE,
+    SEND_TENT_OFFR_CMPL_DATE    DATE,
+    TENT_OFFR_RSPNS_DATE        DATE,
+    RCVE_BKGRND_INVST_DATE      DATE,
+    EOD_DATE                    DATE,
+    SEND_OFCL_OFFR_CMPL_DATE    DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CMS_TIME_OF_POSSESS_STG_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG_I1 ON DSS_CMS_TIME_OF_POSSESS_STG (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CMS_TIME_TO_HIRE
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CMS_TIME_TO_HIRE
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    REQUEST_STATUS              VARCHAR2(1002),
+    REQUEST_TYPE                VARCHAR2(1002),
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    ANNOUNCEMENT_OPEN_DATE      DATE,
+    ANNOUNCEMENT_CLOSE_DATE     DATE,
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    REVIEW_SENT_DATE            DATE,
+    REVIEW_RETURN_DATE          DATE,
+    EOD_DATE                    DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CMS_TIME_TO_HIRE_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CMS_TIME_TO_HIRE_I1 ON DSS_CMS_TIME_TO_HIRE (REQUEST_NUMBER);
+
+------------------------------------
+--DDL for table DSS_CMS_TIME_TO_HIRE_STG
+------------------------------------
+CREATE TABLE HHS_HR.DSS_CMS_TIME_TO_HIRE_STG
+(
+    REQUEST_NUMBER              VARCHAR2(202),
+    REQUEST_STATUS              VARCHAR2(1002),
+    REQUEST_TYPE                VARCHAR2(1002),
+    ANNOUNCEMENT_NUMBER         VARCHAR2(56),
+    ANNOUNCEMENT_OPEN_DATE      DATE,
+    ANNOUNCEMENT_CLOSE_DATE     DATE,
+    CERTIFICATE_NUMBER          VARCHAR2(102),
+    REVIEW_SENT_DATE            DATE,
+    REVIEW_RETURN_DATE          DATE,
+    EOD_DATE                    DATE
+);
+
+----------------------------------------------
+--DDL for index DSS_CMS_TIME_TO_HIRE_STG_I1
+----------------------------------------------
+CREATE INDEX HHS_HR.DSS_CMS_TIME_TO_HIRE_STG_I1 ON DSS_CMS_TIME_TO_HIRE_STG (REQUEST_NUMBER);
