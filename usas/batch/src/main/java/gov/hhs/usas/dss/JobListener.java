@@ -39,6 +39,12 @@ public class JobListener extends JobExecutionListenerSupport {
 	@Value("${staff.report.name}")
 	private String staffReport;
 	
+	@Value("${cms.possess.report.name}")
+	private String cmsPossessReport;
+	
+	@Value("${cms.time2hire.report.name}")
+	private String cmsTime2HireReport;
+	
 	@Value("${cdc.offer.report.name}")
 	private String cdcOfferReport;
 	
@@ -93,6 +99,8 @@ public class JobListener extends JobExecutionListenerSupport {
 			parametersMap.put(ihsVacReport, jobExecution.getExecutionContext().get(ihsVacReport));
 			parametersMap.put(offerReport, jobExecution.getExecutionContext().get(offerReport));
 			parametersMap.put(staffReport, jobExecution.getExecutionContext().get(staffReport));
+			parametersMap.put(cmsPossessReport, jobExecution.getExecutionContext().get(cmsPossessReport));
+			parametersMap.put(cmsTime2HireReport, jobExecution.getExecutionContext().get(cmsTime2HireReport));
 			parametersMap.put(cdcStaffReport, jobExecution.getExecutionContext().get(cdcStaffReport));
 			parametersMap.put(cdcOfferReport, jobExecution.getExecutionContext().get(cdcOfferReport));
 			parametersMap.put(cdcCertReport, jobExecution.getExecutionContext().get(cdcCertReport));
