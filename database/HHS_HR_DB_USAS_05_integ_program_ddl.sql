@@ -3202,6 +3202,7 @@ BEGIN
 		--DBMS_OUTPUT.PUT_LINE('    DSS_CMS_TIME_TO_HIRE_STG table');
 		INSERT INTO HHS_HR.DSS_CMS_TIME_TO_HIRE_STG
 			(REQUEST_NUMBER
+			, REQUEST_CREATE_DATE
     		, REQUEST_STATUS
     		, REQUEST_TYPE
     		, ANNOUNCEMENT_NUMBER
@@ -3213,6 +3214,7 @@ BEGIN
     		, EOD_DATE)
 		SELECT
 			X.REQUEST_NUMBER
+			, TO_DATE(SUBSTR(X.REQUEST_CREATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REQUEST_CREATE_DATE
 			, X.REQUEST_STATUS
 			, X.REQUEST_TYPE
 			, X.ANNOUNCEMENT_NUMBER
@@ -3227,6 +3229,7 @@ BEGIN
 				PASSING IDX.FIELD_DATA
 				COLUMNS
 					REQUEST_NUMBER                      VARCHAR2(202)   PATH 'Certificate__Request__Number'
+					, REQUEST_CREATE_DATE_STR           VARCHAR2(50)    PATH 'Certificate__Request__Creation__Date'
     				, REQUEST_STATUS                    VARCHAR2(1002)  PATH 'Certificate__Request__Status'
     				, REQUEST_TYPE                      VARCHAR2(1002)  PATH 'Certificate__Request__Type'
     				, ANNOUNCEMENT_NUMBER               VARCHAR2(56)    PATH 'Certificate__Announcement__Number'
