@@ -39,6 +39,27 @@ public class JobListener extends JobExecutionListenerSupport {
 	@Value("${staff.report.name}")
 	private String staffReport;
 	
+	@Value("${cms.possess.report.name}")
+	private String cmsPossessReport;
+	
+	@Value("${cms.time2hire.report.name}")
+	private String cmsTime2HireReport;
+	
+	@Value("${cdc.offer.report.name}")
+	private String cdcOfferReport;
+	
+	@Value("${cdc.staff.report.name}")
+	private String cdcStaffReport;
+	
+	@Value("${cdc.cert.report.name}")
+	private String cdcCertReport;
+		
+	@Value("${cdc.audit.report.name}")
+	private String cdcAuditReport;
+	
+	@Value("${cdc.ann.report.name}")
+	private String cdcAnnReport;	
+	
 	@Value("${app.report.name}")
 	private String appReport;
 	
@@ -78,6 +99,13 @@ public class JobListener extends JobExecutionListenerSupport {
 			parametersMap.put(ihsVacReport, jobExecution.getExecutionContext().get(ihsVacReport));
 			parametersMap.put(offerReport, jobExecution.getExecutionContext().get(offerReport));
 			parametersMap.put(staffReport, jobExecution.getExecutionContext().get(staffReport));
+			parametersMap.put(cmsPossessReport, jobExecution.getExecutionContext().get(cmsPossessReport));
+			parametersMap.put(cmsTime2HireReport, jobExecution.getExecutionContext().get(cmsTime2HireReport));
+			parametersMap.put(cdcStaffReport, jobExecution.getExecutionContext().get(cdcStaffReport));
+			parametersMap.put(cdcOfferReport, jobExecution.getExecutionContext().get(cdcOfferReport));
+			parametersMap.put(cdcCertReport, jobExecution.getExecutionContext().get(cdcCertReport));
+			parametersMap.put(cdcAuditReport, jobExecution.getExecutionContext().get(cdcAuditReport));
+			parametersMap.put(cdcAnnReport, jobExecution.getExecutionContext().get(cdcAnnReport));
 			parametersMap.put(appReport, jobExecution.getExecutionContext().get(appReport));
 			parametersMap.put(annReport, jobExecution.getExecutionContext().get(annReport));
 			parametersMap.put(certReport, jobExecution.getExecutionContext().get(certReport));

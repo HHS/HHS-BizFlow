@@ -36,6 +36,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import gov.hhs.batch.biis.BIISJobListener;
 import gov.hhs.batch.biis.BIISProperties;
 import gov.hhs.batch.biis.BIISRefDataTasklet;
+import gov.hhs.batch.biis.BizflowProvisionTasklet;
 import gov.hhs.batch.biis.EHRPRefDataTasklet;
 import gov.hhs.batch.biis.EmployeeTasklet;
 import gov.hhs.batch.ehrp.EHRPJobListener;
@@ -94,6 +95,9 @@ public class BatchConfiguration {
 	
 	@Autowired
 	private EHRPRefDataTasklet ehrpRefDataTasklet;
+	
+	@Autowired
+	private BizflowProvisionTasklet bizflowProvisionTasklet;
 
 	
 	@Bean
@@ -193,6 +197,7 @@ public class BatchConfiguration {
 				.listener(biisJobListener)
 				.preventRestart()
 				.start(importEmployeeDataStep()).on("*")
+				.to(activateBizFlowUsersStep()).on("*")
 				.to(importBiisRefDataStep()).on("*")
 				.to(importEHRPRefDataStep())
 				.end()
@@ -233,6 +238,18 @@ public class BatchConfiguration {
 	public Step importEHRPRefDataStep() {
 		return stepBuilderFactory.get("importEHRPRefDataStep")
 				.tasklet(ehrpRefDataTasklet)
+				.listener(stepsListener)
+				.build();
+	}
+	
+	/*
+	 * Step - activateBizFlowUsersStep - Enable user access for all members
+	 */
+
+	@Bean
+	public Step activateBizFlowUsersStep() {
+		return stepBuilderFactory.get("activateBizFlowUsersStep")
+				.tasklet(bizflowProvisionTasklet)
 				.listener(stepsListener)
 				.build();
 	}

@@ -77,7 +77,7 @@ public class ReportGeneration {
 		}				
 	}
 	
-	public static void insertReporttoDB(DataSource targetDataSource, Report report, String reportXml) throws Exception{
+	public static void insertReportToStg(DataSource targetDataSource, Report report, String reportXml) throws Exception{
 		
 		JdbcTemplate template = new JdbcTemplate(targetDataSource);
 		
@@ -93,6 +93,19 @@ public class ReportGeneration {
 		
 		simpleJdbcCall.execute(in);		
 	}
+	
+	
+	public static void insertReportStgToFnl(DataSource targetDataSource, Report report) throws Exception{
+		
+		JdbcTemplate template = new JdbcTemplate(targetDataSource);
+		
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(template)
+				.withSchemaName("HHS_HR")
+				.withProcedureName(report.getSpStgToFnl());
+		
+		simpleJdbcCall.execute();		
+	}
+	
 	
 	public static void truncateReportTables(DataSource targetDataSource, Report report) throws Exception{
 		

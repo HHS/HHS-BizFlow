@@ -31,6 +31,8 @@ public class BIISProperties {
 	private String biisRefDataName;
 	@Value("${ehrp.refData.name}")
 	private String ehrpRefDataName;
+	@Value("${bizflow.users.name}")
+	private String bizflowUsersName;
 	
 	//Email Message Configurations
 	@Value("${biis.email.html.style}")
@@ -49,6 +51,8 @@ public class BIISProperties {
 	private String importBiisRefData;
 	@Value("${import.ehrp.ref.data}")
 	private String importEhrpRefData;
+	@Value("${activate.bizflow.user}")
+	private String activateBizflowUsers;
 
 	//PL/SQL Stored Function properties
 	@Value("${plsql.employee.catalog}")
@@ -71,7 +75,14 @@ public class BIISProperties {
 	private String plsqlEhrpRefDataSchema;
 	@Value("${plsql.ehrp.refdata.function}")
 	private String plsqEhrpRefDataFunction;
-
+	
+	@Value("${plsql.bizflow.user.catalog}")
+	private String plsqlBizflowUserCatalog;
+	@Value("${plsql.bizflow.user.schema}")
+	private String plsqlBizflowUserSchema;
+	@Value("${plsql.bizflow.user.function}")
+	private String plsqlBizflowUserFunction;
+	
 	public String getBiisInterfaceName() {
 		return biisInterfaceName;
 	}
@@ -216,5 +227,34 @@ public class BIISProperties {
 	public void setPlsqEhrpRefDataFunction(String plsqEhrpRefDataFunction) {
 		this.plsqEhrpRefDataFunction = plsqEhrpRefDataFunction;
 	}
-	
+	public String getBizflowUsersName() {
+		return bizflowUsersName;
+	}
+	public void setBizflowUsersName(String bizflowUsersName) {
+		this.bizflowUsersName = bizflowUsersName;
+	}
+	public String getActivateBizflowUsers() {
+		return activateBizflowUsers;
+	}
+	public void setActivateBizflowUsers(String activateBizflowUsers) {
+		this.activateBizflowUsers = activateBizflowUsers;
+	}
+	public String getPlsqlBizflowUserCatalog() {
+		return plsqlBizflowUserCatalog;
+	}
+	public void setPlsqlBizflowUserCatalog(String plsqlBizflowUserCatalog) {
+		this.plsqlBizflowUserCatalog = plsqlBizflowUserCatalog;
+	}
+	public String getPlsqlBizflowUserSchema() {
+		return plsqlBizflowUserSchema;
+	}
+	public void setPlsqlBizflowUserSchema(String plsqlBizflowUserSchema) {
+		this.plsqlBizflowUserSchema = plsqlBizflowUserSchema;
+	}
+	public String getPlsqlBizflowUserFunction() {
+		return plsqlBizflowUserFunction;
+	}
+	public void setPlsqlBizflowUserFunction(String plsqlBizflowUserFunction) {
+		this.plsqlBizflowUserFunction = plsqlBizflowUserFunction;
+	}
 }
