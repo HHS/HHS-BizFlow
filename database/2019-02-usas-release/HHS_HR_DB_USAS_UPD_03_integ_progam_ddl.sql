@@ -772,6 +772,98 @@ EXCEPTION
 END;
 /
 
+CREATE OR REPLACE PROCEDURE HHS_HR.SP_UPDATE_CDC_ANN_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CDC_ANN_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_CDC_ANN_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_CDC_ANNOUNCEMENT_STG table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_CDC_ANNOUNCEMENT_STG table');
+		INSERT INTO HHS_HR.DSS_CDC_ANNOUNCEMENT_STG
+			(REQUEST_NUMBER
+			, ANNOUNCEMENT_NUMBER
+			, ANNOUNCEMENT_CTRL_NUMBER
+			, ANNOUNCEMENT_OPEN_DATE
+			, ANNOUNCEMENT_CLOSE_DATE
+			, ANNOUNCEMENT_RVW_STATUS
+			, ANN_RVW_CMPL_DATE
+			, ANN_LAST_UPDATE_DATE)
+		SELECT
+			X.REQUEST_NUMBER
+			, X.ANNOUNCEMENT_NUMBER
+			, X.ANNOUNCEMENT_CTRL_NUMBER
+			, TO_DATE(SUBSTR(X.ANNOUNCEMENT_OPEN_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ANNOUNCEMENT_OPEN_DATE
+			, TO_DATE(SUBSTR(X.ANNOUNCEMENT_CLOSE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ANNOUNCEMENT_CLOSE_DATE
+			, X.ANNOUNCEMENT_RVW_STATUS
+			, TO_DATE(SUBSTR(X.ANN_RVW_CMPL_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ANN_RVW_CMPL_DATE
+			, TO_DATE(SUBSTR(X.ANN_LAST_UPDATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS ANN_LAST_UPDATE_DATE
+		FROM HHS_HR.INTG_DATA_DTL IDX
+			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_Announcement"]'
+				PASSING IDX.FIELD_DATA
+				COLUMNS
+					REQUEST_NUMBER                    VARCHAR2(202)   PATH 'Request__Number'
+					, ANNOUNCEMENT_NUMBER             VARCHAR2(56)    PATH 'Announcement__Number'
+					, ANNOUNCEMENT_CTRL_NUMBER        NUMBER(10,0)    PATH 'Announcement__Control__Number'
+					, ANNOUNCEMENT_OPEN_DATE_STR      VARCHAR2(50)    PATH 'Announcement__Open__Date'
+					, ANNOUNCEMENT_CLOSE_DATE_STR     VARCHAR2(50)    PATH 'Announcement__Close__Date'
+					, ANNOUNCEMENT_RVW_STATUS         VARCHAR2(1002)  PATH 'Announcement__Review__Status'
+					, ANN_RVW_CMPL_DATE_STR           VARCHAR2(50)    PATH 'Announcement__Review__Completion__Date'
+					, ANN_LAST_UPDATE_DATE_STR        VARCHAR2(50)    PATH 'Announcement__Last__Update__Date'
+			) X
+		WHERE IDX.ID = I_ID;
+		
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_CDC_ANN_TABLE: Invalid CDC audit data.  IA_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CDC_ANN_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_ANN_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_ANN_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		HHS_HR.SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CDC_ANN_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+/
+
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_INTG_DATA
 --------------------------------------------------------
