@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- ========================= SERVICE CONFIGURATION ========================= -->
+	<bean id="singleSignOnService" class="com.hs.sso.services.impl.SingleSignOnImpl" autowire="default"  parent="abstractServiceImpl">
+		<property name="ssoLoginUrl" value="${bizflow.context.url}/bizlogin.jsp"/>
+		<property name="ssoSuccessUrl" value="bizindex.jsp"/>
+		<property name="ssoFailureUrl" value="${bizflow.context.defaultFailureUrl}"/>
+		<property name="bizFlowConnection"><ref bean="bizFlowConnection"/></property>
+		<property name="principalRequestHeader" value="${siteminderFilter.principalRequestHeader}"/>
+		<property name="cutOffCharacters" value="${siteminderFilter.principal.cutOffCharacters}"/>
+	</bean>
+	<bean id="bizFlowConnection" class="com.hs.sso.services.impl.BizFlowConnectionImpl">
+		<property name="bizflowPropertiesPath" value="${bizflow.propertiesPath}"/>
+		<property name="bizFlowCertFilePath" value="${sso.BizFlowCertFilePath}"/>
+	</bean>
+	<bean id="abstractServiceImpl" abstract="true" class="com.hs.sso.services.impl.AbstractServiceImpl">
+		<property name="messageSource" ref="messageSource" />
+	</bean>
+	<!-- ========================= PROPERTIES CONFIGURATION ========================= -->
+    <bean id="propConfigurer" 
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:bizflow-sso.properties" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+
+	<!-- ========================= RESOURCE DEFINITIONS ========================= -->
+	<bean id="messageSource" 
+             class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>com.hs.sso.exception.Messages</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean class="org.springframework.scripting.support.ScriptFactoryPostProcessor">
+        <!--
+            If the value of the following property is -1, 
+            then the change of the script will not refresh automatically.
+            If you use auto-refresh mode, then set the value to 5000.
+        -->
+        <property name="defaultRefreshCheckDelay" value="5000" />
+    </bean>
+</beans>
