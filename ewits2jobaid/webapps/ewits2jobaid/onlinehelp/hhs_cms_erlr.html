@@ -1,0 +1,138 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=11, chrome=1" />
+	<meta name="Author" content="Taeho Lee">
+	<meta name="Keywords" content="Job Aid File Upload">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>EWITS 2.0 Job Aid File Uploader</title>
+
+	<link rel="stylesheet" href="../components/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../components/fontawesome/css/all.min.css" />
+
+	<script src="../components/jquery/jquery-3.3.1.js"></script>
+	<script src="../components/bootstrap/js/bootstrap.min.js"></script>
+	<script>
+		$(function () {
+		  $('[data-toggle="tooltip"]').tooltip();
+		  
+		  
+		})
+		
+		function download(idx) {
+			//$("#idx_" + idx).trigger("click");
+			var obj = document.getElementById("idx_" + idx);
+			obj.click();
+		}
+		
+		
+		function copyURL(idx) {
+			var url = $("#idx_" + idx).prop("href");
+			$("#txtHiddenForClipboard").val(url);
+			var obj = document.getElementById("txtHiddenForClipboard");
+			obj.select();
+			document.execCommand("copy");
+			alert("URL copied: \r" + obj.value);
+		}
+		
+		function showTab(tabId) {
+			$("#tabHeader1").removeClass("active");
+			$("#tabHeader2").removeClass("active");
+			$("#tabHeader3").removeClass("active");
+			
+			$("#tab1").css("display","none");
+			$("#tab2").css("display","none");
+			$("#tab3").css("display","none");
+
+			$("#tab" + tabId).css("display","");
+			$("#tabHeader" + tabId).addClass("active");
+		}
+	
+	</script>
+</head>
+<body>
+
+<div class="container">
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<img src="../theme/hhs_logo.png" style="width:35px;height:35px" alt="HHS logo"> &nbsp;&nbsp;
+			<li class="breadcrumb-item">EWITS 2.0 Help & Resources</a></li>
+			<li class="breadcrumb-item active" aria-current="page"><a href="#">NEIL Employee and Labor Relations (ER/LR)</a></li>
+		</ol>
+	</nav>
+</div>
+
+<div class="container">
+	<!-- TAB header //-->
+	<ul class="nav nav-tabs">
+	  <li class="nav-item">
+		<a class="nav-link active" href="#" id="tabHeader1" onclick="showTab(1);" alt="User Manual Tab">User Manual</a>
+	  </li>
+	  <li class="nav-item">
+		<a class="nav-link" href="#" id="tabHeader2" onclick="showTab(2);" alt="Training Information Tab">Training Information</a>
+	  </li>
+	  <li class="nav-item">
+		<a class="nav-link" href="#" id="tabHeader3" onclick="showTab(3);" alt="Point of Contact">Point of Contact</a>
+	  </li>
+	</ul>
+
+	
+	<!-- TAB body //-->
+	<div id="tab1" style="display:">
+		<embed src="/ewits2jobaid/materials/Neil%20HR%20ER%20LR%20Job%20Aid%20February%20Release%20v1.0.pdf#view=FitH&page=2" width="99%" height="85%">
+	</div>
+
+	<div id="tab2" style="display:none">
+		<br/>
+		
+		<p tabindex="0">
+			<i class="fas fa-info-circle"></i> 
+			<b>The NEIL ER/LR Tracking Module allows Employee and Labor Relations Specialists within the Office of Human Capital to track cases for the following case types: </b>
+				<ul tabindex="0">
+					<li>Conduct Issue
+					<li>Grievance
+					<li>Information Request
+					<li>Investigation
+					<li>Labor Negotiation
+					<li>Medical Documentation
+					<li>Performance Issue
+					<li>Probationary Period Action
+					<li>Third Party Hearing
+					<li>Unfair Labor Practice
+					<li>Within Grade Increase Denial/Reconsideration
+				</ul>
+		</p>
+		
+		<br/>
+		<div class="list-group">
+			<a href="/ewits2jobaid/materials/Neil%20HR%20ER%20LR%20Job%20Aid%20February%20Release%20v1.0.pdf" target="helpdownload" class="list-group-item list-group-item-action" alt="Download EWITS2.0:NEIL ER/LR Job Aid (updated 2/8/2019) PDF file.">
+				<i class="fas fa-file-download"></i> EWITS2.0:NEIL ER/LR Job Aid (updated 2/8/2019) [PDF - 5.23 MB]
+			</a>
+		</div>
+		
+		<br/>
+		
+		<p style="font-size:8pt;">
+			<em>
+				<i class="fab fa-adobe"></i>&nbsp;Documents in PDF format require the <a href="http://www.adobe.com/products/acrobat/readstep2.html">Adobe Acrobat Reader.</a> If you experience problems with PDF documents, please <a href="http://www.adobe.com/products/acrobat/readstep2.html">download the latest version of the Reader.</a>
+			</em>
+		</p>
+	</div>
+
+	<div id="tab3" style="display:none">
+		<br/>
+		
+		<p tabindex="0">
+			If you have any questions or concerns regarding the EWITS:ERLR Module, please contact:</br>
+			<p tabindex="0">
+			<i class="fas fa-headset"></i> CMS NEIL Help Desk<br/>
+			<a href="mailto:HRSystemsSupportRequest@cms.hhs.gov?subject=[ER/LR support]" alt="Email to CMS NEIL Help Desk">HRSystemsSupportRequest@cms.hhs.gov<br/>
+			</p>
+		</p>
+		
+	</div>	
+	
+</div>
+
+</body>
+</html>
