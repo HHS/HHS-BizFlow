@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE HHS_HR.BIIS_PERSON AS
+CREATE OR REPLACE PACKAGE HHS_HR.BIIS_PERSON_V2 AS
 
 --======================================================
 -- - - -- - - - - - - - - - - - - - - - - - - - - - - -
@@ -244,5 +244,5 @@ FUNCTION FN_IMPORT_BIIS_PERSON
 	(O_ERRMSG   OUT VARCHAR2)
 RETURN NUMBER;
 
-END BIIS_PERSON;
+END BIIS_PERSON_V2;
 /
