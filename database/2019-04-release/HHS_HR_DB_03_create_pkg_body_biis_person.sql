@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY HHS_HR.BIIS_PERSON AS
+CREATE OR REPLACE PACKAGE BODY HHS_HR.BIIS_PERSON_V2 AS
 
 --======================================================
 --  - - -   - - - - - - - - - - - - - - - - - - - - - - 
@@ -846,5 +846,5 @@ EXCEPTION
 		RETURN SQLCODE;
 END;
 
-END BIIS_PERSON;
+END BIIS_PERSON_V2;
 /
