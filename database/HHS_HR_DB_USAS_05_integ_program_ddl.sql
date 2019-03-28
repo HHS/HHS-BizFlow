@@ -3290,6 +3290,99 @@ EXCEPTION
 END;
 /
 
+CREATE OR REPLACE PROCEDURE HHS_HR.SP_UPDATE_CMS_REQUEST_TABLE
+(
+	I_ID                IN      NUMBER
+)
+IS
+	V_REC_CNT                   NUMBER(10);
+	V_XMLDOC                    XMLTYPE;
+	V_XMLVALUE                  XMLTYPE;
+	V_ERRCODE                   NUMBER(10);
+	V_ERRMSG                    VARCHAR2(512);
+	E_INVALID_REC_ID            EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REC_ID, -20960);
+	E_INVALID_REQUEST_DATA      EXCEPTION;
+	PRAGMA EXCEPTION_INIT(E_INVALID_REQUEST_DATA, -20961);
+BEGIN
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CMS_REQUEST_TABLE - BEGIN ============================');
+	--DBMS_OUTPUT.PUT_LINE('PARAMETERS ----------------');
+	--DBMS_OUTPUT.PUT_LINE('    I_ID IS NULL?  = ' || (CASE WHEN I_ID IS NULL THEN 'YES' ELSE 'NO' END));
+	--DBMS_OUTPUT.PUT_LINE('    I_ID           = ' || TO_CHAR(I_ID));
+	--DBMS_OUTPUT.PUT_LINE(' ----------------');
+
+	--DBMS_OUTPUT.PUT_LINE('Starting xml data retrieval and table update ----------');
+
+	IF I_ID IS NULL THEN
+		RAISE_APPLICATION_ERROR(-20960, 'SP_UPDATE_CMS_REQUEST_TABLE: Input Record ID is invalid.  I_ID = '	|| TO_CHAR(I_ID) );
+	END IF;
+
+	BEGIN
+		--------------------------------
+		-- DSS_CMS_REQUESTS_STG table
+		--------------------------------
+		--DBMS_OUTPUT.PUT_LINE('    DSS_CMS_REQUESTS_STG table');
+		INSERT INTO HHS_HR.DSS_CMS_REQUESTS_STG
+			(REQUEST_NUMBER
+			, REQUEST_CREATE_DATE
+    		, REQUEST_STATUS
+ 			, CUSTOMER_NAME
+ 			, SERIES
+ 			, GRADE
+ 			, POSITION_TITLE
+ 			, APPROVER_NAME)
+		SELECT
+			X.REQUEST_NUMBER
+			, TO_DATE(SUBSTR(X.REQUEST_CREATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REQUEST_CREATE_DATE
+			, X.REQUEST_STATUS
+			, X.CUSTOMER_NAME
+			, X.SERIES
+    		, X.GRADE
+    		, X.POSITION_TITLE
+    		, X.APPROVER_NAME
+   		
+		FROM HHS_HR.INTG_DATA_DTL IDX
+			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_Requests"]'
+				PASSING IDX.FIELD_DATA
+				COLUMNS
+					REQUEST_NUMBER                      VARCHAR2(202)   PATH 'Request__Number'
+					, REQUEST_CREATE_DATE_STR           VARCHAR2(50)    PATH 'Request__Creation__Date'
+    				, REQUEST_STATUS                    VARCHAR2(1002)  PATH 'Request__Status'
+    				, CUSTOMER_NAME                     VARCHAR2(202)   PATH 'Customer__Name'
+    				, SERIES                            VARCHAR2(22)    PATH 'Series'
+    				, GRADE                             VARCHAR2(6)     PATH 'Grade'
+    				, POSITION_TITLE                    VARCHAR2(202)   PATH 'Position__Title'
+    				, APPROVER_NAME                     VARCHAR2(206)   PATH 'Request__Approver__Name'
+			) X
+		WHERE IDX.ID = I_ID;
+		
+	EXCEPTION
+		WHEN OTHERS THEN
+			RAISE_APPLICATION_ERROR(-20961, 'SP_UPDATE_CMS_REQUEST_TABLE: Invalid CMS Request data.  IA_ID = ' || TO_CHAR(I_ID) );
+	END;
+
+	--DBMS_OUTPUT.PUT_LINE('SP_UPDATE_CMS_REQUEST_TABLE - END ==========================');
+
+
+EXCEPTION
+	WHEN E_INVALID_REC_ID THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CMS_REQUEST_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Record ID is not valid');
+	WHEN E_INVALID_REQUEST_DATA THEN
+		HHS_HR.SP_ERROR_LOG();
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CMS_REQUEST_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('ERROR message = ' || 'Invalid data');
+	WHEN OTHERS THEN
+		HHS_HR.SP_ERROR_LOG();
+		V_ERRCODE := SQLCODE;
+		V_ERRMSG := SQLERRM;
+		--DBMS_OUTPUT.PUT_LINE('ERROR occurred while executing SP_UPDATE_CMS_REQUEST_TABLE -------------------');
+		--DBMS_OUTPUT.PUT_LINE('Error code    = ' || V_ERRCODE);
+		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
+END;
+/
+
 --------------------------------------------------------
 --  DDL for Procedure SP_UPDATE_INTG_DATA
 --------------------------------------------------------
@@ -3421,7 +3514,9 @@ BEGIN
 	ELSIF V_INTG_TYPE = 'CMS-POSSESSION' THEN
 		SP_UPDATE_CMS_POSSESS_TABLE(V_ID);
 	ELSIF V_INTG_TYPE = 'CMS-TIME2HIRE' THEN
-		SP_UPDATE_CMS_TIME2HIRE_TABLE(V_ID);		
+		SP_UPDATE_CMS_TIME2HIRE_TABLE(V_ID);
+	ELSIF V_INTG_TYPE = 'CMS-REQUESTS' THEN
+		SP_UPDATE_CMS_REQUEST_TABLE(V_ID);		
 	END IF;
 	
 
