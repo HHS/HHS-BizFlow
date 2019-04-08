@@ -34,6 +34,7 @@ BEGIN
 			(REQUEST_NUMBER
 			, REQUEST_CREATE_DATE
     		, REQUEST_STATUS
+    		, REQUEST_TYPE
  			, CUSTOMER_NAME
  			, SERIES
  			, GRADE
@@ -43,6 +44,7 @@ BEGIN
 			X.REQUEST_NUMBER
 			, TO_DATE(SUBSTR(X.REQUEST_CREATE_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REQUEST_CREATE_DATE
 			, X.REQUEST_STATUS
+			, X.REQUEST_TYPE
 			, X.CUSTOMER_NAME
 			, X.SERIES
     		, X.GRADE
@@ -56,6 +58,7 @@ BEGIN
 					REQUEST_NUMBER                      VARCHAR2(202)   PATH 'Request__Number'
 					, REQUEST_CREATE_DATE_STR           VARCHAR2(50)    PATH 'Request__Creation__Date'
     				, REQUEST_STATUS                    VARCHAR2(1002)  PATH 'Request__Status'
+    				, REQUEST_TYPE                      VARCHAR2(1002)  PATH 'Request__Type'
     				, CUSTOMER_NAME                     VARCHAR2(202)   PATH 'Customer__Name'
     				, SERIES                            VARCHAR2(22)    PATH 'Series'
     				, GRADE                             VARCHAR2(6)     PATH 'Grade'
@@ -264,6 +267,7 @@ IS
 		SELECT REQUEST_NUMBER
 		    , REQUEST_CREATE_DATE
     		, REQUEST_STATUS
+    		, REQUEST_TYPE
     		, CUSTOMER_NAME
     		, SERIES
     		, GRADE
