@@ -39,3 +39,16 @@ CREATE TABLE HHS_HR.DSS_CMS_REQUESTS_STG
 --DDL for index DSS_CMS_REQUESTS_STG_I1
 ----------------------------------------------
 CREATE INDEX HHS_HR.DSS_CMS_REQUESTS_STG_I1 ON DSS_CMS_REQUESTS_STG (REQUEST_NUMBER);
+
+
+---------------------------------------
+--DDL for table DSS_CMS_TIME_OF_POSSESS
+---------------------------------------
+ALTER TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS
+	ADD INIT_BKGRND_INVST_DATE DATE;
+	
+-------------------------------------------
+--DDL for table DSS_CMS_TIME_OF_POSSESS_STG
+-------------------------------------------
+ALTER TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG
+	ADD INIT_BKGRND_INVST_DATE DATE;	
