@@ -1482,7 +1482,8 @@ CREATE TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS
     TENT_OFFR_RSPNS_DATE        DATE,
     RCVE_BKGRND_INVST_DATE      DATE,
     EOD_DATE                    DATE,
-    SEND_OFCL_OFFR_CMPL_DATE    DATE
+    SEND_OFCL_OFFR_CMPL_DATE    DATE,
+    INIT_BKGRND_INVST_DATE      DATE
 );
 
 ----------------------------------------------
@@ -1512,7 +1513,8 @@ CREATE TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG
     TENT_OFFR_RSPNS_DATE        DATE,
     RCVE_BKGRND_INVST_DATE      DATE,
     EOD_DATE                    DATE,
-    SEND_OFCL_OFFR_CMPL_DATE    DATE
+    SEND_OFCL_OFFR_CMPL_DATE    DATE,
+    INIT_BKGRND_INVST_DATE      DATE
 );
 
 ----------------------------------------------
