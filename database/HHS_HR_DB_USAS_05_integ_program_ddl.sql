@@ -3097,7 +3097,9 @@ BEGIN
     		, RCVE_BKGRND_INVST_DATE
     		, EOD_DATE
     		, SEND_OFCL_OFFR_CMPL_DATE
-    		, INIT_BKGRND_INVST_DATE)
+    		, INIT_BKGRND_INVST_DATE
+    		, REQUEST_TYPE
+    		, REQUEST_STATUS)
 		SELECT
 			X.REQUEST_NUMBER
 			, TO_DATE(SUBSTR(X.REQUEST_APPROVAL_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS REQUEST_APPROVAL_DATE
@@ -3118,6 +3120,8 @@ BEGIN
     		, TO_DATE(SUBSTR(X.EOD_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS EOD_DATE
     		, TO_DATE(SUBSTR(X.SEND_OFCL_OFFR_CMPL_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS SEND_OFCL_OFFR_CMPL_DATE
     		, TO_DATE(SUBSTR(X.INIT_BKGRND_INVST_DATE_STR, 1, 19), 'YYYY-MM-DD"T"HH24:MI:SS') AS INIT_BKGRND_INVST_DATE
+    		, X.REQUEST_TYPE
+    		, X.REQUEST_STATUS
 		FROM HHS_HR.INTG_DATA_DTL IDX
 			, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://www.ibm.com/xmlns/prod/cognos/dataSet/201006'), '/dataSet/dataTable/row[../id/text() = "lst_TimeToPossess"]'
 				PASSING IDX.FIELD_DATA
@@ -3141,6 +3145,8 @@ BEGIN
     				, EOD_DATE_STR                          VARCHAR2(50)    PATH 'EOD__Date'
     				, SEND_OFCL_OFFR_CMPL_DATE_STR          VARCHAR2(50)    PATH 'Send__Official__Offer__Complete__Date'
     				, INIT_BKGRND_INVST_DATE_STR            VARCHAR2(50)    PATH 'Initiate__Background__Investigation__Complete__Date'
+    				, REQUEST_TYPE                          VARCHAR2(1002)  PATH 'Request__Type'
+    				, REQUEST_STATUS                        VARCHAR2(1002)  PATH 'Request__Status'
 			) X
 		WHERE IDX.ID = I_ID;
 		
@@ -3170,6 +3176,7 @@ EXCEPTION
 		--DBMS_OUTPUT.PUT_LINE('Error message = ' || V_ERRMSG);
 END;
 /
+
 
 CREATE OR REPLACE PROCEDURE HHS_HR.SP_UPDATE_CMS_TIME2HIRE_TABLE
 (

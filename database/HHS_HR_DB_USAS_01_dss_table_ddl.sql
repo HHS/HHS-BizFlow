@@ -1483,7 +1483,9 @@ CREATE TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS
     RCVE_BKGRND_INVST_DATE      DATE,
     EOD_DATE                    DATE,
     SEND_OFCL_OFFR_CMPL_DATE    DATE,
-    INIT_BKGRND_INVST_DATE      DATE
+    INIT_BKGRND_INVST_DATE      DATE,
+    REQUEST_TYPE                VARCHAR2(1002),
+    REQUEST_STATUS              VARCHAR2(1002)
 );
 
 ----------------------------------------------
@@ -1514,7 +1516,9 @@ CREATE TABLE HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG
     RCVE_BKGRND_INVST_DATE      DATE,
     EOD_DATE                    DATE,
     SEND_OFCL_OFFR_CMPL_DATE    DATE,
-    INIT_BKGRND_INVST_DATE      DATE
+    INIT_BKGRND_INVST_DATE      DATE,
+    REQUEST_TYPE                VARCHAR2(1002),
+    REQUEST_STATUS              VARCHAR2(1002)
 );
 
 ----------------------------------------------
