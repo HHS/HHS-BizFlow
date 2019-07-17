@@ -1,0 +1,148 @@
+<report xmlns="http://developer.cognos.com/schemas/report/14.2/"           useStyleVersion="11.4" expressionLocale="en-us">
+				
+				<drillBehavior/>
+				<layouts>
+					<layout>
+						<reportPages>
+							<page name="rptpg_TimeToHire">
+								<style>
+									<defaultStyles>
+										<defaultStyle refStyle="pg"/>
+									</defaultStyles>
+								</style>
+								<pageBody>
+									<style>
+										<defaultStyles>
+											<defaultStyle refStyle="pb"/>
+										</defaultStyles>
+									</style>
+									<contents><list horizontalPagination="true" name="lst_TimeToHire" refQuery="qry_TimeToHire">
+			
+			
+			
+			<noDataHandler>
+				<contents>
+					<block>
+						<contents>
+							<textItem>
+								<dataSource>
+									<staticValue>No Data Available</staticValue>
+								</dataSource>
+								<style>
+									<CSS value="padding:10px 18px;"/>
+								</style>
+							</textItem>
+						</contents>
+					</block>
+				</contents>
+			</noDataHandler>
+			<style>
+				<CSS value="border-collapse:collapse"/>
+				<defaultStyles>
+					<defaultStyle refStyle="ls"/>
+				</defaultStyles>
+			</style>
+		<listColumns><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Request Number"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Request Number"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Request Creation Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Request Creation Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Request Status"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Request Status"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Request Type"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Request Type"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Announcement Number"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Announcement Number"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Announcement Open Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Announcement Open Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Announcement Close Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Announcement Close Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Number"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Number"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Review Sent Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Review Sent Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Review Returned Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Review Returned Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="EOD Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lm"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="EOD Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Certificate Issue Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Certificate Issue Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Send Tentative Offer Complete Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Send Tentative Offer Complete Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Initiate Background Investigation/Security Clearance Complete Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Initiate Background Investigation/Security Clearance Complete Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Receive Background Investigation/Security Clearance Results Complete Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Receive Background Investigation/Security Clearance Results Complete Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Send Official Offer Complete Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Send Official Offer Complete Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="Tentative Job Offer Response Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lm"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="Tentative Job Offer Response Date"/></dataSource></textItem></contents></listColumnBody></listColumn><listColumn><listColumnTitle><style><defaultStyles><defaultStyle refStyle="lt"/></defaultStyles></style><contents><textItem><dataSource><dataItemLabel refDataItem="New Hire Arrival Verified Complete Date"/></dataSource></textItem></contents></listColumnTitle><listColumnBody><style><defaultStyles><defaultStyle refStyle="lc"/></defaultStyles></style><contents><textItem><dataSource><dataItemValue refDataItem="New Hire Arrival Verified Complete Date"/></dataSource></textItem></contents></listColumnBody></listColumn></listColumns></list></contents>
+								</pageBody>
+							</page>
+						</reportPages>
+					<promptPages><page name="prmpg_TimeToHire">
+			
+			<pageBody>
+				<contents><table><style><defaultStyles><defaultStyle refStyle="tb"/></defaultStyles><CSS value="border-collapse:collapse;width:100%"/></style><tableRows><tableRow><tableCells><tableCell><contents><textItem><dataSource><staticValue>Please enter a date range for the EOD date:</staticValue></dataSource></textItem></contents></tableCell></tableCells></tableRow><tableRow><tableCells><tableCell><contents><selectDateTime parameter="parm_StaffingDateRange" range="true"/></contents></tableCell></tableCells></tableRow></tableRows></table></contents>
+				<style>
+					<defaultStyles>
+						<defaultStyle refStyle="py"/>
+					</defaultStyles>
+				</style>
+			</pageBody>
+			<pageFooter>
+				<contents>
+					<promptButton type="cancel">
+						<contents/>
+						<style>
+							<defaultStyles>
+								<defaultStyle refStyle="bp"/>
+							</defaultStyles>
+						</style>
+					</promptButton>
+					<promptButton type="back">
+						<contents/>
+						<style>
+							<defaultStyles>
+								<defaultStyle refStyle="bp"/>
+							</defaultStyles>
+						</style>
+					</promptButton>
+					<promptButton type="next">
+						<contents/>
+						<style>
+							<defaultStyles>
+								<defaultStyle refStyle="bp"/>
+							</defaultStyles>
+						</style>
+					</promptButton>
+					<promptButton type="finish">
+						<contents/>
+						<style>
+							<defaultStyles>
+								<defaultStyle refStyle="bp"/>
+							</defaultStyles>
+						</style>
+					</promptButton>
+				</contents>
+				<style>
+					<defaultStyles>
+						<defaultStyle refStyle="fp"/>
+					</defaultStyles>
+				</style>
+			</pageFooter>
+			<style>
+				<defaultStyles>
+					<defaultStyle refStyle="pp"/>
+				</defaultStyles>
+			</style>
+		</page></promptPages></layout>
+				</layouts>
+			<XMLAttributes><XMLAttribute output="no" name="RS_CreateExtendedDataItems" value="true"/><XMLAttribute output="no" name="RS_modelModificationTime" value="2019-07-11T18:13:15.017Z"/><XMLAttribute output="no" name="listSeparator" value=","/></XMLAttributes><modelPath>/content/folder[@name=&apos;USA Staffing Packages and Folders&apos;]/package[@name=&apos;Staffing Reports&apos;]/model[@name=&apos;model&apos;]</modelPath><reportName>Time to Hire</reportName><queries><query name="qry_Cert">
+			<source>
+				<model/>
+			</source>
+			<selection><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Type"><expression>[Certificates].[Certificate Request].[Certificate Request Type]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Status"><expression>[Certificates].[Certificate Request].[Certificate Request Status]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Review Sent Date"><expression>[Certificates].[Certificate Review].[Certificate Review Sent Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Review Returned Date"><expression>[Certificates].[Certificate Review].[Certificate Review Returned Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Number"><expression>[Certificates].[Certificate].[Certificate Number]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Open Date"><expression>[Certificates].[Certificate Announcement].[Certificate Announcement Open Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="7"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Close Date"><expression>[Certificates].[Certificate Announcement].[Certificate Announcement Close Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="7"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Number"><expression>[Certificates].[Certificate Announcement].[Certificate Announcement Number]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Number"><expression>[Certificates].[Certificate Request].[Certificate Request Number]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Creation Date"><expression>[Certificates].[Certificate Request].[Certificate Request Creation Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Send Official Offer Complete Date"><expression>[Certificates].[Certificate Selectee Request Tasks].[Send Official Offer Complete Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Receive Background Investigation/Security Clearance Results Complete Date"><expression>[Certificates].[Certificate Selectee Request Tasks].[Receive Background Investigation/Security Clearance Results Complete Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Initiate Background Investigation/Security Clearance Complete Date"><expression>[Certificates].[Certificate Selectee Request Tasks].[Initiate Background Investigation/Security Clearance Complete Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Send Tentative Offer Complete Date"><expression>[Certificates].[Certificate Selectee Request Tasks].[Send Tentative Offer Complete Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Issue Date"><expression>[Certificates].[Certificate].[Certificate Issue Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem aggregate="none" rollupAggregate="none" name="New Hire Arrival Verified Complete Date"><expression>[Certificates].[Certificate Selectee Request Tasks].[New Hire Arrival Verified Complete Date]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="4"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem></selection>
+		<detailFilters><detailFilter><filterExpression>[Certificates].[Certificate Vacancy].[Certificate Vacancy Staffing Organization Name] = &apos;Centers for Medicare and Medicaid Services&apos;</filterExpression></detailFilter><detailFilter><filterExpression>[Certificate Announcement Number] IS NOT NULL</filterExpression></detailFilter></detailFilters></query><query name="qry_EOD">
+			<source>
+				<model/>
+			</source>
+			<selection><dataItem aggregate="none" rollupAggregate="none" name="Task Request Number"><expression>[Tasks].[Task Request].[Task Request Number]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem name="EOD Date"><expression>case when [Tasks].[Task].[Task Name] = &apos;Establish Projected Entry on Duty Date&apos; then [Tasks].[Task].[Task Completed Date/Time] end</expression></dataItem></selection>
+		<detailFilters><detailFilter><filterExpression>[EOD Date] IS NOT NULL</filterExpression></detailFilter><detailFilter><filterExpression>[Tasks].[Task Vacancy].[Task Vacancy Staffing Organization Name] = &apos;Centers for Medicare and Medicaid Services&apos;</filterExpression></detailFilter></detailFilters></query><query name="qry_Cert2">
+			<source>
+				
+			<joinOperation>
+			<joinOperands>
+				<joinOperand><queryRef refQuery="qry_Cert"/></joinOperand>
+				<joinOperand cardinality="0:N"><queryRef refQuery="qry_EOD"/></joinOperand>
+			</joinOperands>
+			<joinFilter>
+				<filterExpression>[qry_Cert].[Certificate Request Number] = [qry_EOD].[Task Request Number]</filterExpression>
+			</joinFilter>
+		</joinOperation></source>
+			<selection><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Type"><expression>[qry_Cert].[Certificate Request Type]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Status"><expression>[qry_Cert].[Certificate Request Status]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Review Sent Date"><expression>[qry_Cert].[Certificate Review Sent Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Review Returned Date"><expression>[qry_Cert].[Certificate Review Returned Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Number"><expression>[qry_Cert].[Certificate Number]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Open Date"><expression>[qry_Cert].[Certificate Announcement Open Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Close Date"><expression>[qry_Cert].[Certificate Announcement Close Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Number"><expression>[qry_Cert].[Certificate Announcement Number]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Number"><expression>[qry_Cert].[Certificate Request Number]</expression></dataItem><dataItem name="EOD Date"><expression>[qry_EOD].[EOD Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Creation Date"><expression>[qry_Cert].[Certificate Request Creation Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Issue Date"><expression>[qry_Cert].[Certificate Issue Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Send Tentative Offer Complete Date"><expression>[qry_Cert].[Send Tentative Offer Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Initiate Background Investigation/Security Clearance Complete Date"><expression>[qry_Cert].[Initiate Background Investigation/Security Clearance Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Receive Background Investigation/Security Clearance Results Complete Date"><expression>[qry_Cert].[Receive Background Investigation/Security Clearance Results Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Send Official Offer Complete Date"><expression>[qry_Cert].[Send Official Offer Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="New Hire Arrival Verified Complete Date"><expression>[qry_Cert].[New Hire Arrival Verified Complete Date]</expression></dataItem></selection>
+		</query><query name="qry_NewHire">
+			<source>
+				<model/>
+			</source>
+			<selection><dataItem aggregate="none" rollupAggregate="none" name="New Hire Request Number"><expression>[New Hires].[New Hire Request].[New Hire Request Number]</expression><XMLAttributes><XMLAttribute output="no" name="RS_dataType" value="3"/><XMLAttribute output="no" name="RS_dataUsage" value="attribute"/></XMLAttributes></dataItem><dataItem name="Tentative Job Offer Response Date"><expression>case when [New Hires].[New Hire Job Offers].[New Hire Job Offer Type] = &apos;Tentative&apos; then [New Hires].[New Hire Job Offers].[New Hire Job Offer Response Date/Time] end</expression></dataItem></selection>
+		</query><query name="qry_TimeToHire">
+			<source>
+				
+			<joinOperation>
+			<joinOperands>
+				<joinOperand><queryRef refQuery="qry_NewHire"/></joinOperand>
+				<joinOperand cardinality="0:N"><queryRef refQuery="qry_Cert2"/></joinOperand>
+			</joinOperands>
+			<joinFilter>
+				<filterExpression>[qry_NewHire].[New Hire Request Number] = [qry_Cert2].[Certificate Request Number]</filterExpression>
+			</joinFilter>
+		</joinOperation></source>
+			<selection><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Type"><expression>[qry_Cert2].[Certificate Request Type]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Status"><expression>[qry_Cert2].[Certificate Request Status]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Review Sent Date"><expression>[qry_Cert2].[Certificate Review Sent Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Review Returned Date"><expression>[qry_Cert2].[Certificate Review Returned Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Number"><expression>[qry_Cert2].[Certificate Number]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Open Date"><expression>[qry_Cert2].[Certificate Announcement Open Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Close Date"><expression>[qry_Cert2].[Certificate Announcement Close Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Announcement Number"><expression>[qry_Cert2].[Certificate Announcement Number]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Number"><expression>[qry_Cert2].[Certificate Request Number]</expression></dataItem><dataItem name="EOD Date"><expression>[qry_Cert2].[EOD Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Request Creation Date"><expression>[qry_Cert2].[Certificate Request Creation Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Certificate Issue Date"><expression>[qry_Cert2].[Certificate Issue Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Send Tentative Offer Complete Date"><expression>[qry_Cert2].[Send Tentative Offer Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Initiate Background Investigation/Security Clearance Complete Date"><expression>[qry_Cert2].[Initiate Background Investigation/Security Clearance Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Receive Background Investigation/Security Clearance Results Complete Date"><expression>[qry_Cert2].[Receive Background Investigation/Security Clearance Results Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="Send Official Offer Complete Date"><expression>[qry_Cert2].[Send Official Offer Complete Date]</expression></dataItem><dataItem aggregate="none" rollupAggregate="none" name="New Hire Arrival Verified Complete Date"><expression>[qry_Cert2].[New Hire Arrival Verified Complete Date]</expression></dataItem><dataItem name="Tentative Job Offer Response Date"><expression>[qry_NewHire].[Tentative Job Offer Response Date]</expression></dataItem></selection>
+		<detailFilters><detailFilter><filterExpression>[Certificate Request Creation Date] in_range ?parm_StaffingDateRange?</filterExpression></detailFilter><detailFilter><filterExpression>[Certificate Number] IS NOT NULL</filterExpression></detailFilter></detailFilters></query></queries></report>
