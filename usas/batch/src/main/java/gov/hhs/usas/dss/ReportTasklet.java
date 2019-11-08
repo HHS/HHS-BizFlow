@@ -103,7 +103,7 @@ public class ReportTasklet implements Tasklet {
 						currentDate = DateRange.generateDateRange(currentDate, rpt.getDateInterval());
 					}
 					
-					rpt.setRvpStartDisplay(DateRange.getStartDisplayVal());;
+					rpt.setRvpStartDisplay(DateRange.getStartDisplayVal());
 					rpt.setRvpStartUseval(DateRange.getStartUseVal());
 					rpt.setRvpEndDisplay(DateRange.getEndDisplayVal());
 					rpt.setRvpEndUseval(DateRange.getEndUseVal());

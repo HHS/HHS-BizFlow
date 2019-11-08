@@ -15,7 +15,6 @@ public class StepsListener implements StepExecutionListener{
 	@Override
 	public void beforeStep(StepExecution stepExecution) {
 		log.info(stepExecution.getStepName() + "::" + stepExecution.getStatus());
-		
 	}
 
 	@Override

@@ -22,6 +22,7 @@ public class CMSTimeOfPossession extends Report {
 	@Value("${cms.possess.truncate}") private String spTruncate;
 	@Value("${cms.possess.stgToFnl}") private String spStgToFnl;
 	@Value("${cms.possess.run.report}") private boolean runReport;
+	
 
 	public CMSTimeOfPossession() {
 
@@ -41,6 +42,5 @@ public class CMSTimeOfPossession extends Report {
 		super.setSpTruncate(spTruncate);
 		super.setSpStgToFnl(spStgToFnl);
 		super.setRunReport(runReport);
-	}
-	
+	}	
 }

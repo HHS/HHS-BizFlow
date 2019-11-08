@@ -814,11 +814,12 @@ END;
 --------------------------------------------------------
 --  DDL for Procedure SP_CMS_POSSESS_STG2FNL
 --------------------------------------------------------
-CREATE OR REPLACE PROCEDURE HHS_HR.SP_CMS_POSSESS_STG2FNL
+create or replace PROCEDURE        SP_CMS_POSSESS_STG2FNL
 IS
 	V_STG_CNT                   NUMBER;
 	V_ERRCODE                   NUMBER(10);
 	V_ERRMSG                    VARCHAR2(512);
+    LAST_RUN                    VARCHAR(200);
 	CURSOR CUR_POSS_STG
 	IS
 		SELECT REQUEST_NUMBER
@@ -856,8 +857,14 @@ BEGIN
 		INTO V_STG_CNT
 		FROM HHS_HR.DSS_CMS_TIME_OF_POSSESS_STG;
 		
+        --FIND LAST RUN TIME
+        SELECT COUNT(*) INTO  LAST_RUN FROM batch_step_execution WHERE TO_CHAR(START_TIME,'DD-MM-YY') = TO_CHAR(SYSDATE,'DD-MM-YY')
+            AND step_name IN('executeCMSPossessReportStep','executeCMSPossessApptmntReportStep');
+    
 		IF V_STG_CNT > 0 THEN
-			EXECUTE IMMEDIATE 'TRUNCATE TABLE DSS_CMS_TIME_OF_POSSESS';
+            IF LAST_RUN = 0 THEN
+                EXECUTE IMMEDIATE 'TRUNCATE TABLE DSS_CMS_TIME_OF_POSSESS';
+            END IF;
 			OPEN CUR_POSS_STG;
 			LOOP
 				FETCH CUR_POSS_STG
