@@ -3046,7 +3046,7 @@ EXCEPTION
 END;
 /
 
-create or replace PROCEDURE        SP_UPDATE_CMS_POSSESS_TABLE
+create or replace PROCEDURE  HHS_HR.SP_UPDATE_CMS_POSSESS_TABLE
 (
 	I_ID                IN      NUMBER,
     I_TYPE_RPT         IN      VARCHAR2
@@ -3469,7 +3469,7 @@ END;
  *
  * @return IO_ID - ID number of the row of the INTG_DATA_DTL table inserted or updated.
  */
-create or replace PROCEDURE        SP_UPDATE_INTG_DATA
+create or replace PROCEDURE HHS_HR.SP_UPDATE_INTG_DATA
 (
 	IO_ID               IN OUT  NUMBER
 	, I_INTG_TYPE       IN      VARCHAR2

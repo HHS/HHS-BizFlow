@@ -814,7 +814,7 @@ END;
 --------------------------------------------------------
 --  DDL for Procedure SP_CMS_POSSESS_STG2FNL
 --------------------------------------------------------
-create or replace PROCEDURE        SP_CMS_POSSESS_STG2FNL
+create or replace PROCEDURE HHS_HR.SP_CMS_POSSESS_STG2FNL
 IS
 	V_STG_CNT                   NUMBER;
 	V_ERRCODE                   NUMBER(10);
