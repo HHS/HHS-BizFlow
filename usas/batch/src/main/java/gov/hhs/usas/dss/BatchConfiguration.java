@@ -12,22 +12,14 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.launch.support.SimpleJobLauncher;
-import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
-
 import gov.hhs.usas.dss.model.Announcement;
 import gov.hhs.usas.dss.model.Application;
 import gov.hhs.usas.dss.model.CDCAnnouncement;
@@ -37,6 +29,7 @@ import gov.hhs.usas.dss.model.CDCTimeToOffer;
 import gov.hhs.usas.dss.model.CDCTimeToStaff;
 import gov.hhs.usas.dss.model.CMSRequests;
 import gov.hhs.usas.dss.model.CMSTimeOfPossession;
+import gov.hhs.usas.dss.model.CMSTimeOfPossessionAppointment;
 import gov.hhs.usas.dss.model.CMSTimeToHire;
 import gov.hhs.usas.dss.model.Certificate;
 import gov.hhs.usas.dss.model.IHSVacancy;
@@ -115,6 +108,9 @@ public class BatchConfiguration {
 	private CMSTimeOfPossession cmsPossess;
 	
 	@Autowired 
+	private CMSTimeOfPossessionAppointment cmsPossessApptmnt;
+	
+	@Autowired 
 	private CMSTimeToHire cmsTime2Hire;
 	
 	@Autowired
@@ -147,8 +143,11 @@ public class BatchConfiguration {
 
     	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
     	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get("executeStaffReportStep").tasklet(staffTasklet()).listener(stepListener).build()).end();
-    	final Flow cmsPossessFlow = new FlowBuilder<Flow>("cmsPossessFlow").from(stepBuilderFactory.get("executeCMSPossessReportStep").tasklet(cmsPossessTasklet()).listener(stepListener).build()).end();
-    	final Flow cmsHireFlow = new FlowBuilder<Flow>("cmsHireFlow").from(stepBuilderFactory.get("executeCMSHireReportStep").tasklet(cmsHireTasklet()).listener(stepListener).build()).end();
+    	final Flow cmsPossessRecruitmentFlow = new FlowBuilder<Flow>("cmsPossessRecruitmentFlow").from(stepBuilderFactory.get("executeCMSPossessRecruitmentReportStep").tasklet(cmsPossessTasklet()).listener(stepListener).build()).end();
+    	//TOP appointment report step flow
+		final Flow cmsPossessFlowApptmnt = new FlowBuilder<Flow>("cmsPossessFlowApptmnt").from(stepBuilderFactory.get("executeCMSPossessApptmntReportStep").tasklet(cmsPossessApptmntTasklet()).listener(stepListener).build()).end();
+    	
+		final Flow cmsHireFlow = new FlowBuilder<Flow>("cmsHireFlow").from(stepBuilderFactory.get("executeCMSHireReportStep").tasklet(cmsHireTasklet()).listener(stepListener).build()).end();
     	final Flow cmsRequestFlow = new FlowBuilder<Flow>("cmsRequestFlow").from(stepBuilderFactory.get("executeCMSRequestStep").tasklet(cmsRequestTasklet()).listener(stepListener).build()).end();
     	final Flow ihsVacancyFlow = new FlowBuilder<Flow>("ihsVacancyFlow").from(stepBuilderFactory.get("executeIHSVacancyReportStep").tasklet(ihsVacancyTasklet()).listener(stepListener).build()).end();
     	final Flow cdcOfferFlow = new FlowBuilder<Flow>("cdcOfferFlow").from(stepBuilderFactory.get("executeCDCOfferReportStep").tasklet(cdcOfferTasklet()).listener(stepListener).build()).end();
@@ -166,7 +165,7 @@ public class BatchConfiguration {
     	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
 
     	//Parallel Report Flows
-    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, cmsPossessFlow, cmsHireFlow, cmsRequestFlow, ihsVacancyFlow, cdcOfferFlow, cdcStaffFlow, cdcCertFlow,cdcAuditFlow, cdcAnnFlow).build();
+    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, cmsPossessRecruitmentFlow,cmsPossessFlowApptmnt,cmsHireFlow, cmsRequestFlow, ihsVacancyFlow, cdcOfferFlow, cdcStaffFlow, cdcCertFlow,cdcAuditFlow, cdcAnnFlow).build();
     	final Flow parallelFlow2 = new FlowBuilder<Flow>("parallelFlow2").split(new SimpleAsyncTaskExecutor()).add(appFlow, annFlow, certFlow).build();
     	final Flow parallelFlow3 = new FlowBuilder<Flow>("parallelFlow3").split(new SimpleAsyncTaskExecutor()).add(newHireFlow, requestFlow, reviewFlow).build();
     	final Flow parallelFlow4 = new FlowBuilder<Flow>("parallelFlow4").split(new SimpleAsyncTaskExecutor()).add(taskFlow, vacFlow).build();
@@ -303,6 +302,15 @@ public class BatchConfiguration {
 		return rt;
 	}
 	
+	//CMS Time of Possession Apptmnt Tasklet
+	@Bean
+	@StepScope
+	public Tasklet cmsPossessApptmntTasklet() {
+		ReportTasklet rt = new ReportTasklet();
+		rt.setReport(cmsPossessApptmnt);
+		return rt;
+	}
+	
 	//CMS Time to Hire Tasklet
 	@Bean
 	@StepScope
@@ -388,7 +396,7 @@ public class BatchConfiguration {
 	}	
 	
 	//***To resolve error: Can't serialize access for this transaction***
-	private JobRepository getJobRepository() throws Exception {
+	/*private JobRepository getJobRepository() throws Exception {
 		JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
 		factory.setDataSource(targetDataSource);//
 		factory.setTransactionManager(getTransactionManager());
@@ -406,6 +414,6 @@ public class BatchConfiguration {
 		jobLauncher.setJobRepository(getJobRepository());
 		jobLauncher.afterPropertiesSet();
 		return jobLauncher;
-	}
-
+	}*/
+	
 }

@@ -40,7 +40,11 @@ public class JobListener extends JobExecutionListenerSupport {
 	private String staffReport;
 	
 	@Value("${cms.possess.report.name}")
-	private String cmsPossessReport;
+	private String cmsPossessRecruitmentReport;
+	
+	//TOP apptmnt report
+	@Value("${cms.possessApptmnt.report.name}")
+	private String cmsPossessApptmntReport;
 	
 	@Value("${cms.time2hire.report.name}")
 	private String cmsTime2HireReport;
@@ -90,6 +94,7 @@ public class JobListener extends JobExecutionListenerSupport {
 	//Callback before a job executes.
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
+		
 	}
 
 	//Callback after completion of a job. Called after both both successful and failed executions.
@@ -102,7 +107,10 @@ public class JobListener extends JobExecutionListenerSupport {
 			parametersMap.put(ihsVacReport, jobExecution.getExecutionContext().get(ihsVacReport));
 			parametersMap.put(offerReport, jobExecution.getExecutionContext().get(offerReport));
 			parametersMap.put(staffReport, jobExecution.getExecutionContext().get(staffReport));
-			parametersMap.put(cmsPossessReport, jobExecution.getExecutionContext().get(cmsPossessReport));
+			parametersMap.put(cmsPossessRecruitmentReport, jobExecution.getExecutionContext().get(cmsPossessRecruitmentReport));
+			//TOP appointment report
+			parametersMap.put(cmsPossessApptmntReport, jobExecution.getExecutionContext().get(cmsPossessApptmntReport));//TOP apptmnt params
+			
 			parametersMap.put(cmsTime2HireReport, jobExecution.getExecutionContext().get(cmsTime2HireReport));
 			parametersMap.put(cmsRequestReport, jobExecution.getExecutionContext().get(cmsRequestReport));
 			parametersMap.put(cdcStaffReport, jobExecution.getExecutionContext().get(cdcStaffReport));
