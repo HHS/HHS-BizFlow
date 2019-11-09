@@ -143,8 +143,8 @@ public class BatchConfiguration {
 
     	final Flow offerFlow = new FlowBuilder<Flow>("offerFlow").from(stepBuilderFactory.get("executeOfferReportStep").tasklet(offerTasklet()).listener(stepListener).build()).end();
     	final Flow staffFlow = new FlowBuilder<Flow>("staffFlow").from(stepBuilderFactory.get("executeStaffReportStep").tasklet(staffTasklet()).listener(stepListener).build()).end();
-    	final Flow cmsPossessFlow = new FlowBuilder<Flow>("cmsPossessFlow").from(stepBuilderFactory.get("executeCMSPossessReportStep").tasklet(cmsPossessTasklet()).listener(stepListener).build()).end();
-    	
+    	final Flow cmsPossessRecruitmentFlow = new FlowBuilder<Flow>("cmsPossessRecruitmentFlow").from(stepBuilderFactory.get("executeCMSPossessRecruitmentReportStep").tasklet(cmsPossessTasklet()).listener(stepListener).build()).end();
+    	//TOP appointment report step flow
 		final Flow cmsPossessFlowApptmnt = new FlowBuilder<Flow>("cmsPossessFlowApptmnt").from(stepBuilderFactory.get("executeCMSPossessApptmntReportStep").tasklet(cmsPossessApptmntTasklet()).listener(stepListener).build()).end();
     	
 		final Flow cmsHireFlow = new FlowBuilder<Flow>("cmsHireFlow").from(stepBuilderFactory.get("executeCMSHireReportStep").tasklet(cmsHireTasklet()).listener(stepListener).build()).end();
@@ -165,7 +165,7 @@ public class BatchConfiguration {
     	final Flow vacFlow = new FlowBuilder<Flow>("vacFlow").from(stepBuilderFactory.get("executeVacancyReportStep").tasklet(vacTasklet()).listener(stepListener).build()).end();
 
     	//Parallel Report Flows
-    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, cmsPossessFlow,cmsPossessFlowApptmnt,cmsHireFlow, cmsRequestFlow, ihsVacancyFlow, cdcOfferFlow, cdcStaffFlow, cdcCertFlow,cdcAuditFlow, cdcAnnFlow).build();
+    	final Flow parallelFlow1 = new FlowBuilder<Flow>("parallelFlow1").split(new SimpleAsyncTaskExecutor()).add(offerFlow, staffFlow, cmsPossessRecruitmentFlow,cmsPossessFlowApptmnt,cmsHireFlow, cmsRequestFlow, ihsVacancyFlow, cdcOfferFlow, cdcStaffFlow, cdcCertFlow,cdcAuditFlow, cdcAnnFlow).build();
     	final Flow parallelFlow2 = new FlowBuilder<Flow>("parallelFlow2").split(new SimpleAsyncTaskExecutor()).add(appFlow, annFlow, certFlow).build();
     	final Flow parallelFlow3 = new FlowBuilder<Flow>("parallelFlow3").split(new SimpleAsyncTaskExecutor()).add(newHireFlow, requestFlow, reviewFlow).build();
     	final Flow parallelFlow4 = new FlowBuilder<Flow>("parallelFlow4").split(new SimpleAsyncTaskExecutor()).add(taskFlow, vacFlow).build();

@@ -859,7 +859,7 @@ BEGIN
 		
         --FIND LAST RUN TIME
         SELECT COUNT(*) INTO  LAST_RUN FROM batch_step_execution WHERE TO_CHAR(START_TIME,'DD-MM-YY') = TO_CHAR(SYSDATE,'DD-MM-YY')
-            AND step_name IN('executeCMSPossessReportStep','executeCMSPossessApptmntReportStep');
+            AND step_name IN('executeCMSPossessRecruitmentReportStep','executeCMSPossessApptmntReportStep');
     
 		IF V_STG_CNT > 0 THEN
             IF LAST_RUN = 0 THEN
