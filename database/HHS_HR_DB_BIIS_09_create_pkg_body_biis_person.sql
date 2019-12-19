@@ -332,13 +332,15 @@ BEGIN
 
 	FOR i IN I_TBL_BIIS.FIRST .. I_TBL_BIIS.LAST LOOP
 		--Add records to memberstg collection
-		V_TBL_MEM(i).HHSID          := I_TBL_BIIS(i).HHSID;
-		V_TBL_MEM(i).FIRSTNAME      := I_TBL_BIIS(i).FIRST_NAME;
-		V_TBL_MEM(i).MIDDLENAME     := I_TBL_BIIS(i).MIDDLE_NAME;
-		V_TBL_MEM(i).LASTNAME       := I_TBL_BIIS(i).LAST_NAME;
-		V_TBL_MEM(i).EMAIL          := I_TBL_BIIS(i).EMAIL_ADDR;
-		V_TBL_MEM(i).DEPTNAME       := I_TBL_BIIS(i).OPDIV;
-		V_TBL_MEM(i).LASTUPDATE     := I_TBL_BIIS(i).LAST_UPDT_FROM_PERS_SYSTEM_DT;
+		IF I_TBL_BIIS(i).EMP_STATUS_FROM_PERS_SYSTEM = 'Active' THEN
+            V_TBL_MEM(i).HHSID          := I_TBL_BIIS(i).HHSID;
+            V_TBL_MEM(i).FIRSTNAME      := I_TBL_BIIS(i).FIRST_NAME;
+            V_TBL_MEM(i).MIDDLENAME     := I_TBL_BIIS(i).MIDDLE_NAME;
+            V_TBL_MEM(i).LASTNAME       := I_TBL_BIIS(i).LAST_NAME;
+            V_TBL_MEM(i).EMAIL          := I_TBL_BIIS(i).EMAIL_ADDR;
+            V_TBL_MEM(i).DEPTNAME       := I_TBL_BIIS(i).OPDIV;
+            V_TBL_MEM(i).LASTUPDATE     := I_TBL_BIIS(i).LAST_UPDT_FROM_PERS_SYSTEM_DT;
+		END IF;
 		
 		--Add records to employee lookup collection
 		V_TBL_EMP(i).LAST_NAME                      := I_TBL_BIIS(i).LAST_NAME;
