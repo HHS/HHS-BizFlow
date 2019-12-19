@@ -1,0 +1,5 @@
+1.Execute package specification script.
+	=> HHS_HR_DB_BIIS_08_create_pkg_spec_biis_person.sql
+		
+2.Execute package body script.
+	=> HHS_HR_DB_BIIS_09_create_pkg_body_biis_person.sql
