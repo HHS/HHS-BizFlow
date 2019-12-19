@@ -64,7 +64,7 @@ SELECT HHSID,
 		AND HHSID IS NOT NULL
 		AND EMAIL_ADDR IS NOT NULL
 		AND ((USERTYPE = 'Employee' AND EMP_STATUS_FROM_PERS_SYSTEM IN('Terminated','Active')
-        AND LAST_UPDT_FROM_PERS_SYSTEM_DT >= add_months(SYSDATE, -3))
+        AND LAST_UPDT_FROM_PERS_SYSTEM_DT >= add_months(SYSDATE, -6))
 		OR (USERTYPE != 'Employee' AND EMP_STATUS_FROM_PERS_SYSTEM = 'Active'));
 		
 2. Update BIIS_PERSON package body, replace top section of SP_INSERT_BIIS_DATA procedure as follows.
